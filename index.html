@@ -848,11 +848,15 @@
         }
 
         /* ABA LIVE STAGE (MODO PALCO COM BOTÕES GIGANTES) */
+        #tabLive {
+            box-sizing: border-box;
+            padding-right: 20% !important; /* Redução de 20% na proporção direita solicitada */
+        }
         .live-stage-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
             gap: 12px;
-            padding: 12px;
+            padding: 12px 16px 12px 12px;
             overflow-y: auto;
             flex: 1;
         }
@@ -1027,10 +1031,6 @@
             </div>
         </div>
         <div style="display:flex; gap:8px; align-items:center;">
-            <!-- Botão de Pânico MIDI Instantâneo -->
-            <button class="btn-panic" onclick="triggerMidiPanic()" title="Corta todas as notas presas e reseta controles (Panic)">
-                🚨 Pânico
-            </button>
             <!-- Controles de Escala / Zoom (Ajuste Perfeito no iPad) -->
             <div class="zoom-controls" title="Ajustar proporção da tela no iPad">
                 <button class="btn-zoom" onclick="changeZoom(-0.05)">−</button>
@@ -2020,6 +2020,9 @@
             localStorage.setItem("jv1010_zoom", currentZoom);
         }
 
+        // Aplica o zoom inicial ao carregar
+        applyZoom(currentZoom);
+
         function changeZoom(delta) {
             applyZoom(currentZoom + delta);
         }
@@ -2064,67 +2067,175 @@
             return new Uint8Array(packet);
         }
 
+        let serverMidiPorts = [];
+        let currentServerPort = "";
+
+        function renderMidiSelectOptions() {
+            const sel = document.getElementById("webMidiSelect");
+            if (!sel) return;
+
+            const previousVal = sel.value;
+            sel.innerHTML = '<option value="">🎹 Saída / Dispositivo MIDI (Selecione)</option>';
+
+            // 1. Portas do Servidor PC (WebSocket)
+            if (serverMidiPorts && serverMidiPorts.length > 0) {
+                const grpServer = document.createElement("optgroup");
+                grpServer.label = "💻 PC / Servidor (Interface MIDI Física)";
+                serverMidiPorts.forEach(port => {
+                    const opt = document.createElement("option");
+                    opt.value = `server:${port}`;
+                    opt.text = (port === currentServerPort ? `✓ 🎹 ${port} (Ativa no PC)` : `🎹 ${port}`);
+                    grpServer.appendChild(opt);
+                });
+                sel.appendChild(grpServer);
+            }
+
+            // 2. Dispositivos Web MIDI Direct (Navegador / iPad / Cabo USB OTG / BLE)
+            let webMidiCount = 0;
+            if (midiAccess) {
+                const grpOutputs = document.createElement("optgroup");
+                grpOutputs.label = "📱 Web MIDI (Saídas / Outputs)";
+                for (let output of midiAccess.outputs.values()) {
+                    webMidiCount++;
+                    const opt = document.createElement("option");
+                    opt.value = `webout:${output.id}`;
+                    opt.text = `🎹 ${output.name || 'Saída ' + output.id}`;
+                    grpOutputs.appendChild(opt);
+                }
+                if (grpOutputs.children.length > 0) sel.appendChild(grpOutputs);
+
+                const grpInputs = document.createElement("optgroup");
+                grpInputs.label = "🎹 Teclados / Controladores Conectados (Inputs)";
+                for (let input of midiAccess.inputs.values()) {
+                    webMidiCount++;
+                    const opt = document.createElement("option");
+                    opt.value = `webin:${input.id}`;
+                    opt.text = `🎹 ${input.name || 'Entrada ' + input.id} (Controlador Detectado)`;
+                    grpInputs.appendChild(opt);
+                }
+                if (grpInputs.children.length > 0) sel.appendChild(grpInputs);
+            }
+
+            // Mantém a seleção anterior ou seleciona a porta ativa atual
+            if (selectedMidiOutput) {
+                sel.value = `webout:${selectedMidiOutput.id}`;
+            } else if (currentServerPort && ws && ws.readyState === WebSocket.OPEN) {
+                sel.value = `server:${currentServerPort}`;
+            } else if (previousVal) {
+                sel.value = previousVal;
+            }
+        }
+
         async function initWebMidiDirect() {
             if (navigator.requestMIDIAccess) {
                 try {
-                    midiAccess = await navigator.requestMIDIAccess({ sysex: true });
-                    const sel = document.getElementById("webMidiSelect");
-                    sel.innerHTML = '<option value="">🎹 MIDI Direto (Selecione)</option>';
-
-                    let foundCount = 0;
-                    for (let output of midiAccess.outputs.values()) {
-                        foundCount++;
-                        const opt = document.createElement("option");
-                        opt.value = output.id;
-                        opt.text = `🎹 ${output.name || 'Porta MIDI ' + foundCount}`;
-                        sel.appendChild(opt);
+                    // Tenta acesso com SysEx; se o navegador/dispositivo não permitir, tenta sem SysEx
+                    try {
+                        midiAccess = await navigator.requestMIDIAccess({ sysex: true });
+                    } catch(eSys) {
+                        console.warn("[WebMIDI] Permissão SysEx recusada ou não suportada, tentando modo padrão...", eSys);
+                        midiAccess = await navigator.requestMIDIAccess({ sysex: false });
                     }
 
-                    if (foundCount > 0) {
-                        sel.style.display = "inline-block";
-                        // Auto-conecta na primeira porta se o WebSocket com PC não estiver ativo
-                        if (!ws || ws.readyState !== WebSocket.OPEN) {
-                            const firstPort = midiAccess.outputs.values().next().value;
-                            if (firstPort) {
-                                selectedMidiOutput = firstPort;
-                                sel.value = firstPort.id;
-                                isWebMidiActive = true;
-                                const badge = document.getElementById("connBadge");
+                    renderMidiSelectOptions();
+
+                    // Conecta ouvintes em todas as entradas MIDI (MK37, teclados USB) para repasse Thru direto se em modo autônomo
+                    for (let input of midiAccess.inputs.values()) {
+                        input.onmidimessage = (msg) => {
+                            if (isMidiThruOn && selectedMidiOutput) {
+                                try { selectedMidiOutput.send(msg.data); } catch(e) {}
+                            }
+                        };
+                    }
+
+                    // Auto-conecta na primeira saída WebMIDI se o servidor PC não estiver ativo
+                    if (!ws || ws.readyState !== WebSocket.OPEN) {
+                        const firstPort = midiAccess.outputs.values().next().value;
+                        if (firstPort && !selectedMidiOutput) {
+                            selectedMidiOutput = firstPort;
+                            isWebMidiActive = true;
+                            const badge = document.getElementById("connBadge");
+                            if (badge) {
                                 badge.innerText = `🟢 WebMIDI: ${firstPort.name}`;
                                 badge.style.borderColor = "#00E5FF";
                                 badge.style.color = "#00E5FF";
-                                console.log("[WebMIDI] Auto-conectado com sucesso na porta:", firstPort.name);
                             }
+                            console.log("[WebMIDI] Auto-conectado com sucesso na porta:", firstPort.name);
                         }
                     }
 
                     midiAccess.onstatechange = (e) => {
                         console.log("[WebMIDI] Dispositivo alterado:", e.port.name, e.port.state);
-                        initWebMidiDirect();
+                        renderMidiSelectOptions();
                     };
                 } catch(err) {
-                    console.warn("[WebMIDI] Aviso: Web MIDI API não disponível ou permissão SysEx negada:", err);
+                    console.warn("[WebMIDI] Aviso: Web MIDI API não disponível ou permissão negada:", err);
+                    renderMidiSelectOptions();
                 }
             } else {
                 console.log("[WebMIDI] Navegador não suporta navigator.requestMIDIAccess.");
+                renderMidiSelectOptions();
             }
         }
 
-        function onWebMidiDeviceSelected(portId) {
-            if (!midiAccess) return;
-            selectedMidiOutput = midiAccess.outputs.get(portId) || null;
+        function onWebMidiDeviceSelected(val) {
             const badge = document.getElementById("connBadge");
-            if (selectedMidiOutput) {
-                isWebMidiActive = true;
-                badge.innerText = `🟢 WebMIDI: ${selectedMidiOutput.name}`;
-                badge.style.borderColor = "#00E5FF";
-                badge.style.color = "#00E5FF";
-                console.log("[WebMIDI] Porta selecionada manualmente:", selectedMidiOutput.name);
-            } else {
+
+            if (!val) {
+                selectedMidiOutput = null;
                 isWebMidiActive = false;
-                badge.innerText = `🟡 WebMIDI Desconectado`;
-                badge.style.borderColor = "#F39C12";
-                badge.style.color = "#F39C12";
+                if (badge) {
+                    badge.innerText = `🟡 MIDI Desconectado`;
+                    badge.style.borderColor = "#F39C12";
+                    badge.style.color = "#F39C12";
+                }
+                return;
+            }
+
+            // Seleção de Porta do Servidor PC
+            if (val.startsWith("server:")) {
+                const portName = val.replace("server:", "");
+                selectedMidiOutput = null;
+                isWebMidiActive = false;
+                currentServerPort = portName;
+                sendMidiCommand({ type: "select_midi_port", port: portName });
+                if (badge) {
+                    badge.innerText = `🟢 PC: ${portName}`;
+                    badge.style.borderColor = "#00E5FF";
+                    badge.style.color = "#00E5FF";
+                }
+                return;
+            }
+
+            // Seleção de Porta WebMIDI Output
+            if (val.startsWith("webout:")) {
+                const portId = val.replace("webout:", "");
+                if (midiAccess) {
+                    selectedMidiOutput = midiAccess.outputs.get(portId) || null;
+                    if (selectedMidiOutput) {
+                        isWebMidiActive = true;
+                        if (badge) {
+                            badge.innerText = `🟢 WebMIDI: ${selectedMidiOutput.name}`;
+                            badge.style.borderColor = "#00E5FF";
+                            badge.style.color = "#00E5FF";
+                        }
+                        console.log("[WebMIDI] Porta selecionada manualmente:", selectedMidiOutput.name);
+                        return;
+                    }
+                }
+            }
+
+            // Seleção de Porta WebMIDI Input (apenas informativo para o usuário)
+            if (val.startsWith("webin:")) {
+                const portId = val.replace("webin:", "");
+                if (midiAccess) {
+                    const inputPort = midiAccess.inputs.get(portId);
+                    if (inputPort && badge) {
+                        badge.innerText = `🎹 Input: ${inputPort.name}`;
+                        badge.style.borderColor = "#2ECC71";
+                        badge.style.color = "#2ECC71";
+                    }
+                }
             }
         }
 
@@ -2317,14 +2428,35 @@
                     if (msg.type === "connected") {
                         const badge = document.getElementById("connBadge");
                         badge.innerText = `🟢 MIDI: ${msg.midi_port}`;
+                        currentServerPort = msg.midi_port || "";
+                        if (Array.isArray(msg.available_ports)) {
+                            serverMidiPorts = msg.available_ports;
+                            renderMidiSelectOptions();
+                        }
                         if (typeof msg.midi_thru !== "undefined") {
                             updateThruButtonUI(msg.midi_thru);
                         }
+                        sendMidiCommand({ type: "list_midi_ports" });
                         sendMidiCommand({ type: "list_midi_maps" });
                         sendMidiCommand({ type: "get_user_favorites" });
                         if (favoriteKeys.size > 0 || (customFavoritePatches && customFavoritePatches.length > 0)) {
                             syncFavoritesToServer();
                         }
+                    } else if (msg.type === "midi_ports_list") {
+                        if (Array.isArray(msg.ports)) {
+                            serverMidiPorts = msg.ports;
+                            if (msg.current_port) currentServerPort = msg.current_port;
+                            renderMidiSelectOptions();
+                        }
+                    } else if (msg.type === "midi_port_changed") {
+                        currentServerPort = msg.port;
+                        const badge = document.getElementById("connBadge");
+                        if (badge) {
+                            badge.innerText = `🟢 MIDI: ${msg.port}`;
+                            badge.style.borderColor = "#00E5FF";
+                            badge.style.color = "#00E5FF";
+                        }
+                        renderMidiSelectOptions();
                     } else if (msg.type === "midi_thru_status") {
                         updateThruButtonUI(msg.enabled);
                     } else if (msg.type === "hardware_tone_dump") {
