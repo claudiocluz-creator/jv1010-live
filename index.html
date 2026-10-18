@@ -1057,7 +1057,8 @@
             <select id="webMidiSelect" class="bank-select" style="min-width:180px; max-width:280px; font-size:13px; font-weight:bold; padding:5px 8px; height:32px; border:1.5px solid #00E5FF; color:#00E5FF; background:#0B0E14; border-radius:6px; cursor:pointer;" onchange="onWebMidiDeviceSelected(this.value)" onclick="initWebMidiDirect()" onfocus="initWebMidiDirect()" ontouchstart="initWebMidiDirect()">
                 <option value="">🎹 Saída / Dispositivo MIDI (Selecione)</option>
             </select>
-            <button onclick="forceScanMidiDevices()" style="background:#1C1C28; border:1px solid #00E5FF; color:#00E5FF; font-size:12px; font-weight:bold; height:32px; padding:0 8px; border-radius:6px; cursor:pointer;" title="Reescanear dispositivos Bluetooth e USB">🔄 Buscar</button>
+            <button onclick="forceScanMidiDevices()" style="background:#1C1C28; border:1px solid #00E5FF; color:#00E5FF; font-size:12px; font-weight:bold; height:32px; padding:0 8px; border-radius:6px; cursor:pointer;" title="Reescanear portas do sistema">🔄 Buscar</button>
+            <button onclick="connectWebBluetoothMidi()" style="background:linear-gradient(135deg, #1E3A8A, #2563EB); border:1px solid #60A5FA; color:#FFF; font-size:12px; font-weight:bold; height:32px; padding:0 10px; border-radius:6px; cursor:pointer; box-shadow:0 0 8px rgba(37,99,235,0.4);" title="Conectar diretamente ao M-Vave MS-1 / SMK-37 via Bluetooth BLE sem app auxiliar">📡 Parear BLE</button>
             <div id="connBadge" class="badge" style="border-color:#F39C12; color:#F39C12; font-size:12px; padding:4px 10px;">Aguardando...</div>
         </div>
         <div style="display:flex; align-items:center; gap:8px;">
@@ -2285,7 +2286,140 @@
             }
         }
 
-        // Envia mensagem bruta para o dispositivo MIDI nativo
+        // ========================================================
+        // DRIVER NATIVO WEB BLUETOOTH (BLE-MIDI UNIVERSAL W3C)
+        // Conecta direto ao M-Vave MS-1 / SMK-37 sem nenhum app intermediário
+        // ========================================================
+        const MIDI_SERVICE_UUID = "03b80e5a-ede8-4b33-a751-6ce34ec4c700";
+        const MIDI_CHAR_UUID    = "7772e5db-3868-4112-a1a9-f2669d106bf3";
+        let bleDevice = null;
+        let bleMidiCharacteristic = null;
+
+        async function connectWebBluetoothMidi() {
+            const badge = document.getElementById("connBadge");
+            if (!navigator.bluetooth) {
+                alert("⚠️ Seu navegador atual não suporta Web Bluetooth nativo.\n\n• No Android: Use o Google Chrome.\n• No iPad/iPhone: Use o navegador 'Bluefy' (gratuito na App Store) ou Safari com Web Bluetooth ativado.");
+                return;
+            }
+
+            try {
+                if (badge) {
+                    badge.innerText = "📡 Pareando BLE...";
+                    badge.style.borderColor = "#60A5FA";
+                    badge.style.color = "#60A5FA";
+                }
+
+                console.log("[BLE-MIDI] Solicitando dispositivo Bluetooth MIDI...");
+                bleDevice = await navigator.bluetooth.requestDevice({
+                    filters: [
+                        { services: [MIDI_SERVICE_UUID] }
+                    ],
+                    optionalServices: [MIDI_SERVICE_UUID]
+                });
+
+                console.log("[BLE-MIDI] Conectando ao GATT Server de:", bleDevice.name);
+                const server = await bleDevice.gatt.connect();
+
+                console.log("[BLE-MIDI] Acessando MIDI Service...");
+                const service = await server.getPrimaryService(MIDI_SERVICE_UUID);
+
+                console.log("[BLE-MIDI] Acessando Characteristic MIDI IO...");
+                bleMidiCharacteristic = await service.getCharacteristic(MIDI_CHAR_UUID);
+
+                // Ativa notificações para receber notas do teclado (se for SMK-37 conectado direto)
+                try {
+                    await bleMidiCharacteristic.startNotifications();
+                    bleMidiCharacteristic.addEventListener("characteristicvaluechanged", (event) => {
+                        const raw = new Uint8Array(event.target.value.buffer);
+                        // Protocolo BLE-MIDI: [Header Byte, Timestamp Byte, Status, Data1, Data2...]
+                        if (raw.length >= 3 && isMidiThruOn && selectedMidiOutput) {
+                            // Extrai os bytes MIDI puros pulando o cabeçalho de timestamp
+                            const midiBytes = [];
+                            for (let i = 2; i < raw.length; i++) {
+                                // Se for timestamp byte intermediário (bit 7 = 1 mas menor que 0x80 status do MIDI)
+                                if ((raw[i] & 0x80) && raw[i] < 0xF8 && i > 2) continue;
+                                midiBytes.push(raw[i]);
+                            }
+                            if (midiBytes.length > 0) {
+                                try { selectedMidiOutput.send(midiBytes); } catch(e) {}
+                            }
+                        }
+                    });
+                } catch(eNotif) {
+                    console.warn("[BLE-MIDI] Notificações não suportadas ou erro:", eNotif);
+                }
+
+                // Cria um objeto compatível com a API WebMIDI Output para plugar perfeitamente no sistema existente
+                const bleOutputAdapter = {
+                    id: "ble-direct-" + (bleDevice.id || "mvave"),
+                    name: bleDevice.name || "M-Vave Wireless MIDI",
+                    isBle: true,
+                    send: function(bytes) {
+                        if (!bleMidiCharacteristic) return;
+                        // Encapsula no formato BLE-MIDI (RFC/MIDI Spec):
+                        // Byte 0: Header (0x80 | (timestamp_high & 0x3F))
+                        // Byte 1: Timestamp (0x80 | (timestamp_low & 0x7F))
+                        // Bytes 2+: Dados MIDI
+                        const nowMs = Math.floor(performance.now()) & 0x1FFF;
+                        const header = 0x80 | ((nowMs >> 7) & 0x3F);
+                        const timestamp = 0x80 | (nowMs & 0x7F);
+                        const packet = new Uint8Array([header, timestamp, ...bytes]);
+                        bleMidiCharacteristic.writeValueWithoutResponse(packet).catch(err => {
+                            // Fallback caso writeWithoutResponse não seja aceito
+                            bleMidiCharacteristic.writeValue(packet).catch(e2 => console.error("[BLE-MIDI] Erro de envio:", e2));
+                        });
+                    }
+                };
+
+                selectedMidiOutput = bleOutputAdapter;
+                isWebMidiActive = true;
+
+                // Adiciona na lista suspensa
+                const sel = document.getElementById("webMidiSelect");
+                if (sel) {
+                    const opt = document.createElement("option");
+                    opt.value = `ble:${bleOutputAdapter.id}`;
+                    opt.text = `📡 🟢 ${bleOutputAdapter.name} (Bluetooth Direto)`;
+                    opt.selected = true;
+                    sel.insertBefore(opt, sel.firstChild.nextSibling);
+                }
+
+                if (badge) {
+                    badge.innerText = `🟢 BLE: ${bleOutputAdapter.name}`;
+                    badge.style.borderColor = "#2ECC71";
+                    badge.style.color = "#2ECC71";
+                }
+
+                bleDevice.addEventListener("gattserverdisconnected", () => {
+                    console.warn("[BLE-MIDI] Dispositivo Bluetooth desconectado!");
+                    if (selectedMidiOutput === bleOutputAdapter) {
+                        selectedMidiOutput = null;
+                        isWebMidiActive = false;
+                        if (badge) {
+                            badge.innerText = "🟡 BLE Desconectado";
+                            badge.style.borderColor = "#F39C12";
+                            badge.style.color = "#F39C12";
+                        }
+                    }
+                });
+
+                console.log("[BLE-MIDI] Conexão direta estabelecida com sucesso!");
+                alert(`✅ Conectado com sucesso ao ${bleDevice.name}!\n\nAgora você pode trocar timbres, testar som e controlar o Roland JV-1010 sem nenhum app intermediário.`);
+
+            } catch(err) {
+                console.error("[BLE-MIDI] Erro ao conectar Bluetooth:", err);
+                if (badge) {
+                    badge.innerText = "⚠️ Falha BLE";
+                    badge.style.borderColor = "#FF5252";
+                    badge.style.color = "#FF5252";
+                }
+                if (err.name !== "NotFoundError") {
+                    alert("Aviso Bluetooth: " + err.message);
+                }
+            }
+        }
+
+        // Envia mensagem bruta para o dispositivo MIDI nativo (WebMIDI ou BLE Direto)
         function sendRawWebMidi(bytes) {
             if (selectedMidiOutput) {
                 try {
