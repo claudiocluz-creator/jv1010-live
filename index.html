@@ -1054,10 +1054,11 @@
         <div style="display:flex; align-items:center; gap:8px;">
             <span style="font-size:16px;">🎹</span>
             <span style="font-weight:bold; font-size:13px; color:#00E5FF;">SAÍDA MIDI:</span>
-            <select id="webMidiSelect" class="bank-select" style="min-width:180px; max-width:280px; font-size:13px; font-weight:bold; padding:5px 8px; height:32px; border:1.5px solid #00E5FF; color:#00E5FF; background:#0B0E14; border-radius:6px; cursor:pointer;" onchange="onWebMidiDeviceSelected(this.value)">
-                <option value="">Procurando MIDI...</option>
+            <select id="webMidiSelect" class="bank-select" style="min-width:180px; max-width:280px; font-size:13px; font-weight:bold; padding:5px 8px; height:32px; border:1.5px solid #00E5FF; color:#00E5FF; background:#0B0E14; border-radius:6px; cursor:pointer;" onchange="onWebMidiDeviceSelected(this.value)" onclick="initWebMidiDirect()" onfocus="initWebMidiDirect()" ontouchstart="initWebMidiDirect()">
+                <option value="">🎹 Saída / Dispositivo MIDI (Selecione)</option>
             </select>
-            <div id="connBadge" class="badge" style="border-color:#F39C12; color:#F39C12; font-size:12px; padding:4px 10px;">Conectando...</div>
+            <button onclick="forceScanMidiDevices()" style="background:#1C1C28; border:1px solid #00E5FF; color:#00E5FF; font-size:12px; font-weight:bold; height:32px; padding:0 8px; border-radius:6px; cursor:pointer;" title="Reescanear dispositivos Bluetooth e USB">🔄 Buscar</button>
+            <div id="connBadge" class="badge" style="border-color:#F39C12; color:#F39C12; font-size:12px; padding:4px 10px;">Aguardando...</div>
         </div>
         <div style="display:flex; align-items:center; gap:8px;">
             <button onclick="testMidiSound()" style="background:#27AE60; border:none; color:white; font-size:12px; font-weight:bold; padding:6px 14px; border-radius:6px; cursor:pointer; box-shadow:0 0 8px rgba(39,174,96,0.5);" title="Toca uma nota Dó4 no JV-1010 para validar comunicação">🔔 Testar Som (Dó 4)</button>
@@ -2073,6 +2074,13 @@
         let serverMidiPorts = [];
         let currentServerPort = "";
 
+        function formatDeviceName(name) {
+            if (!name) return "Dispositivo MIDI";
+            if (name.toLowerCase() === "bluetooth") return "Bluetooth (SMK-37 / BLE)";
+            if (name.toLowerCase() === "session 1") return "Network Session 1";
+            return name;
+        }
+
         function renderMidiSelectOptions() {
             const sel = document.getElementById("webMidiSelect");
             if (!sel) return;
@@ -2097,26 +2105,51 @@
             let webMidiCount = 0;
             if (midiAccess) {
                 const grpOutputs = document.createElement("optgroup");
-                grpOutputs.label = "📱 Web MIDI (Saídas / Outputs)";
+                grpOutputs.label = "📱 Saídas MIDI (Envio para o JV-1010)";
                 for (let output of midiAccess.outputs.values()) {
                     webMidiCount++;
                     const opt = document.createElement("option");
                     opt.value = `webout:${output.id}`;
-                    opt.text = `🎹 ${output.name || 'Saída ' + output.id}`;
+                    const displayName = formatDeviceName(output.name);
+                    opt.text = `🎹 ${displayName}`;
                     grpOutputs.appendChild(opt);
                 }
                 if (grpOutputs.children.length > 0) sel.appendChild(grpOutputs);
 
                 const grpInputs = document.createElement("optgroup");
-                grpInputs.label = "🎹 Teclados / Controladores Conectados (Inputs)";
+                grpInputs.label = "🎹 Entradas MIDI (Teclado / Controlador)";
                 for (let input of midiAccess.inputs.values()) {
                     webMidiCount++;
                     const opt = document.createElement("option");
                     opt.value = `webin:${input.id}`;
-                    opt.text = `🎹 ${input.name || 'Entrada ' + input.id} (Controlador Detectado)`;
+                    const displayName = formatDeviceName(input.name);
+                    opt.text = `🎹 ${displayName} (Entrada)`;
                     grpInputs.appendChild(opt);
                 }
                 if (grpInputs.children.length > 0) sel.appendChild(grpInputs);
+            }
+
+            // Se só tiver 1 saída Web MIDI e nenhuma selecionada, seleciona automaticamente
+            if (!selectedMidiOutput && midiAccess && midiAccess.outputs.size > 0 && (!ws || ws.readyState !== WebSocket.OPEN)) {
+                // Prioriza porta com 'bluetooth' ou a primeira encontrada
+                let targetPort = null;
+                for (let out of midiAccess.outputs.values()) {
+                    if (!targetPort) targetPort = out;
+                    if (out.name && (out.name.toLowerCase().includes("bluetooth") || out.name.toLowerCase().includes("smk"))) {
+                        targetPort = out;
+                        break;
+                    }
+                }
+                if (targetPort) {
+                    selectedMidiOutput = targetPort;
+                    isWebMidiActive = true;
+                    const badge = document.getElementById("connBadge");
+                    if (badge) {
+                        badge.innerText = `🟢 WebMIDI: ${formatDeviceName(targetPort.name)}`;
+                        badge.style.borderColor = "#00E5FF";
+                        badge.style.color = "#00E5FF";
+                    }
+                }
             }
 
             // Mantém a seleção anterior ou seleciona a porta ativa atual
@@ -2126,6 +2159,32 @@
                 sel.value = `server:${currentServerPort}`;
             } else if (previousVal) {
                 sel.value = previousVal;
+            }
+        }
+
+        async function forceScanMidiDevices() {
+            const badge = document.getElementById("connBadge");
+            if (badge) {
+                badge.innerText = "🔍 Buscando MIDI...";
+                badge.style.borderColor = "#00E5FF";
+                badge.style.color = "#00E5FF";
+            }
+            await initWebMidiDirect();
+            renderMidiSelectOptions();
+            if (badge) {
+                if (selectedMidiOutput) {
+                    badge.innerText = `🟢 WebMIDI: ${formatDeviceName(selectedMidiOutput.name)}`;
+                    badge.style.borderColor = "#00E5FF";
+                    badge.style.color = "#00E5FF";
+                } else if (midiAccess && (midiAccess.outputs.size > 0 || midiAccess.inputs.size > 0)) {
+                    badge.innerText = `🟡 ${midiAccess.outputs.size} Saídas / ${midiAccess.inputs.size} Entradas`;
+                    badge.style.borderColor = "#F39C12";
+                    badge.style.color = "#F39C12";
+                } else {
+                    badge.innerText = "⚠️ Nenhum MIDI achado";
+                    badge.style.borderColor = "#FF5252";
+                    badge.style.color = "#FF5252";
+                }
             }
         }
 
@@ -2149,22 +2208,6 @@
                                 try { selectedMidiOutput.send(msg.data); } catch(e) {}
                             }
                         };
-                    }
-
-                    // Auto-conecta na primeira saída WebMIDI se o servidor PC não estiver ativo
-                    if (!ws || ws.readyState !== WebSocket.OPEN) {
-                        const firstPort = midiAccess.outputs.values().next().value;
-                        if (firstPort && !selectedMidiOutput) {
-                            selectedMidiOutput = firstPort;
-                            isWebMidiActive = true;
-                            const badge = document.getElementById("connBadge");
-                            if (badge) {
-                                badge.innerText = `🟢 WebMIDI: ${firstPort.name}`;
-                                badge.style.borderColor = "#00E5FF";
-                                badge.style.color = "#00E5FF";
-                            }
-                            console.log("[WebMIDI] Auto-conectado com sucesso na porta:", firstPort.name);
-                        }
                     }
 
                     midiAccess.onstatechange = (e) => {
@@ -2218,7 +2261,7 @@
                     if (selectedMidiOutput) {
                         isWebMidiActive = true;
                         if (badge) {
-                            badge.innerText = `🟢 WebMIDI: ${selectedMidiOutput.name}`;
+                            badge.innerText = `🟢 WebMIDI: ${formatDeviceName(selectedMidiOutput.name)}`;
                             badge.style.borderColor = "#00E5FF";
                             badge.style.color = "#00E5FF";
                         }
@@ -2234,7 +2277,7 @@
                 if (midiAccess) {
                     const inputPort = midiAccess.inputs.get(portId);
                     if (inputPort && badge) {
-                        badge.innerText = `🎹 Input: ${inputPort.name}`;
+                        badge.innerText = `🎹 Input: ${formatDeviceName(inputPort.name)}`;
                         badge.style.borderColor = "#2ECC71";
                         badge.style.color = "#2ECC71";
                     }
@@ -5135,7 +5178,16 @@
         setSynthView("studio");
         initStereoEqControls();
         refreshAllLearnButtons();
+        initWebMidiDirect();
         initWebSocket();
+
+        // No iOS/Safari/Web MIDI Browser, alguns navegadores exigem primeiro toque para liberar portas
+        window.addEventListener("touchstart", () => {
+            if (!midiAccess) initWebMidiDirect();
+        }, { once: true });
+        window.addEventListener("click", () => {
+            if (!midiAccess) initWebMidiDirect();
+        }, { once: true });
     </script>
 
     <!-- Modal de Edição de Categoria para iPad -->
