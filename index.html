@@ -5,11 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="JV-1010 Live">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%2314141C'/><rect x='10' y='10' width='80' height='80' rx='14' fill='%2300E5FF' fill-opacity='0.15' stroke='%2300E5FF' stroke-width='4'/><text x='50' y='58' font-size='42' font-family='sans-serif' text-anchor='middle' fill='%2300E5FF'>🎹</text></svg>">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>Roland JV-1010 Live Stage Editor</title>
-    <script src="patches_data.js?v=20261018b"></script>
+    <script src="patches_data.js?v=20261018c"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; }
         html, body {
@@ -829,25 +832,29 @@
             background: #1E2333;
         }
 
-        /* Botão de Pânico MIDI */
+        /* Botão de Pânico MIDI Gigante para Palco */
         .btn-panic {
-            background: #4A1212;
-            border: 1px solid #E74C3C;
-            color: #FF7675;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: bold;
+            background: linear-gradient(135deg, #7A1212, #C0392B);
+            border: 2px solid #E74C3C;
+            color: #FFFFFF;
+            padding: 6px 16px;
+            border-radius: 8px;
+            font-size: 13.5px;
+            font-weight: 900;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 4px;
-            transition: all 0.15s;
+            gap: 6px;
+            box-shadow: 0 0 14px rgba(231, 76, 60, 0.45);
+            transition: all 0.15s ease-out;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            -webkit-tap-highlight-color: transparent;
         }
         .btn-panic:active {
             background: #E74C3C;
-            color: #FFFFFF;
-            transform: scale(0.96);
+            box-shadow: 0 0 24px rgba(255, 118, 117, 0.8);
+            transform: scale(0.95);
         }
 
         /* ABA LIVE STAGE (MODO PALCO COM BOTÕES GIGANTES) */
@@ -857,38 +864,39 @@
         }
         .live-stage-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 12px;
-            padding: 12px 16px 12px 12px;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 14px;
+            padding: 12px 16px 16px 12px;
             overflow-y: auto;
             flex: 1;
         }
         .live-card {
-            background: #12121D;
-            border: 2px solid #272738;
-            border-radius: 12px;
-            padding: 16px 14px;
+            background: #141422;
+            border: 2px solid #2C2C40;
+            border-radius: 14px;
+            padding: 18px 16px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            min-height: 120px;
+            min-height: 135px;
             cursor: pointer;
-            transition: all 0.15s ease-out;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            transition: all 0.12s ease-out;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
             user-select: none;
             -webkit-tap-highlight-color: transparent;
         }
         .live-card:active {
-            transform: scale(0.97);
+            transform: scale(0.96);
+            background: #1B283A;
         }
         .live-card.selected {
             border-color: #00E5FF;
-            background: #152233;
-            box-shadow: 0 0 16px rgba(0, 229, 255, 0.35);
+            background: #15273C;
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.45);
         }
         .live-card-num {
             font-family: monospace;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: bold;
             color: #8E8E9E;
             display: flex;
@@ -896,8 +904,8 @@
             align-items: center;
         }
         .live-card-title {
-            font-size: 16px;
-            font-weight: bold;
+            font-size: 18px;
+            font-weight: 800;
             color: #FFFFFF;
             margin: 6px 0;
             line-height: 1.25;
@@ -5322,6 +5330,15 @@
         window.addEventListener("click", () => {
             if (!midiAccess) initWebMidiDirect();
         }, { once: true });
+
+        // Registro do ServiceWorker PWA para permitir Modo Offline e Instalação na Tela de Início
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js?v=20261018c')
+                    .then((reg) => console.log('[PWA] Service Worker registrado com sucesso:', reg.scope))
+                    .catch((err) => console.warn('[PWA] Falha no registro do Service Worker:', err));
+            });
+        }
     </script>
 
     <!-- Modal de Edição de Categoria para iPad -->
