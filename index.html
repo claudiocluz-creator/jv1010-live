@@ -1288,8 +1288,9 @@
             </div>
 
             <!-- Master Volume & Mute Geral -->
-            <div style="display:flex; align-items:center; gap:6px; background:rgba(255,255,255,0.06); padding:3px 8px; border-radius:5px; border:1px solid rgba(255,255,255,0.2); min-width:150px;">
+            <div style="display:flex; align-items:center; gap:6px; background:rgba(255,255,255,0.06); padding:3px 8px; border-radius:5px; border:1px solid rgba(255,255,255,0.2); min-width:180px;">
                 <button id="btnCombMasterMute" onclick="toggleCombMasterMute()" style="background:#2C2C3E; border:1px solid #7E7E94; color:#FFF; font-size:10px; font-weight:bold; padding:2px 6px; border-radius:4px; cursor:pointer;" title="Mute Geral (Corta volume sem desconfigurar)">🔊 MUTE</button>
+                <button class="btn-learn" id="btnLearnCombMasterVol" onclick="toggleMidiLearn('master_level', this)" style="padding:1px 5px; font-size:9.5px; margin:0;" title="Mapear Volume Geral para um Knob/Fader MIDI">🎓 Learn</button>
                 <span style="font-size:11px; font-weight:bold; color:#FFF; white-space:nowrap;">Vol:</span>
                 <input type="range" id="sldCombMasterVol" min="0" max="127" value="127" class="synth-param-slider" style="flex:1; height:18px; accent-color:#00E5FF; margin:0;" oninput="onCombMasterVolChange(this.value)">
                 <span id="valCombMasterVol" style="font-size:11px; font-family:monospace; font-weight:bold; color:#00E5FF; min-width:24px; text-align:right;">127</span>
@@ -1441,6 +1442,7 @@
                     </div>
                     <div class="synth-param-row">
                         <span class="synth-param-label" style="min-width:90px;">Master Level:</span>
+                        <button class="btn-learn" id="btnLearnMasterLevel" onclick="toggleMidiLearn('master_level', this)" title="Clique e gire um knob no teclado para mapear o Volume Geral">🎓 Learn</button>
                         <input type="range" min="0" max="127" value="127" class="synth-param-slider" id="sldMasterLevel" oninput="onMasterParamChange('level', this.value)">
                         <span class="synth-param-val" id="valMasterLevel">127</span>
                     </div>
@@ -2213,6 +2215,14 @@
                     // Conecta ouvintes em todas as entradas MIDI (MK37, teclados USB) para repasse Thru direto se em modo autônomo
                     for (let input of midiAccess.inputs.values()) {
                         input.onmidimessage = (msg) => {
+                            const d = msg.data;
+                            if (d && d.length >= 3) {
+                                const status = d[0] & 0xF0;
+                                const ch = d[0] & 0x0F;
+                                if (status === 0xB0) {
+                                    handleIncomingMidiCC(d[1], d[2], ch);
+                                }
+                            }
                             if (isMidiThruOn && selectedMidiOutput) {
                                 try { selectedMidiOutput.send(msg.data); } catch(e) {}
                             }
@@ -2340,7 +2350,7 @@
                     bleMidiCharacteristic.addEventListener("characteristicvaluechanged", (event) => {
                         const raw = new Uint8Array(event.target.value.buffer);
                         // Protocolo BLE-MIDI: [Header Byte, Timestamp Byte, Status, Data1, Data2...]
-                        if (raw.length >= 3 && isMidiThruOn && selectedMidiOutput) {
+                        if (raw.length >= 3) {
                             // Extrai os bytes MIDI puros pulando o cabeçalho de timestamp
                             const midiBytes = [];
                             for (let i = 2; i < raw.length; i++) {
@@ -2348,7 +2358,19 @@
                                 if ((raw[i] & 0x80) && raw[i] < 0xF8 && i > 2) continue;
                                 midiBytes.push(raw[i]);
                             }
-                            if (midiBytes.length > 0) {
+
+                            // Roteia mensagens de Control Change (CC) para o sistema de MIDI Learn
+                            for (let i = 0; i < midiBytes.length - 2; i++) {
+                                if ((midiBytes[i] & 0xF0) === 0xB0) {
+                                    const ch = midiBytes[i] & 0x0F;
+                                    const ccNum = midiBytes[i + 1];
+                                    const ccVal = midiBytes[i + 2];
+                                    handleIncomingMidiCC(ccNum, ccVal, ch);
+                                    i += 2;
+                                }
+                            }
+
+                            if (midiBytes.length > 0 && isMidiThruOn && selectedMidiOutput) {
                                 try { selectedMidiOutput.send(midiBytes); } catch(e) {}
                             }
                         }
@@ -4043,9 +4065,12 @@
 
                     <div class="fader-row">
                         <div class="fader-box" style="width: 100%;">
-                            <div class="fader-val" style="color:${partColor}">${p.level}</div>
-                            <input type="range" min="0" max="127" value="${p.level}" orient="vertical" class="fader-input" oninput="updatePartVal(${i}, 'level', this.value)">
-                            <div class="fader-label">Volume</div>
+                            <div class="fader-val" id="valPartFader${i}" style="color:${partColor}">${p.level}</div>
+                            <input type="range" id="sldPartFader${i}" min="0" max="127" value="${p.level}" orient="vertical" class="fader-input" oninput="updatePartVal(${i}, 'level', this.value)">
+                            <div style="display:flex; align-items:center; justify-content:center; gap:4px; margin-top:2px;">
+                                <div class="fader-label" style="margin:0;">Vol:</div>
+                                <button class="btn-learn" id="btnLearnPartVol${i}" onclick="toggleMidiLearn('part_vol_${i}', this)" style="padding:1px 4px; font-size:9px; margin:0;" title="Mapear Volume da Parte ${i + 1} para um Fader/Knob MIDI">🎓 Learn</button>
+                            </div>
                         </div>
                     </div>
 
@@ -4458,12 +4483,13 @@
         // ==========================================
         // SISTEMA DE MIDI LEARN (CC MAPPING)
         // ==========================================
-        // Padrão Roland GS/GM: Cutoff=74, Reso=71, Attack=73, Release=72
+        // Padrão Roland GS/GM: Cutoff=74, Reso=71, Attack=73, Release=72, Master Vol=7
         const DEFAULT_MIDI_LEARN_MAP = {
             "cutoff": 74,
             "reso": 71,
             "tva_attack": 73,
-            "tva_release": 72
+            "tva_release": 72,
+            "master_level": 7
         };
 
         let midiLearnMap = JSON.parse(localStorage.getItem("jv1010_midi_learn_map") || "null") || Object.assign({}, DEFAULT_MIDI_LEARN_MAP);
@@ -4499,7 +4525,10 @@
             const badge = document.getElementById("midiLearnStatusBadge");
             if (badge) {
                 badge.style.display = "inline-block";
-                badge.innerText = `Aguardando CC para ${param.replace('tva_', '').toUpperCase()}...`;
+                let label = param.toUpperCase();
+                if (param === 'master_level') label = "VOLUME GERAL";
+                else if (param.startsWith('part_vol_')) label = `VOL PARTE ${parseInt(param.replace('part_vol_', '')) + 1}`;
+                badge.innerText = `Aguardando CC para ${label}...`;
             }
         }
 
@@ -4515,8 +4544,17 @@
 
         function updateLearnButtonText(btn) {
             if (!btn) return;
-            const param = btn.id.replace("btnLearn", "").toLowerCase();
-            const fullKey = param === "cutoff" ? "cutoff" : (param === "reso" ? "reso" : (param === "attack" ? "tva_attack" : "tva_release"));
+            let fullKey = "";
+            if (btn.id === "btnLearnMasterLevel" || btn.id === "btnLearnCombMasterVol") {
+                fullKey = "master_level";
+            } else if (btn.id.startsWith("btnLearnPartVol")) {
+                const idx = btn.id.replace("btnLearnPartVol", "");
+                fullKey = `part_vol_${idx}`;
+            } else {
+                const param = btn.id.replace("btnLearn", "").toLowerCase();
+                fullKey = param === "cutoff" ? "cutoff" : (param === "reso" ? "reso" : (param === "attack" ? "tva_attack" : "tva_release"));
+            }
+
             const cc = midiLearnMap[fullKey];
             if (cc !== undefined) {
                 btn.innerText = `CC ${cc}`;
@@ -4532,10 +4570,18 @@
             const btnR = document.getElementById("btnLearnReso");
             const btnA = document.getElementById("btnLearnAttack");
             const btnRel = document.getElementById("btnLearnRelease");
+            const btnM1 = document.getElementById("btnLearnMasterLevel");
+            const btnM2 = document.getElementById("btnLearnCombMasterVol");
             updateLearnButtonText(btnC);
             updateLearnButtonText(btnR);
             updateLearnButtonText(btnA);
             updateLearnButtonText(btnRel);
+            updateLearnButtonText(btnM1);
+            updateLearnButtonText(btnM2);
+            for (let i = 0; i < 4; i++) {
+                const btnPart = document.getElementById(`btnLearnPartVol${i}`);
+                if (btnPart) updateLearnButtonText(btnPart);
+            }
         }
 
         function clearAllMidiLearned() {
@@ -4709,6 +4755,40 @@
 
         function applyMappedCCValue(param, val, channel) {
             const num = Math.max(0, Math.min(127, parseInt(val)));
+
+            // 1. Controle de Volume Geral (Master Level)
+            if (param === "master_level") {
+                const sldMaster = document.getElementById("sldMasterLevel");
+                if (sldMaster) sldMaster.value = num;
+                const valMaster = document.getElementById("valMasterLevel");
+                if (valMaster) valMaster.innerText = num;
+
+                const sldComb = document.getElementById("sldCombMasterVol");
+                if (sldComb) sldComb.value = num;
+                const valComb = document.getElementById("valCombMasterVol");
+                if (valComb) valComb.innerText = num;
+
+                lastCombMasterVol = num;
+                userTouchedParams.master["level"] = num;
+                sendMidiCommand({ type: "master_param", param: "level", value: num });
+                return;
+            }
+
+            // 2. Controle de Volume das 4 Partes Individuais (Combinações / Performance)
+            if (param.startsWith("part_vol_")) {
+                const partIdx = parseInt(param.replace("part_vol_", ""));
+                if (parts[partIdx]) {
+                    parts[partIdx].level = num;
+                    const sldPart = document.getElementById(`sldPartFader${partIdx}`);
+                    if (sldPart) sldPart.value = num;
+                    const valPart = document.getElementById(`valPartFader${partIdx}`);
+                    if (valPart) valPart.innerText = num;
+                    updatePartVal(partIdx, "level", num);
+                }
+                return;
+            }
+
+            // 3. Controles Globais de Síntese (Cutoff, Reso, Attack, Release)
             userTouchedParams.global_tones[param] = num;
             for (let i = 0; i < 4; i++) {
                 userTouchedParams.tones[i][param] = num;
