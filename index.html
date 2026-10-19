@@ -1309,13 +1309,6 @@
                 <span id="valCombCho" style="font-size:11px; font-family:monospace; font-weight:bold; color:#2ECC71; min-width:24px; text-align:right;">0</span>
             </div>
 
-            <!-- Slider 3: Efeito Stereo EQ / EFX Level -->
-            <div style="display:flex; align-items:center; gap:6px; flex:1; min-width:130px; background:rgba(255,215,0,0.06); padding:3px 8px; border-radius:5px; border:1px solid rgba(255,215,0,0.22);">
-                <span style="font-size:11px; font-weight:bold; color:#FFD700; white-space:nowrap;" title="Nível de Saída do Efeito Selecionado (Stereo EQ / EFX)">🎚️ EQ Level:</span>
-                <input type="range" id="sldCombEq" min="0" max="127" value="127" class="synth-param-slider" style="flex:1; height:18px; accent-color:#FFD700; margin:0;" oninput="onCombFxChange('efx_prm11', this.value, 'valCombEq')">
-                <span id="valCombEq" style="font-size:11px; font-family:monospace; font-weight:bold; color:#FFD700; min-width:24px; text-align:right;">127</span>
-            </div>
-
             <!-- Master Volume & Mute Geral -->
             <div style="display:flex; align-items:center; gap:6px; background:rgba(255,255,255,0.06); padding:3px 8px; border-radius:5px; border:1px solid rgba(255,255,255,0.2); min-width:180px;">
                 <button id="btnCombMasterMute" onclick="toggleCombMasterMute()" style="background:#2C2C3E; border:1px solid #7E7E94; color:#FFF; font-size:10px; font-weight:bold; padding:2px 6px; border-radius:4px; cursor:pointer;" title="Mute Geral (Corta volume sem desconfigurar)">🔊 MUTE</button>
@@ -1329,8 +1322,16 @@
         <!-- Painel Compacto de Equalização (Stereo EQ 4-Bandas) para a Aba Combinações -->
         <div id="panelCombStereoEq" style="display:flex; flex-direction:column; gap:5px; background:#10101A; border:1px solid #232338; border-radius:8px; padding:6px 10px; margin-bottom:8px;">
             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; border-bottom:1px solid #1C1C2A; padding-bottom:4px;">
-                <div style="display:flex; align-items:center; gap:6px;">
-                    <span style="font-weight:bold; color:#FFD700; font-size:11px;">🎚️ Equalizador Stereo-EQ (4 Bandas)</span>
+                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                    <span style="font-weight:bold; color:#FFD700; font-size:11px; white-space:nowrap;">🎚️ Equalizador Stereo-EQ (4 Bandas)</span>
+                    
+                    <!-- EQ Level ao lado do título, antes do botão de ligar EFX -->
+                    <div style="display:flex; align-items:center; gap:4px; background:rgba(255,215,0,0.08); padding:2px 6px; border-radius:4px; border:1px solid rgba(255,215,0,0.25);">
+                        <span style="font-size:10px; font-weight:bold; color:#FFD700; white-space:nowrap;">EQ Level:</span>
+                        <input type="range" id="sldCombEq" min="0" max="127" value="127" class="synth-param-slider" style="width:75px; height:16px; accent-color:#FFD700; margin:0;" oninput="onCombFxChange('efx_prm11', this.value, 'valCombEq')">
+                        <span id="valCombEq" style="font-size:10.5px; font-family:monospace; font-weight:bold; color:#FFD700; min-width:22px; text-align:right;">127</span>
+                    </div>
+
                     <button onclick="sendMidiCommand({type:'route_efx'})" style="background:#27AE60; border:none; color:white; font-size:10px; font-weight:bold; padding:2px 7px; border-radius:3px; cursor:pointer;" title="Força o roteamento do sinal para passar 100% pelo EFX">⚡ Ligar EFX nos Timbres</button>
                 </div>
                 <!-- Barra de Presets Rápidos de EQ -->
