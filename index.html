@@ -1057,23 +1057,23 @@
         </div>
     </div>
 
-    <!-- BARRA DEDICADA DE CONEXÃO MIDI E TESTE (ALTA VISIBILIDADE NO IPAD) -->
-    <div style="background:#10141D; border:1.5px solid #00E5FF; padding:8px 12px; border-radius:8px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; box-shadow:0 0 12px rgba(0,229,255,0.25);">
-        <div style="display:flex; align-items:center; gap:8px;">
-            <span style="font-size:16px;">🎹</span>
-            <span style="font-weight:bold; font-size:13px; color:#00E5FF;">SAÍDA MIDI:</span>
-            <select id="webMidiSelect" class="bank-select" style="min-width:180px; max-width:280px; font-size:13px; font-weight:bold; padding:5px 8px; height:32px; border:1.5px solid #00E5FF; color:#00E5FF; background:#0B0E14; border-radius:6px; cursor:pointer;" onchange="onWebMidiDeviceSelected(this.value)" onclick="initWebMidiDirect()" onfocus="initWebMidiDirect()" ontouchstart="initWebMidiDirect()">
-                <option value="">🎹 Saída / Dispositivo MIDI (Selecione)</option>
+    <!-- BARRA DEDICADA DE CONEXÃO MIDI E TESTE COMPACTA (LINHA ÚNICA) -->
+    <div style="background:#10141D; border:1px solid #00E5FF; padding:4px 10px; border-radius:6px; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center; flex-wrap:nowrap; gap:6px; box-shadow:0 0 8px rgba(0,229,255,0.2); overflow-x:auto;">
+        <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
+            <span style="font-size:14px;">🎹</span>
+            <span style="font-weight:bold; font-size:11.5px; color:#00E5FF; white-space:nowrap;">MIDI:</span>
+            <select id="webMidiSelect" class="bank-select" style="min-width:140px; max-width:220px; font-size:11.5px; font-weight:bold; padding:2px 6px; height:26px; border:1px solid #00E5FF; color:#00E5FF; background:#0B0E14; border-radius:4px; cursor:pointer;" onchange="onWebMidiDeviceSelected(this.value)" onclick="initWebMidiDirect()" onfocus="initWebMidiDirect()" ontouchstart="initWebMidiDirect()">
+                <option value="">🎹 Dispositivo MIDI...</option>
             </select>
-            <button onclick="forceScanMidiDevices()" style="background:#1C1C28; border:1px solid #00E5FF; color:#00E5FF; font-size:12px; font-weight:bold; height:32px; padding:0 8px; border-radius:6px; cursor:pointer;" title="Reescanear portas do sistema">🔄 Buscar</button>
-            <button onclick="connectWebBluetoothMidi()" style="background:linear-gradient(135deg, #1E3A8A, #2563EB); border:1px solid #60A5FA; color:#FFF; font-size:12px; font-weight:bold; height:32px; padding:0 10px; border-radius:6px; cursor:pointer; box-shadow:0 0 8px rgba(37,99,235,0.4);" title="Conectar diretamente ao M-Vave MS-1 / SMK-37 via Bluetooth BLE sem app auxiliar">📡 Parear BLE</button>
-            <div id="connBadge" class="badge" style="border-color:#F39C12; color:#F39C12; font-size:12px; padding:4px 10px;">Aguardando...</div>
+            <button onclick="forceScanMidiDevices()" style="background:#1C1C28; border:1px solid #00E5FF; color:#00E5FF; font-size:11px; font-weight:bold; height:26px; padding:0 6px; border-radius:4px; cursor:pointer; white-space:nowrap;" title="Reescanear portas do sistema">🔄 Buscar</button>
+            <button onclick="connectWebBluetoothMidi()" style="background:linear-gradient(135deg, #1E3A8A, #2563EB); border:1px solid #60A5FA; color:#FFF; font-size:11px; font-weight:bold; height:26px; padding:0 8px; border-radius:4px; cursor:pointer; box-shadow:0 0 6px rgba(37,99,235,0.4); white-space:nowrap;" title="Conectar diretamente via Bluetooth BLE">📡 BLE</button>
+            <div id="connBadge" class="badge" style="border-color:#F39C12; color:#F39C12; font-size:11px; padding:2px 8px; height:24px; display:inline-flex; align-items:center; white-space:nowrap;">Aguardando...</div>
         </div>
-        <div style="display:flex; align-items:center; gap:8px;">
-            <button onclick="testMidiSound()" style="background:#27AE60; border:none; color:white; font-size:12px; font-weight:bold; padding:6px 14px; border-radius:6px; cursor:pointer; box-shadow:0 0 8px rgba(39,174,96,0.5);" title="Toca uma nota Dó4 no JV-1010 para validar comunicação">🔔 Testar Som (Dó 4)</button>
-            <button id="btnMidiThru" class="btn-thru" style="height:32px; font-size:12px; padding:0 12px;" onclick="toggleMidiThru()" title="Ativar/desativar repasse do teclado físico via MIDI Thru">🔁 Thru (OFF)</button>
-            <button class="synth-btn" style="padding: 5px 10px; font-size:11px; height:32px; background: rgba(0, 229, 255, 0.12); border-color: #00E5FF; color: #00E5FF; font-weight: bold;" onclick="exportFullBackup()" title="Exportar Backup">💾 Backup</button>
-            <button class="synth-btn" style="padding: 5px 10px; font-size:11px; height:32px; background: rgba(255, 215, 0, 0.12); border-color: #FFD700; color: #FFD700; font-weight: bold;" onclick="document.getElementById('fileRestoreInput').click()" title="Restaurar Backup">📂 Restaurar</button>
+        <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
+            <button onclick="testMidiSound()" style="background:#27AE60; border:none; color:white; font-size:11px; font-weight:bold; padding:0 10px; height:26px; border-radius:4px; cursor:pointer; box-shadow:0 0 6px rgba(39,174,96,0.5); white-space:nowrap;" title="Toca Dó4 no JV-1010">🔔 Testar (Dó 4)</button>
+            <button id="btnMidiThru" class="btn-thru" style="height:26px; font-size:11px; padding:0 8px; border-radius:4px; white-space:nowrap;" onclick="toggleMidiThru()" title="Repasse Thru do teclado">🔁 Thru (OFF)</button>
+            <button class="synth-btn" style="padding:0 8px; font-size:10.5px; height:26px; background:rgba(0, 229, 255, 0.12); border-color:#00E5FF; color:#00E5FF; font-weight:bold; white-space:nowrap;" onclick="exportFullBackup()" title="Exportar Backup">💾 Backup</button>
+            <button class="synth-btn" style="padding:0 8px; font-size:10.5px; height:26px; background:rgba(255, 215, 0, 0.12); border-color:#FFD700; color:#FFD700; font-weight:bold; white-space:nowrap;" onclick="document.getElementById('fileRestoreInput').click()" title="Restaurar Backup">📂 Restaurar</button>
             <input type="file" id="fileRestoreInput" accept=".json" style="display:none;" onchange="importFullBackup(event)">
         </div>
     </div>
@@ -1340,26 +1340,7 @@
                     </div>
                 </div>
 
-                <!-- Banda 2: High Band -->
-                <div style="background:#141422; padding:4px 8px; border-radius:5px; border:1px solid #202030;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2px;">
-                        <span style="color:#FF4081; font-weight:bold; font-size:10.5px;">High Band:</span>
-                        <div style="display:flex; align-items:center; gap:4px;">
-                            <span style="color:#8E8E9E; font-size:9.5px;">Freq:</span>
-                            <select id="selCombHighFreq" class="synth-select" style="font-size:9.5px; padding:1px 3px; height:18px;" onchange="onCombEqSelectChange('efx_prm3', this.value)">
-                                <option value="0" selected>4000 Hz</option>
-                                <option value="1">8000 Hz</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="synth-param-row" style="margin:0;">
-                        <span class="synth-param-label" style="min-width:32px; font-size:10px;">Gain:</span>
-                        <input type="range" id="sldCombHighGain" min="0" max="30" value="15" class="synth-param-slider" style="flex:1; height:16px; accent-color:#FF4081; margin:0;" oninput="onEqGainChange('efx_prm4', this.value, 'valHighGain')">
-                        <span class="synth-param-val" id="valCombHighGain" style="min-width:38px; font-size:10px; color:#FF4081;">0 dB</span>
-                    </div>
-                </div>
-
-                <!-- Banda 3: Peaking 1 (Médio 1) -->
+                <!-- Banda 2: Peaking 1 (Médio 1) -->
                 <div style="background:#141422; padding:4px 8px; border-radius:5px; border:1px solid #202030;">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2px;">
                         <span style="color:#FFD700; font-weight:bold; font-size:10.5px;">Peaking 1 (Médio 1):</span>
@@ -1383,7 +1364,7 @@
                     </div>
                 </div>
 
-                <!-- Banda 4: Peaking 2 (Médio 2) -->
+                <!-- Banda 3: Peaking 2 (Médio 2) -->
                 <div style="background:#141422; padding:4px 8px; border-radius:5px; border:1px solid #202030;">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2px;">
                         <span style="color:#76FF03; font-weight:bold; font-size:10.5px;">Peaking 2 (Médio 2):</span>
@@ -1404,6 +1385,25 @@
                         <span class="synth-param-label" style="min-width:32px; font-size:10px;">Gain:</span>
                         <input type="range" id="sldCombP2Gain" min="0" max="30" value="15" class="synth-param-slider" style="flex:1; height:16px; accent-color:#76FF03; margin:0;" oninput="onEqGainChange('efx_prm10', this.value, 'valP2Gain')">
                         <span class="synth-param-val" id="valCombP2Gain" style="min-width:38px; font-size:10px; color:#76FF03;">0 dB</span>
+                    </div>
+                </div>
+
+                <!-- Banda 4: High Band -->
+                <div style="background:#141422; padding:4px 8px; border-radius:5px; border:1px solid #202030;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2px;">
+                        <span style="color:#FF4081; font-weight:bold; font-size:10.5px;">High Band:</span>
+                        <div style="display:flex; align-items:center; gap:4px;">
+                            <span style="color:#8E8E9E; font-size:9.5px;">Freq:</span>
+                            <select id="selCombHighFreq" class="synth-select" style="font-size:9.5px; padding:1px 3px; height:18px;" onchange="onCombEqSelectChange('efx_prm3', this.value)">
+                                <option value="0" selected>4000 Hz</option>
+                                <option value="1">8000 Hz</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="synth-param-row" style="margin:0;">
+                        <span class="synth-param-label" style="min-width:32px; font-size:10px;">Gain:</span>
+                        <input type="range" id="sldCombHighGain" min="0" max="30" value="15" class="synth-param-slider" style="flex:1; height:16px; accent-color:#FF4081; margin:0;" oninput="onEqGainChange('efx_prm4', this.value, 'valHighGain')">
+                        <span class="synth-param-val" id="valCombHighGain" style="min-width:38px; font-size:10px; color:#FF4081;">0 dB</span>
                     </div>
                 </div>
             </div>
@@ -1907,25 +1907,6 @@
                                 </div>
                             </div>
 
-                            <!-- High Freq & High Gain Slider -->
-                            <div style="background:#141422; padding:5px 8px; border-radius:4px; border:1px solid #202030;">
-                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-                                    <span style="color:#FF4081; font-weight:bold; font-size:11px;">High Band:</span>
-                                    <div style="display:flex; align-items:center; gap:6px;">
-                                        <span style="color:#8E8E9E; font-size:10px;">Freq:</span>
-                                        <select class="synth-select" style="font-size:10px; padding:1px 4px;" onchange="onCommonParamChange('efx_prm3', this.value)">
-                                            <option value="0" selected>4000 Hz</option>
-                                            <option value="1">8000 Hz</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="synth-param-row">
-                                    <span class="synth-param-label" style="min-width:60px; font-size:11px;">High Gain:</span>
-                                    <input type="range" min="0" max="30" value="15" class="synth-param-slider" oninput="onEqGainChange('efx_prm4', this.value, 'valHighGain')">
-                                    <span class="synth-param-val" id="valHighGain" style="min-width:50px;">0 dB</span>
-                                </div>
-                            </div>
-
                             <!-- Peaking 1 (Médios 1) -->
                             <div style="background:#141422; padding:5px 8px; border-radius:4px; border:1px solid #202030;">
                                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
@@ -1971,6 +1952,25 @@
                                     <span class="synth-param-label" style="min-width:60px; font-size:11px;">P2 Gain:</span>
                                     <input type="range" min="0" max="30" value="15" class="synth-param-slider" oninput="onEqGainChange('efx_prm10', this.value, 'valP2Gain')">
                                     <span class="synth-param-val" id="valP2Gain" style="min-width:50px;">0 dB</span>
+                                </div>
+                            </div>
+
+                            <!-- High Freq & High Gain Slider -->
+                            <div style="background:#141422; padding:5px 8px; border-radius:4px; border:1px solid #202030;">
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                                    <span style="color:#FF4081; font-weight:bold; font-size:11px;">High Band:</span>
+                                    <div style="display:flex; align-items:center; gap:6px;">
+                                        <span style="color:#8E8E9E; font-size:10px;">Freq:</span>
+                                        <select class="synth-select" style="font-size:10px; padding:1px 4px;" onchange="onCommonParamChange('efx_prm3', this.value)">
+                                            <option value="0" selected>4000 Hz</option>
+                                            <option value="1">8000 Hz</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="synth-param-row">
+                                    <span class="synth-param-label" style="min-width:60px; font-size:11px;">High Gain:</span>
+                                    <input type="range" min="0" max="30" value="15" class="synth-param-slider" oninput="onEqGainChange('efx_prm4', this.value, 'valHighGain')">
+                                    <span class="synth-param-val" id="valHighGain" style="min-width:50px;">0 dB</span>
                                 </div>
                             </div>
 
@@ -4191,7 +4191,7 @@
         function applyPreset(type) {
             if (type === "dual") {
                 parts[0].active = true; parts[0].patch = "[004] Nice Piano"; parts[0].bank_msb = 81; parts[0].bank_lsb = 0; parts[0].prog_num = 4; parts[0].level = 115; parts[0].lower = 0; parts[0].upper = 127;
-                parts[1].active = true; parts[1].patch = "[013] Str Adagio"; parts[1].bank_msb = 81; parts[1].bank_lsb = 0; parts[1].prog_num = 13; parts[1].level = 80; parts[1].lower = 0; parts[1].upper = 127;
+                parts[1].active = true; parts[1].patch = "[005] ViennaStrgs3"; parts[1].bank_msb = 80; parts[1].bank_lsb = 0; parts[1].prog_num = 5; parts[1].level = 88; parts[1].lower = 0; parts[1].upper = 127;
                 parts[2].active = false;
                 parts[3].active = false;
             } else if (type === "split") {
