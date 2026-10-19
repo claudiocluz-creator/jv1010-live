@@ -857,31 +857,37 @@
             transform: scale(0.95);
         }
 
-        /* ABA LIVE STAGE (MODO PALCO COM BOTÕES GIGANTES) */
+        /* ABA LIVE STAGE (MODO PALCO COMPACTO E ERGONÔMICO) */
         #tabLive {
             box-sizing: border-box;
-            padding-right: 20% !important; /* Redução de 20% na proporção direita solicitada */
+            padding: 8px !important;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
         .live-stage-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            gap: 14px;
-            padding: 12px 16px 16px 12px;
+            display: flex;
+            flex-wrap: wrap;
+            align-content: flex-start;
+            gap: 8px;
+            padding: 8px 4px;
             overflow-y: auto;
             flex: 1;
         }
         .live-card {
             background: #141422;
-            border: 2px solid #2C2C40;
-            border-radius: 14px;
-            padding: 18px 16px;
+            border: 1.5px solid #2C2C40;
+            border-radius: 8px;
+            padding: 8px 12px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            min-height: 135px;
+            min-width: 140px;
+            max-width: 240px;
+            flex: 0 1 auto;
             cursor: pointer;
             transition: all 0.12s ease-out;
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
             user-select: none;
             -webkit-tap-highlight-color: transparent;
         }
@@ -892,27 +898,30 @@
         .live-card.selected {
             border-color: #00E5FF;
             background: #15273C;
-            box-shadow: 0 0 20px rgba(0, 229, 255, 0.45);
+            box-shadow: 0 0 14px rgba(0, 229, 255, 0.45);
         }
         .live-card-num {
             font-family: monospace;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: bold;
             color: #8E8E9E;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 6px;
         }
         .live-card-title {
-            font-size: 18px;
+            font-size: 14px;
             font-weight: 800;
             color: #FFFFFF;
-            margin: 6px 0;
-            line-height: 1.25;
-            word-break: break-word;
+            margin: 3px 0 2px 0;
+            line-height: 1.2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .live-card-desc {
-            font-size: 11px;
+            font-size: 10px;
             color: #A0A0B5;
             white-space: nowrap;
             overflow: hidden;
@@ -922,15 +931,15 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 8px;
-            padding-top: 6px;
+            margin-top: 6px;
+            padding-top: 4px;
             border-top: 1px solid #1E1E2C;
         }
         .live-card-badge {
-            font-size: 9.5px;
+            font-size: 8.5px;
             font-weight: bold;
-            padding: 2px 6px;
-            border-radius: 4px;
+            padding: 1px 5px;
+            border-radius: 3px;
             text-transform: uppercase;
         }
 
@@ -992,11 +1001,6 @@
             #subTabEffects {
                 grid-template-columns: 1fr !important;
             }
-            /* Cards do Modo Live Palco em 2 colunas largas */
-            .live-stage-grid {
-                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)) !important;
-                gap: 10px !important;
-            }
         }
 
         /* MODO PAISAGEM (LANDSCAPE) - Otimizado para faders lado a lado e visão estúdio */
@@ -1019,9 +1023,6 @@
             }
             #subTabEffects {
                 grid-template-columns: 1fr 1fr 1fr !important;
-            }
-            .live-stage-grid {
-                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)) !important;
             }
         }
     </style>
