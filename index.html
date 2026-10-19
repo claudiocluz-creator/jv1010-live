@@ -127,8 +127,8 @@
         .badge.alert { border-color: #FF5252; color: #FF5252; }
 
         /* Main View Containers */
-        .tab-content { display: none; flex: 1; flex-direction: column; min-height: 0; }
-        .tab-content.active { display: flex; }
+        .tab-content { display: none !important; flex: 1; flex-direction: column; min-height: 0; }
+        .tab-content.active { display: flex !important; }
 
         /* ========================================== */
         /* ABA 1: LISTA DE TIMBRES (ESTILO DA IMAGEM) */
@@ -863,6 +863,12 @@
             padding: 8px !important;
             overflow: hidden;
             flex-direction: column;
+        }
+        #tabLive:not(.active) {
+            display: none !important;
+        }
+        #tabLive.active {
+            display: flex !important;
         }
         .live-stage-grid {
             display: flex;
