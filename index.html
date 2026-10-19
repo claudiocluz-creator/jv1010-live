@@ -2555,11 +2555,82 @@
                 const modeByte = data.mode === "performance" ? 0x00 : 0x01;
                 sendRawWebMidi(createRolandDT1([0x00, 0x00, 0x00, 0x00], [modeByte]));
             }
+            else if (cmd === "global_tone_param") {
+                const param = data.param;
+                const val = parseInt(data.value || 0) & 0x7F;
+                const ch = parseInt(data.channel || 0) & 0x0F;
+
+                // 1. Control Change nativo rápido (CC 74=Cutoff, 71=Reso, 73=Attack, 72=Release)
+                const CC_MAP = { "cutoff": 74, "reso": 71, "tva_attack": 73, "tva_release": 72 };
+                if (CC_MAP[param]) {
+                    sendRawWebMidi([0xB0 | ch, CC_MAP[param], val]);
+                }
+
+                // 2. SysEx DT1 nos 4 Tones em background (0x03, 0x00, 0x10..0x16, offset)
+                const TONE_OFFSETS = { "cutoff": 0x51, "reso": 0x53, "tva_attack": 0x6E, "tva_release": 0x71 };
+                if (TONE_OFFSETS[param]) {
+                    const off = TONE_OFFSETS[param];
+                    const modePrefix = currentTab === "combination" ? 0x02 : 0x03;
+                    for (let t = 0; t < 4; t++) {
+                        sendRawWebMidi(createRolandDT1([modePrefix, 0x00, 0x10 + (t * 2), off], [val]));
+                    }
+                }
+            }
+            else if (cmd === "tone_param") {
+                const toneIdx = parseInt(data.tone || 0) & 0x03;
+                const param = data.param;
+                const val = parseInt(data.value || 0) & 0x7F;
+                const modePrefix = currentTab === "combination" ? 0x02 : 0x03;
+                const toneSec = 0x10 + (toneIdx * 2);
+
+                const PARAM_MAP = {
+                    "level": 0x65, "cutoff": 0x51, "reso": 0x53, "pan": 0x77,
+                    "coarse": 0x3D, "fine": 0x3E, "filter_type": 0x50,
+                    "tvf_attack": 0x5B, "tvf_decay": 0x5C, "tvf_release": 0x5E,
+                    "tva_attack": 0x6E, "tva_decay": 0x6F, "tva_release": 0x71,
+                    "lfo1_rate": 0x2F, "lfo2_rate": 0x37
+                };
+                if (PARAM_MAP[param]) {
+                    sendRawWebMidi(createRolandDT1([modePrefix, 0x00, toneSec, PARAM_MAP[param]], [val]));
+                }
+            }
+            else if (cmd === "tone_switch") {
+                const toneIdx = parseInt(data.tone || 0) & 0x03;
+                const modePrefix = currentTab === "combination" ? 0x02 : 0x03;
+                const toneSec = 0x10 + (toneIdx * 2);
+                sendRawWebMidi(createRolandDT1([modePrefix, 0x00, toneSec, 0x00], [data.on ? 1 : 0]));
+            }
+            else if (cmd === "common_param") {
+                const param = data.param;
+                const val = parseInt(data.value || 0) & 0x7F;
+                const isPerf = (currentTab === "combination");
+                const modePrefix = isPerf ? 0x01 : 0x03;
+
+                const COMMON_MAP = {
+                    "rev_level": isPerf ? 0x29 : 0x28,
+                    "rev_time": isPerf ? 0x2A : 0x29,
+                    "rev_type": isPerf ? 0x28 : 0x27,
+                    "cho_level": isPerf ? 0x22 : 0x21,
+                    "cho_rate": isPerf ? 0x23 : 0x22,
+                    "cho_depth": isPerf ? 0x24 : 0x23,
+                    "efx_output_level": isPerf ? 0x1B : 0x1A,
+                    "mfx_type": isPerf ? 0x0D : 0x0C
+                };
+                if (COMMON_MAP[param]) {
+                    sendRawWebMidi(createRolandDT1([modePrefix, 0x00, 0x00, COMMON_MAP[param]], [val]));
+                }
+            }
             else if (cmd === "master_param") {
                 const val = parseInt(data.value || 0) & 0x7F;
                 if (data.param === "level") {
                     for (let ch = 0; ch < 16; ch++) sendRawWebMidi([0xB0 | ch, 7, val]);
+                } else if (data.param === "pan") {
+                    for (let ch = 0; ch < 16; ch++) sendRawWebMidi([0xB0 | ch, 10, val]);
                 }
+            }
+            else if (cmd === "route_efx") {
+                // Força chave de EFX para ligado no Roland
+                sendRawWebMidi(createRolandDT1([0x00, 0x00, 0x00, 0x08], [0x01]));
             }
         }
 
