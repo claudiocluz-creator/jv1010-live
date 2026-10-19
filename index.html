@@ -4092,23 +4092,23 @@
 
                     <div class="patch-box" onclick="openPatchPicker(${i})" title="Clique para trocar este timbre">${p.patch}</div>
 
-                    <div class="fader-row">
-                        <div class="fader-box" style="width: 100%;">
-                            <div class="fader-val" id="valPartFader${i}" style="color:${partColor}">${p.level}</div>
-                            <input type="range" id="sldPartFader${i}" min="0" max="127" value="${p.level}" orient="vertical" class="fader-input" oninput="updatePartVal(${i}, 'level', this.value)">
-                            <div style="display:flex; align-items:center; justify-content:center; gap:4px; margin-top:2px;">
-                                <div class="fader-label" style="margin:0;">Vol:</div>
-                                <button class="btn-learn" id="btnLearnPartVol${i}" onclick="toggleMidiLearn('part_vol_${i}', this)" style="padding:1px 4px; font-size:9px; margin:0;" title="Mapear Volume da Parte ${i + 1} para um Fader/Knob MIDI">🎓 Learn</button>
+                    <div class="knob-box" style="width: 100%; box-sizing: border-box;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2px;">
+                            <div style="display:flex; align-items:center; gap:4px;">
+                                <span class="knob-label" style="font-weight:bold; margin:0;">Volume</span>
+                                <button class="btn-learn" id="btnLearnPartVol${i}" onclick="toggleMidiLearn('part_vol_${i}', this)" style="padding:1px 4px; font-size:8.5px; margin:0; height:16px;" title="Mapear Volume da Parte ${i + 1} para um Fader/Knob MIDI">🎓 Learn</button>
                             </div>
+                            <span class="knob-val" id="valPartFader${i}" style="color:${partColor}; margin:0;">${p.level}</span>
                         </div>
+                        <input type="range" id="sldPartFader${i}" min="0" max="127" value="${p.level}" class="synth-param-slider" style="width:100%; height:18px; margin:0; accent-color:${partColor};" oninput="updatePartVal(${i}, 'level', this.value)">
                     </div>
 
-                    <div class="knob-box" style="width: 100%;">
+                    <div class="knob-box" style="width: 100%; box-sizing: border-box;">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2px;">
-                            <span class="knob-label">Pan</span>
-                            <span class="knob-val" style="color:${p.color}">${panText}</span>
+                            <span class="knob-label" style="font-weight:bold; margin:0;">Pan</span>
+                            <span class="knob-val" style="color:${p.color}; margin:0;">${panText}</span>
                         </div>
-                        <input type="range" min="0" max="127" value="${p.pan}" oninput="updatePartVal(${i}, 'pan', this.value)" style="width:100%; accent-color:${p.color}">
+                        <input type="range" min="0" max="127" value="${p.pan}" class="synth-param-slider" oninput="updatePartVal(${i}, 'pan', this.value)" style="width:100%; height:18px; margin:0; accent-color:${p.color};">
                     </div>
 
                     <div class="stepper-row">
