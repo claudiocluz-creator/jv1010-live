@@ -1761,30 +1761,30 @@
                             </select>
                         </div>
 
-                        <!-- Routing & Sends do EFX (como no ChangeIt) -->
-                        <div style="background:#13131F; padding:6px; border-radius:4px; border:1px solid #1F1F30; display:grid; grid-template-columns: 1fr 1fr; gap:6px; font-size:10px;">
-                            <div>
-                                <span style="color:#8E8E9E;">Output Assign:</span>
-                                <select class="synth-select" style="width:100%; font-size:10px; padding:2px;" onchange="onCommonParamChange('efx_output_assign', this.value)">
+                        <!-- Routing & Sends do EFX (um em baixo do outro) -->
+                        <div style="background:#13131F; padding:8px 10px; border-radius:6px; border:1px solid #1F1F30; display:flex; flex-direction:column; gap:6px; font-size:10px;">
+                            <div class="synth-param-row" style="margin:0;">
+                                <span class="synth-param-label" style="min-width:75px; font-size:10px; color:#8E8E9E;">Output Assign:</span>
+                                <select class="synth-select" style="flex:1; font-size:10px; padding:2px 4px; height:20px;" onchange="onCommonParamChange('efx_output_assign', this.value)">
                                     <option value="0" selected>MIX</option>
                                     <option value="1">DIR-1</option>
                                     <option value="2">DIR-2</option>
                                 </select>
                             </div>
-                            <div>
-                                <span style="color:#8E8E9E;">Output Level:</span>
-                                <input type="range" min="0" max="127" value="127" style="width:100%; height:14px; accent-color:#E74C3C;" oninput="onCommonParamChange('efx_output_level', this.value, 'valEfxOutLevel')">
-                                <span id="valEfxOutLevel" style="color:#E74C3C; font-family:monospace; float:right;">127</span>
+                            <div class="synth-param-row" style="margin:0;">
+                                <span class="synth-param-label" style="min-width:75px; font-size:10px; color:#E74C3C;">Output Level:</span>
+                                <input type="range" min="0" max="127" value="127" class="synth-param-slider" style="flex:1; height:16px; accent-color:#E74C3C; margin:0;" oninput="onCommonParamChange('efx_output_level', this.value, 'valEfxOutLevel')">
+                                <span id="valEfxOutLevel" style="color:#E74C3C; font-family:monospace; min-width:24px; text-align:right;">127</span>
                             </div>
-                            <div>
-                                <span style="color:#8E8E9E;">Chorus Send:</span>
-                                <input type="range" min="0" max="127" value="0" style="width:100%; height:14px; accent-color:#2ECC71;" oninput="onCommonParamChange('efx_chorus_send', this.value, 'valEfxChoSend')">
-                                <span id="valEfxChoSend" style="color:#2ECC71; font-family:monospace; float:right;">0</span>
+                            <div class="synth-param-row" style="margin:0;">
+                                <span class="synth-param-label" style="min-width:75px; font-size:10px; color:#2ECC71;">Chorus Send:</span>
+                                <input type="range" min="0" max="127" value="0" class="synth-param-slider" style="flex:1; height:16px; accent-color:#2ECC71; margin:0;" oninput="onCommonParamChange('efx_chorus_send', this.value, 'valEfxChoSend')">
+                                <span id="valEfxChoSend" style="color:#2ECC71; font-family:monospace; min-width:24px; text-align:right;">0</span>
                             </div>
-                            <div>
-                                <span style="color:#8E8E9E;">Reverb Send:</span>
-                                <input type="range" min="0" max="127" value="0" style="width:100%; height:14px; accent-color:#00E5FF;" oninput="onCommonParamChange('efx_reverb_send', this.value, 'valEfxRevSend')">
-                                <span id="valEfxRevSend" style="color:#00E5FF; font-family:monospace; float:right;">0</span>
+                            <div class="synth-param-row" style="margin:0;">
+                                <span class="synth-param-label" style="min-width:75px; font-size:10px; color:#00E5FF;">Reverb Send:</span>
+                                <input type="range" min="0" max="127" value="0" class="synth-param-slider" style="flex:1; height:16px; accent-color:#00E5FF; margin:0;" oninput="onCommonParamChange('efx_reverb_send', this.value, 'valEfxRevSend')">
+                                <span id="valEfxRevSend" style="color:#00E5FF; font-family:monospace; min-width:24px; text-align:right;">0</span>
                             </div>
                         </div>
 
