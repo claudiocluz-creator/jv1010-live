@@ -1165,9 +1165,24 @@
             }
             .synth-top-grid {
                 grid-template-columns: 1fr 1fr !important;
+                gap: 8px !important;
             }
             #subTabEffects {
                 grid-template-columns: 1fr 1fr !important;
+                gap: 8px !important;
+            }
+            .synth-view-wrapper {
+                gap: 6px !important;
+            }
+            .synth-card-panel {
+                padding: 6px 10px !important;
+                gap: 4px !important;
+            }
+            .synth-param-row {
+                gap: 6px !important;
+            }
+            .synth-param-slider {
+                height: 15px !important;
             }
         }
     </style>
@@ -1556,10 +1571,10 @@
             </div>
 
             <!-- Bottom Section: Fine Tone Editor & FX Tabs -->
-            <div class="synth-card-panel" style="flex:1;">
-                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
-                    <span style="font-size:13px; font-weight:bold; color:#00E5FF;">🎨 Edição Detalhada da Camada Selecionada:</span>
-                    <select id="selToneTarget" class="synth-select" onchange="onSelectActiveTone(this.value)">
+            <div class="synth-card-panel" style="flex:1; padding: 6px 12px; gap: 4px;">
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:2px;">
+                    <span style="font-size:12.5px; font-weight:bold; color:#00E5FF; white-space:nowrap;">🎨 Edição Detalhada:</span>
+                    <select id="selToneTarget" class="synth-select" style="font-size:11px; font-weight:bold; padding:2px 8px; height:24px; min-width:85px; border-color:#00E5FF; color:#00E5FF; background:#0B0E14;" onchange="onSelectActiveTone(this.value)">
                         <option value="0">Tone 1</option>
                         <option value="1">Tone 2</option>
                         <option value="2">Tone 3</option>
@@ -1568,7 +1583,7 @@
                 </div>
 
                 <!-- Sub-abas -->
-                <div class="synth-tabs-bar">
+                <div class="synth-tabs-bar" style="margin-bottom:4px; padding-bottom:2px;">
                     <button class="synth-subtab-btn active" id="btnSubTabEffects" onclick="switchSynthSubTab('effects')">1. Efeitos (Reverb/Chorus/MFX)</button>
                     <button class="synth-subtab-btn" id="btnSubTabPitch" onclick="switchSynthSubTab('pitch')">2. Pitch & LFOs</button>
                     <button class="synth-subtab-btn" id="btnSubTabEnv" onclick="switchSynthSubTab('env')">3. Envelopes (TVF/TVA/Pitch)</button>
@@ -1922,14 +1937,14 @@
                         </div>
 
                         <!-- Mini Pré-Visualização da Curva de EQ em Tempo Real -->
-                        <div id="synthMiniEqCard" style="background:#090910; border:1px solid #1F1F30; border-radius:6px; padding:4px 6px; cursor:pointer; display:flex; flex-direction:column; gap:2px;" onclick="openEqModal()" title="Toque para abrir Equalizador Gráfico 4-Bandas completo">
+                        <div id="synthMiniEqCard" style="background:#090910; border:1px solid #1F1F30; border-radius:5px; padding:3px 6px; cursor:pointer; display:flex; flex-direction:column; gap:2px;" onclick="openEqModal()" title="Toque para abrir Equalizador Gráfico 4-Bandas completo">
                             <div style="display:flex; justify-content:space-between; align-items:center;">
                                 <span style="font-size:9.5px; font-weight:bold; color:#FFD700; display:flex; align-items:center; gap:3px;">
                                     📊 Curva Estéreo EQ (4 Bandas)
                                 </span>
                                 <span style="font-size:9px; color:#00E5FF;">Toque p/ editar ↗</span>
                             </div>
-                            <canvas id="canvasMiniEqCurve" width="280" height="48" style="width:100%; height:48px; border-radius:4px; display:block;"></canvas>
+                            <canvas id="canvasMiniEqCurve" width="280" height="38" style="width:100%; height:38px; border-radius:4px; display:block;"></canvas>
                         </div>
 
                         <!-- Fallback para outros tipos de EFX -->
