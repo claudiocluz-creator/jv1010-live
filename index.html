@@ -563,10 +563,14 @@
         .fader-val { font-family: monospace; font-weight: bold; font-size: 12px; margin-bottom: 2px; }
         .fader-input { 
             -webkit-appearance: slider-vertical; 
-            width: 22px; 
+            appearance: slider-vertical;
+            writing-mode: bt-lr;
+            -webkit-writing-mode: vertical-lr;
+            width: 28px; 
             flex: 1; 
             cursor: pointer; 
             min-height: 60px;
+            touch-action: pan-x !important;
         }
         .fader-label { font-size: 9.5px; color: #8E8E9E; text-transform: uppercase; margin-top: 2px; }
 
@@ -631,12 +635,15 @@
         .part-fader-input-full {
             -webkit-appearance: slider-vertical;
             appearance: slider-vertical;
-            width: 26px;
+            writing-mode: bt-lr; /* IE/Legacy */
+            -webkit-writing-mode: vertical-lr; /* Safari */
+            width: 32px;
             flex: 1;
             min-height: 140px;
             cursor: pointer;
             outline: none;
             margin: 4px 0;
+            touch-action: pan-x !important;
         }
 
         .part-right-controls-panel {
@@ -1165,14 +1172,24 @@
         }
 
         /* ======================================================== */
-        /* RESPONSIVIDADE ERGONÔMICA: RETRATO vs PAISAGEM NO IPAD   */
+        /* RESPONSIVIDADE ERGONÔMICA: TOUCH ACTIONS PARA SLIDERS    */
         /* ======================================================== */
-        /* Touch Targets Aumentados para Dedos em Sliders e Controles */
-        input[type="range"].synth-param-slider,
+        /* Sliders Horizontais: Permite rolagem vertical da página enquanto desliza horizontalmente */
         input[type="range"] {
-            height: 24px !important;
-            touch-action: manipulation;
+            touch-action: pan-y;
+            cursor: pointer;
+            -webkit-user-select: none;
+            user-select: none;
         }
+
+        /* Sliders Verticais: Devem ter touch-action pan-x ou none para o dedo não rolar a página verticalmente ao arrastar o fader */
+        input[type="range"][orient="vertical"],
+        input[type="range"].part-fader-input-full,
+        input[type="range"].fader-input {
+            touch-action: pan-x !important;
+            height: auto !important;
+        }
+
         select.synth-select,
         select.select-filter {
             min-height: 28px !important;
