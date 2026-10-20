@@ -203,6 +203,46 @@
         }
         .badge.alert { border-color: #FF5252; color: #FF5252; }
 
+        /* LED Virtual de Atividade MIDI */
+        .midi-led {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: #252830;
+            border: 1px solid #3F4450;
+            display: inline-block;
+            transition: background 0.05s, box-shadow 0.05s;
+        }
+        .midi-led.active {
+            background: #00E5FF;
+            box-shadow: 0 0 8px #00E5FF, 0 0 14px rgba(0,229,255,0.8);
+            border-color: #FFF;
+        }
+
+        /* Botões de Navegação Gigantes para Setlist Live */
+        .setlist-nav-btn {
+            background: #181C26;
+            border: 1.5px solid #2ECC71;
+            color: #2ECC71;
+            font-size: 13px;
+            font-weight: bold;
+            padding: 4px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.15s;
+        }
+        .setlist-nav-btn:hover {
+            background: #2ECC71;
+            color: #000;
+            box-shadow: 0 0 10px rgba(46,204,113,0.5);
+        }
+        .setlist-nav-btn:active {
+            transform: scale(0.96);
+        }
+
         /* Main View Containers */
         .tab-content { display: none !important; flex: 1; flex-direction: column; min-height: 0; }
         .tab-content.active { display: flex !important; }
@@ -1186,7 +1226,10 @@
             </select>
             <button onclick="forceScanMidiDevices()" style="background:#1C1C28; border:1px solid #00E5FF; color:#00E5FF; font-size:11px; font-weight:bold; height:26px; padding:0 6px; border-radius:4px; cursor:pointer; white-space:nowrap;" title="Reescanear portas do sistema">🔄 Buscar</button>
             <button onclick="connectWebBluetoothMidi()" style="background:linear-gradient(135deg, #1E3A8A, #2563EB); border:1px solid #60A5FA; color:#FFF; font-size:11px; font-weight:bold; height:26px; padding:0 8px; border-radius:4px; cursor:pointer; box-shadow:0 0 6px rgba(37,99,235,0.4); white-space:nowrap;" title="Conectar diretamente via Bluetooth BLE">📡 BLE</button>
-            <div id="connBadge" class="badge" style="border-color:#F39C12; color:#F39C12; font-size:11px; padding:2px 8px; height:24px; display:inline-flex; align-items:center; white-space:nowrap;">Aguardando...</div>
+            <div id="connBadge" class="badge" style="border-color:#F39C12; color:#F39C12; font-size:11px; padding:2px 8px; height:24px; display:inline-flex; align-items:center; gap:6px; white-space:nowrap;">
+                <span id="midiActivityLed" class="midi-led" title="Indicador de Atividade MIDI em tempo real"></span>
+                <span id="connBadgeText">Aguardando...</span>
+            </div>
         </div>
         <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
             <button onclick="testMidiSound()" style="background:#27AE60; border:none; color:white; font-size:11px; font-weight:bold; padding:0 10px; height:26px; border-radius:4px; cursor:pointer; box-shadow:0 0 6px rgba(39,174,96,0.5); white-space:nowrap;" title="Toca Dó4 no JV-1010">🔔 Testar (Dó 4)</button>
@@ -1878,6 +1921,17 @@
                             </div>
                         </div>
 
+                        <!-- Mini Pré-Visualização da Curva de EQ em Tempo Real -->
+                        <div id="synthMiniEqCard" style="background:#090910; border:1px solid #1F1F30; border-radius:6px; padding:4px 6px; cursor:pointer; display:flex; flex-direction:column; gap:2px;" onclick="openEqModal()" title="Toque para abrir Equalizador Gráfico 4-Bandas completo">
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <span style="font-size:9.5px; font-weight:bold; color:#FFD700; display:flex; align-items:center; gap:3px;">
+                                    📊 Curva Estéreo EQ (4 Bandas)
+                                </span>
+                                <span style="font-size:9px; color:#00E5FF;">Toque p/ editar ↗</span>
+                            </div>
+                            <canvas id="canvasMiniEqCurve" width="280" height="48" style="width:100%; height:48px; border-radius:4px; display:block;"></canvas>
+                        </div>
+
                         <!-- Fallback para outros tipos de EFX -->
                         <div id="panelGenericEfx" style="display:none; background:#10101A; padding:6px; border-radius:4px; border:1px solid #252538;">
                             <span style="color:#8E8E9E; font-size:11px;">Efeito genérico ativo. Use controles de Mix / Send acima.</span>
@@ -1897,12 +1951,19 @@
     <!-- ABA 5: MODO PALCO LIVE (BOTÕES GIGANTES)  -->
     <!-- ========================================== -->
     <div class="tab-content" id="tabLive" style="background:#09090E; padding:8px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; padding:4px 10px; border-bottom:1px solid #1E1E2C; margin-bottom:8px;">
-            <div style="display:flex; align-items:center; gap:8px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; padding:6px 10px; border-bottom:1px solid #1E1E2C; margin-bottom:8px; background:#12121B; border-radius:6px;">
+            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
                 <span style="font-size:14px; font-weight:bold; color:#2ECC71;">🎤 MODO PALCO LIVE</span>
-                <span style="font-size:11px; color:#8E8E9E;">Toque direto no card para disparar o timbre/combinação instantaneamente</span>
+                <!-- Controles de Setlist / Sequência de Músicas -->
+                <div style="display:inline-flex; align-items:center; gap:4px; background:#0B0B12; border:1px solid #2ECC71; border-radius:6px; padding:2px 6px;">
+                    <button class="setlist-nav-btn" onclick="triggerPrevLiveSong()" title="Voltar para a música anterior do repertório">◀ ANTERIOR</button>
+                    <span id="setlistCurrentIndicator" style="font-family:monospace; font-weight:bold; font-size:11px; color:#FFF; padding:0 6px; min-width:85px; text-align:center;">MÚSICA --</span>
+                    <button class="setlist-nav-btn" onclick="triggerNextLiveSong()" title="Avançar para a próxima música do repertório">PRÓXIMA ▶</button>
+                </div>
             </div>
             <div style="display:flex; gap:6px; align-items:center;">
+                <!-- Chave de Transição Suave (Patch Remain) -->
+                <button id="btnPatchRemain" class="btn-preset-eq" style="background:#1B2E23; border-color:#2ECC71; color:#2ECC71; font-weight:bold; font-size:10.5px;" onclick="togglePatchRemain()" title="Ativa troca suave preservando cauda do reverb">🍃 Suave (ON)</button>
                 <button class="btn-preset-eq" onclick="filterLiveStage('all')">Todos</button>
                 <button class="btn-preset-eq" onclick="filterLiveStage('perf')">🎹 Combinações</button>
                 <button class="btn-preset-eq" onclick="filterLiveStage('patch')">⭐ Patches</button>
@@ -2039,6 +2100,31 @@
         let midiAccess = null;
         let selectedMidiOutput = null;
         let isWebMidiActive = false;
+        let midiLedTimer = null;
+
+        function blinkMidiLed() {
+            const led = document.getElementById("midiActivityLed");
+            if (!led) return;
+            led.classList.add("active");
+            if (midiLedTimer) clearTimeout(midiLedTimer);
+            midiLedTimer = setTimeout(() => {
+                led.classList.remove("active");
+            }, 90);
+        }
+
+        function updateConnBadge(text, color, borderColor) {
+            const badge = document.getElementById("connBadge");
+            const txtEl = document.getElementById("connBadgeText");
+            if (txtEl) {
+                txtEl.innerText = text;
+            } else if (badge) {
+                badge.innerText = text;
+            }
+            if (badge) {
+                if (color) badge.style.color = color;
+                if (borderColor) badge.style.borderColor = borderColor;
+            }
+        }
 
         function calcRolandChecksum(addrBytes, dataBytes) {
             let total = 0;
@@ -2187,6 +2273,7 @@
                     // Conecta ouvintes em todas as entradas MIDI (MK37, teclados USB) para repasse Thru direto se em modo autônomo
                     for (let input of midiAccess.inputs.values()) {
                         input.onmidimessage = (msg) => {
+                            blinkMidiLed();
                             const d = msg.data;
                             if (d && d.length >= 3) {
                                 const status = d[0] & 0xF0;
@@ -2331,6 +2418,7 @@
                                 midiBytes.push(raw[i]);
                             }
 
+                            blinkMidiLed();
                             // Roteia mensagens de Control Change (CC) para o sistema de MIDI Learn
                             for (let i = 0; i < midiBytes.length - 2; i++) {
                                 if ((midiBytes[i] & 0xF0) === 0xB0) {
@@ -2423,6 +2511,7 @@
 
         // Envia mensagem bruta para o dispositivo MIDI nativo (WebMIDI ou BLE Direto)
         function sendRawWebMidi(bytes) {
+            blinkMidiLed();
             if (selectedMidiOutput) {
                 try {
                     selectedMidiOutput.send(bytes);
@@ -3041,10 +3130,12 @@
                 return;
             }
 
+            currentLiveStageItems = items;
             items.forEach((item, idx) => {
                 const card = document.createElement("div");
                 card.className = "live-card";
-                card.onclick = () => triggerLiveCard(item, card);
+                card.setAttribute("data-live-idx", idx);
+                card.onclick = () => triggerLiveCard(item, card, idx);
 
                 card.innerHTML = `
                     <div>
@@ -3068,6 +3159,69 @@
                 `;
                 container.appendChild(card);
             });
+            updateSetlistIndicator();
+        }
+
+        let currentLiveStageItems = [];
+        let currentLiveSongIndex = -1;
+        let isPatchRemainSmooth = true; // Por padrão suave (ON)
+
+        function togglePatchRemain() {
+            isPatchRemainSmooth = !isPatchRemainSmooth;
+            const btn = document.getElementById("btnPatchRemain");
+            if (btn) {
+                if (isPatchRemainSmooth) {
+                    btn.innerText = "🍃 Suave (ON)";
+                    btn.style.background = "#1B2E23";
+                    btn.style.borderColor = "#2ECC71";
+                    btn.style.color = "#2ECC71";
+                } else {
+                    btn.innerText = "⚡ Corte (OFF)";
+                    btn.style.background = "#2D1B20";
+                    btn.style.borderColor = "#E74C3C";
+                    btn.style.color = "#E74C3C";
+                }
+            }
+        }
+
+        function updateSetlistIndicator() {
+            const ind = document.getElementById("setlistCurrentIndicator");
+            if (!ind) return;
+            if (currentLiveSongIndex >= 0 && currentLiveSongIndex < currentLiveStageItems.length) {
+                ind.innerText = `#${currentLiveSongIndex + 1} de ${currentLiveStageItems.length}`;
+            } else {
+                ind.innerText = `MÚSICA --`;
+            }
+        }
+
+        function triggerPrevLiveSong() {
+            if (currentLiveStageItems.length === 0) return;
+            if (currentLiveSongIndex <= 0) {
+                currentLiveSongIndex = currentLiveStageItems.length - 1;
+            } else {
+                currentLiveSongIndex--;
+            }
+            triggerLiveCardByIndex(currentLiveSongIndex);
+        }
+
+        function triggerNextLiveSong() {
+            if (currentLiveStageItems.length === 0) return;
+            if (currentLiveSongIndex < 0 || currentLiveSongIndex >= currentLiveStageItems.length - 1) {
+                currentLiveSongIndex = 0;
+            } else {
+                currentLiveSongIndex++;
+            }
+            triggerLiveCardByIndex(currentLiveSongIndex);
+        }
+
+        function triggerLiveCardByIndex(idx) {
+            if (idx < 0 || idx >= currentLiveStageItems.length) return;
+            const item = currentLiveStageItems[idx];
+            const cardEl = document.querySelector(`.live-card[data-live-idx='${idx}']`);
+            triggerLiveCard(item, cardEl, idx);
+            if (cardEl) {
+                cardEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
         }
 
         function playCustomPatchObject(cp) {
@@ -3076,9 +3230,19 @@
             playSelectedSolo(false);
         }
 
-        function triggerLiveCard(item, cardEl) {
+        function triggerLiveCard(item, cardEl, idx = -1) {
+            if (idx !== -1) {
+                currentLiveSongIndex = idx;
+                updateSetlistIndicator();
+            }
             document.querySelectorAll(".live-card").forEach(c => c.classList.remove("selected"));
             if (cardEl) cardEl.classList.add("selected");
+
+            // Se Patch Remain estiver desativado, corta notas antes de trocar
+            if (!isPatchRemainSmooth) {
+                sendRawWebMidi([0xB0, 120, 0]); // All Sound Off Ch 1
+                sendRawWebMidi([0xB0, 123, 0]); // All Notes Off Ch 1
+            }
 
             if (item.type === "comb") {
                 selectedComb = item.data;
@@ -5236,6 +5400,61 @@
                 const dbStr = (pt.db > 0 ? `+${pt.db}` : `${pt.db}`) + "dB";
                 const textY = pt.y > 25 ? (pt.y - 12) : (pt.y + 20);
                 ctx.fillText(`${pt.name}: ${dbStr}`, pt.x, textY);
+            });
+
+            // Mini Curva na Caixa de Síntese
+            drawMiniEqPreview(pts);
+        }
+
+        function drawMiniEqPreview(pts) {
+            const mCanvas = document.getElementById("canvasMiniEqCurve");
+            if (!mCanvas) return;
+            const mCtx = mCanvas.getContext("2d");
+            const mw = mCanvas.width;
+            const mh = mCanvas.height;
+
+            mCtx.clearRect(0, 0, mw, mh);
+            mCtx.fillStyle = "#090910";
+            mCtx.fillRect(0, 0, mw, mh);
+
+            // Linha zero
+            const zeroY = mh / 2;
+            mCtx.strokeStyle = "rgba(255, 255, 255, 0.1)";
+            mCtx.lineWidth = 1;
+            mCtx.beginPath();
+            mCtx.moveTo(0, zeroY);
+            mCtx.lineTo(mw, zeroY);
+            mCtx.stroke();
+
+            const minF = 20, maxF = 20000;
+            const logMin = Math.log10(minF), logMax = Math.log10(maxF);
+
+            mCtx.beginPath();
+            mCtx.lineWidth = 2;
+            mCtx.strokeStyle = "#FFD700";
+
+            for (let px = 0; px <= mw; px += 2) {
+                const f = Math.pow(10, logMin + (px / mw) * (logMax - logMin));
+                let totalDb = 0;
+                totalDb += pts[0].db / (1 + Math.pow(f / pts[0].freq, 2));
+                totalDb += pts[1].db / (1 + Math.pow(1.0 * (f / pts[1].freq - pts[1].freq / f), 2));
+                totalDb += pts[2].db / (1 + Math.pow(1.0 * (f / pts[2].freq - pts[2].freq / f), 2));
+                totalDb += pts[3].db * (Math.pow(f / pts[3].freq, 2) / (1 + Math.pow(f / pts[3].freq, 2)));
+
+                const py = zeroY - (totalDb / 15) * (mh * 0.40);
+                if (px === 0) mCtx.moveTo(px, py);
+                else mCtx.lineTo(px, py);
+            }
+            mCtx.stroke();
+
+            // Nós miniaturizados
+            pts.forEach(pt => {
+                const nx = ((Math.log10(pt.freq) - logMin) / (logMax - logMin)) * mw;
+                const ny = zeroY - (pt.db / 15) * (mh * 0.40);
+                mCtx.beginPath();
+                mCtx.arc(nx, ny, 3.5, 0, Math.PI * 2);
+                mCtx.fillStyle = pt.color;
+                mCtx.fill();
             });
         }
 
