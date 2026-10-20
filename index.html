@@ -686,7 +686,72 @@
             align-items: center;
             justify-content: center;
         }
-        .stepper-val { font-family: monospace; font-size: 10px; font-weight: bold; min-width: 44px; text-align: center; }
+        .stepper-val { 
+            font-family: monospace; 
+            font-size: 10.5px; 
+            font-weight: bold; 
+            min-width: 44px; 
+            text-align: center; 
+            cursor: pointer;
+            padding: 2px 4px;
+            border-radius: 4px;
+            transition: all 0.15s;
+        }
+        .stepper-val:hover {
+            background: rgba(255, 255, 255, 0.1);
+            text-shadow: 0 0 6px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Menu Rolável de Opções para Oitava/Tom */
+        .coarse-dropdown {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #14141E;
+            border: 1px solid #3A3A52;
+            border-radius: 8px;
+            padding: 6px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.85), 0 0 12px rgba(0,229,255,0.25);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            width: 145px;
+        }
+        .coarse-dropdown.active {
+            display: flex;
+        }
+        .coarse-presets-list {
+            max-height: 180px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            padding-right: 2px;
+        }
+        .coarse-preset-item {
+            padding: 5px 8px;
+            font-size: 11px;
+            font-family: monospace;
+            color: #C0C0D0;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.15s;
+        }
+        .coarse-preset-item:hover {
+            background: rgba(0, 229, 255, 0.2);
+            color: #00E5FF;
+            font-weight: bold;
+        }
+        .coarse-preset-item.selected {
+            background: rgba(0, 229, 255, 0.3);
+            color: #00E5FF;
+            font-weight: bold;
+        }
         .range-row {
             width: 100%;
             box-sizing: border-box;
@@ -4324,7 +4389,7 @@
                                 <div class="card-subtitle" style="font-size:9.5px;">MIDI Ch: 1 (Layer)</div>
                             </div>
 
-                            <button class="btn-toggle ${p.active ? 'active' : ''}" style="height:32px; font-size:11px;" onclick="togglePart(${i})">
+                            <button class="btn-toggle ${p.active ? 'active' : ''}" style="height:48px; min-height:48px; font-size:12px; font-weight:900; letter-spacing:0.5px;" onclick="togglePart(${i})">
                                 ${p.active ? 'LIGADO (ON)' : 'MUTADO (OFF)'}
                             </button>
 
@@ -4339,13 +4404,21 @@
                                 <input type="range" id="sldPartPan${i}" min="0" max="127" value="${p.pan}" class="synth-param-slider" oninput="updatePartVal(${i}, 'pan', this.value)" style="width:100%; height:16px; margin:0; accent-color:${p.color};">
                             </div>
 
-                            <!-- Oitava / Coarse -->
-                            <div class="stepper-row" style="padding:4px 6px; background:#14141E;">
+                            <!-- Oitava / Coarse com Dropdown Rolável de Opções -->
+                            <div class="stepper-row" style="padding:4px 6px; background:#14141E; position:relative;">
                                 <span class="stepper-label" style="font-size:10px;">Oit/Tom:</span>
                                 <div class="stepper-ctrls">
                                     <button class="stepper-btn" style="width:22px; height:22px; font-size:12px;" onclick="stepCoarse(${i}, -1)">−</button>
-                                    <span class="stepper-val" style="color:${p.color}; font-size:10.5px; min-width:34px;">${p.coarse >= 0 ? '+' : ''}${p.coarse}</span>
+                                    <span class="stepper-val" id="valPartCoarse${i}" style="color:${p.color}; font-size:11px; min-width:38px;" onclick="toggleCoarsePicker(event, ${i})" title="Clique para abrir menu rolável de opções de oitava e afinação">${p.coarse >= 0 ? '+' : ''}${p.coarse}</span>
                                     <button class="stepper-btn" style="width:22px; height:22px; font-size:12px;" onclick="stepCoarse(${i}, 1)">+</button>
+                                </div>
+                                <!-- Dropdown Rolável de Opções -->
+                                <div class="coarse-dropdown" id="coarseDropdownPart${i}" onclick="event.stopPropagation()">
+                                    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #282838; padding-bottom:3px; margin-bottom:3px;">
+                                        <span style="font-size:9.5px; font-weight:bold; color:#8E8E9E;">OITAVA / TOM</span>
+                                        <button onclick="closeCoarsePicker(${i})" style="background:none; border:none; color:#8E8E9E; cursor:pointer; font-size:11px; padding:0 3px;">✕</button>
+                                    </div>
+                                    <div class="coarse-presets-list" id="coarseListPart${i}"></div>
                                 </div>
                             </div>
 
@@ -4436,9 +4509,79 @@
         function stepCoarse(i, delta) {
             const next = Math.max(-24, Math.min(24, parts[i].coarse + delta));
             parts[i].coarse = next;
+            const el = document.getElementById(`valPartCoarse${i}`);
+            if (el) el.innerText = (next >= 0 ? '+' : '') + next;
             sendMidiCommand({ type: "part_param", part: i, param: "coarse", value: next });
-            renderParts();
         }
+
+        function toggleCoarsePicker(event, partIdx) {
+            if (event) event.stopPropagation();
+            // Fecha outros pickers abertos
+            for (let p = 0; p < 4; p++) {
+                if (p !== partIdx) closeCoarsePicker(p);
+            }
+            const dropdown = document.getElementById(`coarseDropdownPart${partIdx}`);
+            if (!dropdown) return;
+            const isOpen = dropdown.classList.contains("active");
+            if (isOpen) {
+                dropdown.classList.remove("active");
+            } else {
+                dropdown.classList.add("active");
+                renderCoarsePresetsList(partIdx);
+            }
+        }
+
+        function closeCoarsePicker(partIdx) {
+            const dropdown = document.getElementById(`coarseDropdownPart${partIdx}`);
+            if (dropdown) dropdown.classList.remove("active");
+        }
+
+        function renderCoarsePresetsList(partIdx) {
+            const listEl = document.getElementById(`coarseListPart${partIdx}`);
+            if (!listEl) return;
+            const curVal = parts[partIdx].coarse;
+            let html = "";
+            for (let c = -24; c <= 24; c++) {
+                const isSel = (c === curVal);
+                let label = (c >= 0 ? '+' : '') + c;
+                if (c === 0) label += " (Normal)";
+                else if (c === 12) label += " (+1 Oitava)";
+                else if (c === -12) label += " (-1 Oitava)";
+                else if (c === 24) label += " (+2 Oitavas)";
+                else if (c === -24) label += " (-2 Oitavas)";
+                else if (c === 7) label += " (+5ª Justa)";
+                else if (c === -5) label += " (-4ª Justa)";
+
+                html += `
+                    <div class="coarse-preset-item ${isSel ? 'selected' : ''}" onclick="selectCoarseOption(${partIdx}, ${c})">
+                        <span>${label}</span>
+                        ${isSel ? '<span style="font-size:10px; color:#00E5FF;">✓</span>' : ''}
+                    </div>
+                `;
+            }
+            listEl.innerHTML = html;
+
+            // Rola até o item selecionado
+            setTimeout(() => {
+                const selItem = listEl.querySelector(".coarse-preset-item.selected");
+                if (selItem) selItem.scrollIntoView({ block: "center", behavior: "smooth" });
+            }, 30);
+        }
+
+        function selectCoarseOption(partIdx, val) {
+            parts[partIdx].coarse = val;
+            const el = document.getElementById(`valPartCoarse${partIdx}`);
+            if (el) el.innerText = (val >= 0 ? '+' : '') + val;
+            sendMidiCommand({ type: "part_param", part: partIdx, param: "coarse", value: val });
+            closeCoarsePicker(partIdx);
+        }
+
+        // Fecha todos os coarse dropdowns ao clicar fora
+        document.addEventListener("click", () => {
+            for (let p = 0; p < 4; p++) {
+                closeCoarsePicker(p);
+            }
+        });
 
         function updateZoneMap() {
             const container = document.getElementById("zoneMapBars");
