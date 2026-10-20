@@ -1572,14 +1572,14 @@
 
             <!-- Bottom Section: Fine Tone Editor & FX Tabs -->
             <div class="synth-card-panel" style="flex:1; padding: 6px 12px; gap: 4px;">
-                <div style="display:flex; align-items:center; gap:8px; margin-bottom:2px;">
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:2px; flex-wrap:wrap;">
                     <span style="font-size:12.5px; font-weight:bold; color:#00E5FF; white-space:nowrap;">🎨 Edição Detalhada:</span>
-                    <select id="selToneTarget" class="synth-select" style="font-size:11px; font-weight:bold; padding:2px 8px; height:24px; min-width:85px; border-color:#00E5FF; color:#00E5FF; background:#0B0E14;" onchange="onSelectActiveTone(this.value)">
-                        <option value="0">Tone 1</option>
-                        <option value="1">Tone 2</option>
-                        <option value="2">Tone 3</option>
-                        <option value="3">Tone 4</option>
-                    </select>
+                    <div style="display:inline-flex; align-items:center; gap:5px;">
+                        <button class="synth-tone-btn active t0" id="btnToneSel0" onclick="onSelectActiveTone(0)" style="padding:3px 10px; font-size:11px; height:24px; min-width:60px;">Tone 1</button>
+                        <button class="synth-tone-btn t1" id="btnToneSel1" onclick="onSelectActiveTone(1)" style="padding:3px 10px; font-size:11px; height:24px; min-width:60px;">Tone 2</button>
+                        <button class="synth-tone-btn t2" id="btnToneSel2" onclick="onSelectActiveTone(2)" style="padding:3px 10px; font-size:11px; height:24px; min-width:60px;">Tone 3</button>
+                        <button class="synth-tone-btn t3" id="btnToneSel3" onclick="onSelectActiveTone(3)" style="padding:3px 10px; font-size:11px; height:24px; min-width:60px;">Tone 4</button>
+                    </div>
                 </div>
 
                 <!-- Sub-abas -->
@@ -4460,6 +4460,17 @@
 
         function onSelectActiveTone(idx) {
             activeToneIndex = parseInt(idx);
+            // Atualiza o estado visual dos 4 botões de seleção de Tone
+            for (let i = 0; i < 4; i++) {
+                const btn = document.getElementById(`btnToneSel${i}`);
+                if (btn) {
+                    if (i === activeToneIndex) {
+                        btn.classList.add("active");
+                    } else {
+                        btn.classList.remove("active");
+                    }
+                }
+            }
             if (tones[activeToneIndex]) {
                 syncDetailedToneUI(tones[activeToneIndex]);
             }
