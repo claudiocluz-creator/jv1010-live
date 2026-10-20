@@ -570,49 +570,83 @@
         }
         .fader-label { font-size: 9.5px; color: #8E8E9E; text-transform: uppercase; margin-top: 2px; }
 
-        /* Fader Vertical Estilo Console/Mixer para Combinações */
-        .part-fader-section {
-            width: 100%;
-            box-sizing: border-box;
-            background: #14141E;
-            border: 1px solid #252536;
-            border-radius: 6px;
-            padding: 6px 4px;
+        /* Layout Split para Part Card (Fader de Altura Total à Esquerda + Controles à Direita) */
+        .part-split-card {
             display: flex;
-            align-items: center;
-            justify-content: space-between;
+            flex-direction: row;
+            align-items: stretch;
+            width: 100%;
+            height: 100%;
             gap: 6px;
+            box-sizing: border-box;
         }
-        .part-fader-vertical-box {
+
+        .part-left-fader-panel {
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: space-between;
-            background: #0E0E14;
+            background: #0D0D14;
             border: 1px solid #1E1E2C;
-            border-radius: 5px;
-            padding: 4px 6px;
-            min-width: 48px;
-            flex: 1;
-            height: 125px;
+            border-radius: 6px;
+            padding: 6px 4px;
+            width: 75px;
+            min-width: 65px;
             box-sizing: border-box;
+            flex-shrink: 0;
         }
-        .part-fader-input {
+
+        .part-fader-header-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 6px;
+        }
+
+        .part-fader-vol-tag {
+            font-size: 11px;
+            font-weight: 900;
+            color: #8E8E9E;
+            letter-spacing: 0.5px;
+        }
+
+        .part-fader-numeric {
+            font-family: monospace;
+            font-size: 13.5px;
+            font-weight: bold;
+        }
+
+        .part-fader-learn-btn {
+            background: #1E1E2C;
+            border: 1px solid #3A3A4E;
+            color: #B0B0C0;
+            border-radius: 4px;
+            padding: 2px 4px;
+            font-size: 8.5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .part-fader-input-full {
             -webkit-appearance: slider-vertical;
             appearance: slider-vertical;
-            width: 24px;
-            height: 80px;
+            width: 26px;
+            flex: 1;
+            min-height: 140px;
             cursor: pointer;
             outline: none;
-            margin: 2px 0;
+            margin: 4px 0;
         }
-        .part-side-controls {
+
+        .part-right-controls-panel {
             display: flex;
             flex-direction: column;
             gap: 5px;
-            flex: 1.1;
+            flex: 1;
             min-width: 0;
             box-sizing: border-box;
+            justify-content: space-between;
         }
 
         .stepper-row {
@@ -698,10 +732,10 @@
         .zone-info { font-family: monospace; font-size: 11px; color: #00E5FF; line-height: 1.4; }
 
         /* Cores Temáticas Part 1..4 */
-        .part-p0 .card-title { color: #00E5FF; } .part-p0 .btn-toggle.active { border-color: #00E5FF; color: #00E5FF; background: rgba(0,229,255,0.2); } .part-p0 .fader-input { accent-color: #00E5FF; }
-        .part-p1 .card-title { color: #2ECC71; } .part-p1 .btn-toggle.active { border-color: #2ECC71; color: #2ECC71; background: rgba(46,204,113,0.2); } .part-p1 .fader-input { accent-color: #2ECC71; }
-        .part-p2 .card-title { color: #F39C12; } .part-p2 .btn-toggle.active { border-color: #F39C12; color: #F39C12; background: rgba(243,156,18,0.2); } .part-p2 .fader-input { accent-color: #F39C12; }
-        .part-p3 .card-title { color: #E74C3C; } .part-p3 .btn-toggle.active { border-color: #E74C3C; color: #E74C3C; background: rgba(231,76,60,0.2); } .part-p3 .fader-input { accent-color: #E74C3C; }
+        .part-p0 .card-title { color: #00E5FF; } .part-p0 .btn-toggle.active { border-color: #00E5FF; color: #00E5FF; background: rgba(0,229,255,0.2); } .part-p0 .fader-input, .part-p0 .part-fader-input-full { accent-color: #00E5FF; }
+        .part-p1 .card-title { color: #2ECC71; } .part-p1 .btn-toggle.active { border-color: #2ECC71; color: #2ECC71; background: rgba(46,204,113,0.2); } .part-p1 .fader-input, .part-p1 .part-fader-input-full { accent-color: #2ECC71; }
+        .part-p2 .card-title { color: #F39C12; } .part-p2 .btn-toggle.active { border-color: #F39C12; color: #F39C12; background: rgba(243,156,18,0.2); } .part-p2 .fader-input, .part-p2 .part-fader-input-full { accent-color: #F39C12; }
+        .part-p3 .card-title { color: #E74C3C; } .part-p3 .btn-toggle.active { border-color: #E74C3C; color: #E74C3C; background: rgba(231,76,60,0.2); } .part-p3 .fader-input, .part-p3 .part-fader-input-full { accent-color: #E74C3C; }
 
         /* Cores dos 4 Tones */
         .tone-t0 .card-title { color: #00E5FF; } .tone-t0 .btn-toggle.active { border-color: #00E5FF; color: #00E5FF; background: rgba(0,229,255,0.2); } .tone-t0 .fader-input { accent-color: #00E5FF; }
@@ -4253,63 +4287,64 @@
                 const panText = p.pan === 64 ? "Center" : (p.pan < 64 ? `L${64 - p.pan}` : `R${p.pan - 64}`);
 
                 col.innerHTML = `
-                    <div class="card-header">
-                        <div class="card-title">${p.active ? '✓ ' : ''}<b>${partName.toUpperCase()}</b></div>
-                        <div class="card-subtitle">MIDI Ch: 1 (Layer)</div>
-                    </div>
-
-                    <button class="btn-toggle ${p.active ? 'active' : ''}" onclick="togglePart(${i})">
-                        ${p.active ? 'LIGADO (ON)' : 'MUTADO (OFF)'}
-                    </button>
-
-                    <div class="patch-box" onclick="openPatchPicker(${i})" title="Clique para trocar este timbre">${p.patch}</div>
-
-                    <div class="part-fader-section">
-                        <div class="part-fader-vertical-box">
-                            <div style="display:flex; align-items:center; justify-content:space-between; width:100%; margin-bottom:2px;">
-                                <span class="knob-label" style="font-weight:bold; font-size:9.5px; margin:0;">Vol</span>
-                                <button class="btn-learn" id="btnLearnPartVol${i}" onclick="toggleMidiLearn('part_vol_${i}', this)" style="padding:1px 3px; font-size:8px; margin:0; height:15px;" title="Mapear Volume da Parte ${i + 1} para um Fader/Knob MIDI">🎓</button>
+                    <div class="part-split-card">
+                        <!-- Coluna Esquerda: Fader de Volume Vertical de Altura Total -->
+                        <div class="part-left-fader-panel">
+                            <div class="part-fader-header-row">
+                                <span class="part-fader-vol-tag">VOL</span>
+                                <span class="part-fader-numeric" id="valPartFader${i}" style="color:${partColor};">${p.level}</span>
+                                <button class="part-fader-learn-btn" id="btnLearnPartVol${i}" onclick="toggleMidiLearn('part_vol_${i}', this)" title="Mapear Volume da Parte ${i + 1} para um Fader MIDI">🎓 Learn</button>
                             </div>
-                            <span class="fader-val" id="valPartFader${i}" style="color:${partColor}; font-size:12px; margin:1px 0;">${p.level}</span>
-                            <input type="range" id="sldPartFader${i}" min="0" max="127" value="${p.level}" orient="vertical" class="part-fader-input" style="accent-color:${partColor};" oninput="updatePartVal(${i}, 'level', this.value)">
-                            <span style="font-size:8.5px; color:#7E7E94; font-weight:bold; text-transform:uppercase; margin-top:2px;">Fader</span>
+                            <input type="range" id="sldPartFader${i}" min="0" max="127" value="${p.level}" orient="vertical" class="part-fader-input-full" style="accent-color:${partColor};" oninput="updatePartVal(${i}, 'level', this.value)">
                         </div>
 
-                        <div class="part-side-controls">
+                        <!-- Coluna Direita: Header, Botão ON/OFF, Patch, Pan, Oit/Tom e Range -->
+                        <div class="part-right-controls-panel">
+                            <div class="card-header" style="margin-bottom:0;">
+                                <div class="card-title" style="color:${partColor};">${p.active ? '✓ ' : ''}<b>${partName.toUpperCase()}</b></div>
+                                <div class="card-subtitle" style="font-size:9.5px;">MIDI Ch: 1 (Layer)</div>
+                            </div>
+
+                            <button class="btn-toggle ${p.active ? 'active' : ''}" style="height:26px; font-size:10.5px;" onclick="togglePart(${i})">
+                                ${p.active ? 'LIGADO (ON)' : 'MUTADO (OFF)'}
+                            </button>
+
+                            <div class="patch-box" style="padding:4px 3px; min-height:30px; font-size:10.5px;" onclick="openPatchPicker(${i})" title="Clique para trocar este timbre">${p.patch}</div>
+
                             <!-- Pan Control -->
-                            <div class="knob-box" style="width:100%; box-sizing:border-box; padding:3px 4px;">
+                            <div class="knob-box" style="width:100%; box-sizing:border-box; padding:3px 5px; background:#14141E;">
                                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1px;">
-                                    <span class="knob-label" style="font-weight:bold; margin:0; font-size:9px;">Pan</span>
+                                    <span class="knob-label" style="font-weight:bold; margin:0; font-size:9.5px;">PAN</span>
                                     <span class="knob-val" style="color:${p.color}; margin:0; font-size:10px;">${panText}</span>
                                 </div>
                                 <input type="range" min="0" max="127" value="${p.pan}" class="synth-param-slider" oninput="updatePartVal(${i}, 'pan', this.value)" style="width:100%; height:14px; margin:0; accent-color:${p.color};">
                             </div>
 
                             <!-- Oitava / Coarse -->
-                            <div class="stepper-row" style="padding:2px 4px;">
+                            <div class="stepper-row" style="padding:2px 5px; background:#14141E;">
                                 <span class="stepper-label" style="font-size:9.5px;">Oit/Tom:</span>
                                 <div class="stepper-ctrls">
-                                    <button class="stepper-btn" style="width:18px; height:18px; font-size:10px;" onclick="stepCoarse(${i}, -1)">−</button>
-                                    <span class="stepper-val" style="color:${p.color}; font-size:9.5px; min-width:32px;">${p.coarse >= 0 ? '+' : ''}${p.coarse}</span>
-                                    <button class="stepper-btn" style="width:18px; height:18px; font-size:10px;" onclick="stepCoarse(${i}, 1)">+</button>
+                                    <button class="stepper-btn" style="width:19px; height:19px; font-size:11px;" onclick="stepCoarse(${i}, -1)">−</button>
+                                    <span class="stepper-val" style="color:${p.color}; font-size:10px; min-width:32px;">${p.coarse >= 0 ? '+' : ''}${p.coarse}</span>
+                                    <button class="stepper-btn" style="width:19px; height:19px; font-size:11px;" onclick="stepCoarse(${i}, 1)">+</button>
                                 </div>
                             </div>
-                        </div>
-                    </div>
 
-                    <div class="range-row">
-                        <div class="range-title-bar">
-                            <span class="range-label">Faixa Teclas (Range):</span>
-                            <span class="range-span-val" style="color:${p.color}">${noteNumToName(p.lower)} → ${noteNumToName(p.upper)}</span>
-                        </div>
-                        <div class="range-ctrls">
-                            <select class="range-select" onchange="updatePartRange(${i}, 'lower', this.value)" title="Nota Mínima (Início da faixa)">
-                                ${buildNoteOptions(p.lower)}
-                            </select>
-                            <span style="font-size:10px; color:#8E8E9E;">até</span>
-                            <select class="range-select" onchange="updatePartRange(${i}, 'upper', this.value)" title="Nota Máxima (Fim da faixa)">
-                                ${buildNoteOptions(p.upper)}
-                            </select>
+                            <!-- Faixa Teclas (Range) -->
+                            <div class="range-row" style="padding:3px 5px; background:#14141E; margin-top:auto;">
+                                <div class="range-title-bar" style="margin-bottom:2px;">
+                                    <span class="range-label" style="font-size:9.5px;">Range:</span>
+                                    <span class="range-span-val" style="color:${p.color}; font-size:9.5px;">${noteNumToName(p.lower)} → ${noteNumToName(p.upper)}</span>
+                                </div>
+                                <div class="range-ctrls" style="gap:3px;">
+                                    <select class="range-select" style="font-size:9.5px; padding:1px 2px;" onchange="updatePartRange(${i}, 'lower', this.value)" title="Nota Mínima (Início da faixa)">
+                                        ${buildNoteOptions(p.lower)}
+                                    </select>
+                                    <select class="range-select" style="font-size:9.5px; padding:1px 2px;" onchange="updatePartRange(${i}, 'upper', this.value)" title="Nota Máxima (Fim da faixa)">
+                                        ${buildNoteOptions(p.upper)}
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 `;

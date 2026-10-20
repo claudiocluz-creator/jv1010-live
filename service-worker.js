@@ -1,5 +1,5 @@
 // Service Worker para Cache Offline PWA do Roland JV-1010 Live Stage
-const CACHE_NAME = 'jv1010-live-v20261020c';
+const CACHE_NAME = 'jv1010-live-v20261020d';
 const STATIC_ASSETS = [
   './',
   './index.html',
