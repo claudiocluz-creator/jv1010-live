@@ -805,6 +805,75 @@
         .zone-header { font-size: 11px; font-weight: bold; color: #8E8E9E; text-transform: uppercase; }
         .zone-info { font-family: monospace; font-size: 11px; color: #00E5FF; line-height: 1.4; }
 
+        /* Mini Teclado Virtual (Piano Keys) de Alta Precisão */
+        .mini-keyboard-wrapper {
+            width: 100%;
+            height: 48px;
+            position: relative;
+            background: #08080C;
+            border-radius: 0 0 6px 6px;
+            overflow: hidden;
+            display: flex;
+            touch-action: none;
+            user-select: none;
+            -webkit-user-select: none;
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.8);
+            border-top: 1px solid #20202E;
+        }
+        .mini-white-keys-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+        }
+        .mini-key-white {
+            flex: 1;
+            height: 100%;
+            background: linear-gradient(180deg, #EAEAEA 0%, #FFFFFF 65%, #D8D8D8 100%);
+            border-right: 1px solid #7E7E94;
+            border-bottom: 2px solid #555566;
+            border-radius: 0 0 3px 3px;
+            cursor: pointer;
+            box-sizing: border-box;
+            transition: background 0.05s;
+        }
+        .mini-key-white:last-child {
+            border-right: none;
+        }
+        .mini-key-white:active, .mini-key-white.active {
+            background: #00E5FF !important;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.5), 0 0 8px #00E5FF;
+        }
+        .mini-black-keys-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60%;
+            pointer-events: none;
+        }
+        .mini-key-black {
+            position: absolute;
+            top: 0;
+            width: calc(100% / 75 * 0.62);
+            height: 100%;
+            background: linear-gradient(180deg, #1C1C24 0%, #000000 80%, #2A2A38 100%);
+            border: 1px solid #000;
+            border-radius: 0 0 2.5px 2.5px;
+            cursor: pointer;
+            pointer-events: auto;
+            box-sizing: border-box;
+            box-shadow: 1px 2px 4px rgba(0,0,0,0.85);
+            transition: background 0.05s;
+            z-index: 2;
+        }
+        .mini-key-black:active, .mini-key-black.active {
+            background: #FF4081 !important;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.5), 0 0 8px #FF4081;
+        }
+
         /* Cores Temáticas Part 1..4 */
         .part-p0 .card-title { color: #00E5FF; } .part-p0 .btn-toggle.active { border-color: #00E5FF; color: #00E5FF; background: rgba(0,229,255,0.2); } .part-p0 .fader-input, .part-p0 .part-fader-input-full { accent-color: #00E5FF; }
         .part-p1 .card-title { color: #2ECC71; } .part-p1 .btn-toggle.active { border-color: #2ECC71; color: #2ECC71; background: rgba(46,204,113,0.2); } .part-p1 .fader-input, .part-p1 .part-fader-input-full { accent-color: #2ECC71; }
@@ -1632,7 +1701,10 @@
 
         <div class="strip-container" id="partsStripContainer" style="flex:1; min-height:0;"></div>
 
-        <div id="zoneMapBars" style="display:flex; flex-direction:column; gap:4px; background:#0E0E14; border:1px solid #1C1C28; border-radius:8px; padding:6px 10px; margin-top:6px; flex-shrink:0;"></div>
+        <div style="background:#0E0E14; border:1px solid #1C1C28; border-radius:8px; padding:6px 10px 4px 10px; margin-top:6px; flex-shrink:0; display:flex; flex-direction:column; gap:5px;">
+            <div id="zoneMapBars" style="display:flex; flex-direction:column; gap:4px;"></div>
+            <div id="miniKeyboardContainer" class="mini-keyboard-wrapper"></div>
+        </div>
     </div>
 
     <!-- ========================================== -->
@@ -2463,6 +2535,10 @@
                                 const ch = d[0] & 0x0F;
                                 if (status === 0xB0) {
                                     handleIncomingMidiCC(d[1], d[2], ch);
+                                } else if (status === 0x90 && d[2] > 0) {
+                                    highlightMiniKey(d[1], true);
+                                } else if (status === 0x80 || (status === 0x90 && d[2] === 0)) {
+                                    highlightMiniKey(d[1], false);
                                 }
                             }
                             if (isMidiThruOn && selectedMidiOutput) {
@@ -2601,14 +2677,22 @@
                                 midiBytes.push(raw[i]);
                             }
 
-                            blinkMidiLed();
-                            // Roteia mensagens de Control Change (CC) para o sistema de MIDI Learn
+                            // Roteia mensagens de Control Change (CC) para MIDI Learn e Note On/Off para o mini teclado
                             for (let i = 0; i < midiBytes.length - 2; i++) {
-                                if ((midiBytes[i] & 0xF0) === 0xB0) {
-                                    const ch = midiBytes[i] & 0x0F;
-                                    const ccNum = midiBytes[i + 1];
-                                    const ccVal = midiBytes[i + 2];
-                                    handleIncomingMidiCC(ccNum, ccVal, ch);
+                                const status = midiBytes[i] & 0xF0;
+                                const ch = midiBytes[i] & 0x0F;
+                                if (status === 0xB0) {
+                                    handleIncomingMidiCC(midiBytes[i + 1], midiBytes[i + 2], ch);
+                                    i += 2;
+                                } else if (status === 0x90) {
+                                    if (midiBytes[i + 2] > 0) {
+                                        highlightMiniKey(midiBytes[i + 1], true);
+                                    } else {
+                                        highlightMiniKey(midiBytes[i + 1], false);
+                                    }
+                                    i += 2;
+                                } else if (status === 0x80) {
+                                    highlightMiniKey(midiBytes[i + 1], false);
                                     i += 2;
                                 }
                             }
@@ -4595,6 +4679,165 @@
                     <div style="position:absolute; top:0; bottom:0; left:${left}%; width:${width}%; background:${color}; border-radius:4px; box-shadow:0 0 6px ${color}55;"></div>
                 </div>`;
             }).join("");
+
+            // Garante a construção e sincronização do mini teclado virtual
+            renderMiniKeyboard();
+        }
+
+        // ==========================================
+        // MINI TECLADO VIRTUAL DE PERFORMANCE (0..127)
+        // ==========================================
+        let isMiniKeyboardRendered = false;
+        const activePlayingNotes = new Set();
+
+        function renderMiniKeyboard() {
+            const kbContainer = document.getElementById("miniKeyboardContainer");
+            if (!kbContainer || isMiniKeyboardRendered) return;
+            isMiniKeyboardRendered = true;
+
+            // Mapeia todas as 75 teclas brancas de 0 a 127 (C-1 a G9)
+            // Cada nota MIDI possui um offset proporcional de 0 a 100% de largura
+            const whiteNotes = [];
+            const blackNotes = [];
+
+            for (let n = 0; n <= 127; n++) {
+                const name = NOTE_NAMES_BASE[n % 12];
+                if (name.includes("#")) {
+                    blackNotes.push(n);
+                } else {
+                    whiteNotes.push(n);
+                }
+            }
+
+            const totalWhite = whiteNotes.length; // 75 teclas brancas
+
+            // 1. Camada de Teclas Brancas
+            let whiteHtml = `<div class="mini-white-keys-layer">`;
+            whiteNotes.forEach((note, idx) => {
+                const noteName = noteNumToName(note);
+                whiteHtml += `<div class="mini-key-white" id="mKey_${note}" title="${noteName} (${note})" 
+                    onpointerdown="onMiniKeyDown(event, ${note})" 
+                    onpointerenter="onMiniKeyEnter(event, ${note})"
+                    onpointerup="onMiniKeyUp(event, ${note})" 
+                    onpointercancel="onMiniKeyUp(event, ${note})"></div>`;
+            });
+            whiteHtml += `</div>`;
+
+            // 2. Camada de Teclas Pretas com posicionamento percentual exato
+            let blackHtml = `<div class="mini-black-keys-layer">`;
+            blackNotes.forEach(note => {
+                // Descobre a tecla branca imediatamente anterior
+                const prevWhiteNote = note - 1;
+                const prevWhiteIdx = whiteNotes.indexOf(prevWhiteNote);
+                if (prevWhiteIdx !== -1) {
+                    // Centro entre a tecla branca atual e a próxima
+                    const leftPct = ((prevWhiteIdx + 1) / totalWhite) * 100;
+                    const noteName = noteNumToName(note);
+                    blackHtml += `<div class="mini-key-black" id="mKey_${note}" style="left: calc(${leftPct}% - (100% / 75 * 0.31));" title="${noteName} (${note})" 
+                        onpointerdown="onMiniKeyDown(event, ${note})" 
+                        onpointerenter="onMiniKeyEnter(event, ${note})"
+                        onpointerup="onMiniKeyUp(event, ${note})" 
+                        onpointercancel="onMiniKeyUp(event, ${note})"></div>`;
+                }
+            });
+            blackHtml += `</div>`;
+
+            kbContainer.innerHTML = whiteHtml + blackHtml;
+        }
+
+        let isPointerDownOnKeyboard = false;
+        window.addEventListener("pointerup", () => {
+            isPointerDownOnKeyboard = false;
+            stopAllVirtualNotes();
+        });
+
+        function onMiniKeyDown(e, note) {
+            e.preventDefault();
+            e.stopPropagation();
+            isPointerDownOnKeyboard = true;
+            playVirtualNote(note);
+        }
+
+        function onMiniKeyEnter(e, note) {
+            if (isPointerDownOnKeyboard) {
+                e.preventDefault();
+                playVirtualNote(note);
+            }
+        }
+
+        function onMiniKeyUp(e, note) {
+            e.preventDefault();
+            stopVirtualNote(note);
+        }
+
+        function playVirtualNote(note) {
+            // Se já estiver tocando, não redispare
+            if (activePlayingNotes.has(note)) return;
+            activePlayingNotes.add(note);
+
+            // Realce visual na tecla
+            const keyEl = document.getElementById(`mKey_${note}`);
+            if (keyEl) keyEl.classList.add("active");
+
+            // Dispara para os canais/parts que tiverem esse note dentro da faixa (Range)
+            // Se estiver no modo Comb/Performance:
+            let dispatchedAny = false;
+            if (currentTab === "combination") {
+                parts.forEach((p, idx) => {
+                    if (p.active && note >= p.lower && note <= p.upper) {
+                        const noteWithCoarse = Math.max(0, Math.min(127, note + (p.coarse || 0)));
+                        sendMidiCommand({ type: "note_on", channel: idx, note: noteWithCoarse, velocity: 100 });
+                        sendRawWebMidi([0x90 | (idx & 0x0F), noteWithCoarse, 100]);
+                        dispatchedAny = true;
+                    }
+                });
+            }
+
+            // Fallback caso nenhuma part esteja ativa ou fora da aba comb: canal 1
+            if (!dispatchedAny) {
+                sendMidiCommand({ type: "note_on", channel: 0, note: note, velocity: 100 });
+                sendRawWebMidi([0x90, note, 100]);
+            }
+        }
+
+        function stopVirtualNote(note) {
+            if (!activePlayingNotes.has(note)) return;
+            activePlayingNotes.delete(note);
+
+            const keyEl = document.getElementById(`mKey_${note}`);
+            if (keyEl) keyEl.classList.remove("active");
+
+            if (currentTab === "combination") {
+                parts.forEach((p, idx) => {
+                    if (p.active) {
+                        const noteWithCoarse = Math.max(0, Math.min(127, note + (p.coarse || 0)));
+                        sendMidiCommand({ type: "note_off", channel: idx, note: noteWithCoarse });
+                        sendRawWebMidi([0x80 | (idx & 0x0F), noteWithCoarse, 0]);
+                    }
+                });
+            } else {
+                sendMidiCommand({ type: "note_off", channel: 0, note: note });
+                sendRawWebMidi([0x80, note, 0]);
+            }
+        }
+
+        function highlightMiniKey(note, isDown) {
+            const keyEl = document.getElementById(`mKey_${note}`);
+            if (keyEl) {
+                if (isDown) keyEl.classList.add("active");
+                else keyEl.classList.remove("active");
+            }
+        }
+
+        function stopAllVirtualNotes() {
+            activePlayingNotes.forEach(note => {
+                const keyEl = document.getElementById(`mKey_${note}`);
+                if (keyEl) keyEl.classList.remove("active");
+                for (let ch = 0; ch < 4; ch++) {
+                    sendRawWebMidi([0x80 | ch, note, 0]);
+                }
+            });
+            activePlayingNotes.clear();
         }
 
         function updatePartsBadge() {
