@@ -4332,9 +4332,9 @@
                             <div class="knob-box" style="width:100%; box-sizing:border-box; padding:3px 5px; background:#14141E;">
                                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1px;">
                                     <span class="knob-label" style="font-weight:bold; margin:0; font-size:9.5px;">PAN</span>
-                                    <span class="knob-val" style="color:${p.color}; margin:0; font-size:10px;">${panText}</span>
+                                    <span class="knob-val" id="valPartPan${i}" style="color:${p.color}; margin:0; font-size:10px;">${panText}</span>
                                 </div>
-                                <input type="range" min="0" max="127" value="${p.pan}" class="synth-param-slider" oninput="updatePartVal(${i}, 'pan', this.value)" style="width:100%; height:14px; margin:0; accent-color:${p.color};">
+                                <input type="range" id="sldPartPan${i}" min="0" max="127" value="${p.pan}" class="synth-param-slider" oninput="updatePartVal(${i}, 'pan', this.value)" style="width:100%; height:14px; margin:0; accent-color:${p.color};">
                             </div>
 
                             <!-- Oitava / Coarse -->
@@ -4412,9 +4412,23 @@
         }
 
         function updatePartVal(i, param, val) {
-            parts[i][param] = parseInt(val);
-            sendMidiCommand({ type: "part_param", part: i, param: param, value: parseInt(val) });
-            renderParts();
+            const num = parseInt(val);
+            parts[i][param] = num;
+            
+            // Atualização cirúrgica e imediata dos displays visuais sem destruir o DOM
+            if (param === 'level') {
+                const el = document.getElementById(`valPartFader${i}`);
+                if (el) el.innerText = num;
+                const sld = document.getElementById(`sldPartFader${i}`);
+                if (sld && sld.value != num) sld.value = num;
+            } else if (param === 'pan') {
+                const el = document.getElementById(`valPartPan${i}`);
+                if (el) el.innerText = num === 64 ? "Center" : (num < 64 ? `L${64 - num}` : `R${num - 64}`);
+                const sld = document.getElementById(`sldPartPan${i}`);
+                if (sld && sld.value != num) sld.value = num;
+            }
+            
+            sendMidiCommand({ type: "part_param", part: i, param: param, value: num });
         }
 
         function stepCoarse(i, delta) {
