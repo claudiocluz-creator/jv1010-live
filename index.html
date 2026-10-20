@@ -1909,29 +1909,34 @@
                             </select>
                         </div>
 
-                        <!-- Routing & Sends do EFX (um em baixo do outro) -->
-                        <div style="background:#13131F; padding:8px 10px; border-radius:6px; border:1px solid #1F1F30; display:flex; flex-direction:column; gap:6px; font-size:10px;">
-                            <div class="synth-param-row" style="margin:0;">
-                                <span class="synth-param-label" style="min-width:75px; font-size:10px; color:#8E8E9E;">Output Assign:</span>
-                                <select class="synth-select" style="flex:1; font-size:10px; padding:2px 4px; height:20px;" onchange="onCommonParamChange('efx_output_assign', this.value)">
-                                    <option value="0" selected>MIX</option>
-                                    <option value="1">DIR-1</option>
-                                    <option value="2">DIR-2</option>
-                                </select>
+                        <!-- Routing & Sends do EFX (com Modo Link Inteligente) -->
+                        <div style="background:#13131F; padding:6px 10px; border-radius:6px; border:1px solid #1F1F30; display:flex; flex-direction:column; gap:5px; font-size:10px;">
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <div style="display:flex; align-items:center; gap:6px;">
+                                    <span style="font-size:10px; color:#8E8E9E;">Assign:</span>
+                                    <select class="synth-select" style="font-size:10px; padding:1px 4px; height:18px;" onchange="onCommonParamChange('efx_output_assign', this.value)">
+                                        <option value="0" selected>MIX</option>
+                                        <option value="1">DIR-1</option>
+                                        <option value="2">DIR-2</option>
+                                    </select>
+                                </div>
+                                <button id="btnLinkEfxSends" onclick="toggleLinkEfxSends()" style="background:#1B2E23; border:1px solid #2ECC71; color:#2ECC71; font-size:9.5px; font-weight:bold; padding:1px 6px; border-radius:4px; cursor:pointer;" title="Liga/Desliga o link automático inteligente entre Level e Send">
+                                    🔗 Auto-Link (ON)
+                                </button>
                             </div>
                             <div class="synth-param-row" style="margin:0;">
                                 <span class="synth-param-label" style="min-width:75px; font-size:10px; color:#E74C3C;">Output Level:</span>
-                                <input type="range" min="0" max="127" value="127" class="synth-param-slider" style="flex:1; height:16px; accent-color:#E74C3C; margin:0;" oninput="onCommonParamChange('efx_output_level', this.value, 'valEfxOutLevel')">
+                                <input type="range" min="0" max="127" value="127" class="synth-param-slider" style="flex:1; height:15px; accent-color:#E74C3C; margin:0;" oninput="onCommonParamChange('efx_output_level', this.value, 'valEfxOutLevel')">
                                 <span id="valEfxOutLevel" style="color:#E74C3C; font-family:monospace; min-width:24px; text-align:right;">127</span>
                             </div>
                             <div class="synth-param-row" style="margin:0;">
                                 <span class="synth-param-label" style="min-width:75px; font-size:10px; color:#2ECC71;">Chorus Send:</span>
-                                <input type="range" min="0" max="127" value="0" class="synth-param-slider" style="flex:1; height:16px; accent-color:#2ECC71; margin:0;" oninput="onCommonParamChange('efx_chorus_send', this.value, 'valEfxChoSend')">
+                                <input type="range" id="sldEfxChoSend" min="0" max="127" value="0" class="synth-param-slider" style="flex:1; height:15px; accent-color:#2ECC71; margin:0;" oninput="onCommonParamChange('efx_chorus_send', this.value, 'valEfxChoSend')">
                                 <span id="valEfxChoSend" style="color:#2ECC71; font-family:monospace; min-width:24px; text-align:right;">0</span>
                             </div>
                             <div class="synth-param-row" style="margin:0;">
                                 <span class="synth-param-label" style="min-width:75px; font-size:10px; color:#00E5FF;">Reverb Send:</span>
-                                <input type="range" min="0" max="127" value="0" class="synth-param-slider" style="flex:1; height:16px; accent-color:#00E5FF; margin:0;" oninput="onCommonParamChange('efx_reverb_send', this.value, 'valEfxRevSend')">
+                                <input type="range" id="sldEfxRevSend" min="0" max="127" value="0" class="synth-param-slider" style="flex:1; height:15px; accent-color:#00E5FF; margin:0;" oninput="onCommonParamChange('efx_reverb_send', this.value, 'valEfxRevSend')">
                                 <span id="valEfxRevSend" style="color:#00E5FF; font-family:monospace; min-width:24px; text-align:right;">0</span>
                             </div>
                         </div>
@@ -5009,6 +5014,26 @@
             sendMidiCommand({ type: "tone_param", tone: activeToneIndex, param: param, value: num });
         }
 
+        let isEfxSendsLinked = true; // Por padrão Auto-Link ativado para facilitar no palco/estúdio
+
+        function toggleLinkEfxSends() {
+            isEfxSendsLinked = !isEfxSendsLinked;
+            const btn = document.getElementById("btnLinkEfxSends");
+            if (btn) {
+                if (isEfxSendsLinked) {
+                    btn.innerHTML = "🔗 Auto-Link (ON)";
+                    btn.style.background = "#1B2E23";
+                    btn.style.borderColor = "#2ECC71";
+                    btn.style.color = "#2ECC71";
+                } else {
+                    btn.innerHTML = "🔓 Manual (OFF)";
+                    btn.style.background = "#2D1B20";
+                    btn.style.borderColor = "#E74C3C";
+                    btn.style.color = "#E74C3C";
+                }
+            }
+        }
+
         function onCommonParamChange(param, val, labelId) {
             const num = parseInt(val);
             userTouchedParams.common[param] = num;
@@ -5016,13 +5041,54 @@
                 const el = document.getElementById(labelId);
                 if (el) el.innerText = num;
             }
+
+            // Sincronização entre tela principal da Síntese e Modal de EQ/EFX
+            if (param === 'efx_output_assign') {
+                const selM = document.getElementById("selModalOutputAssign");
+                if (selM && selM.value != num) selM.value = num;
+            } else if (param === 'efx_chorus_send') {
+                const sM = document.getElementById("sldModalChoSend"); if (sM) sM.value = num;
+                const vM = document.getElementById("valModalChoSend"); if (vM) vM.innerText = num;
+                const sS = document.getElementById("sldEfxChoSend"); if (sS && sS.value != num) sS.value = num;
+                const vS = document.getElementById("valEfxChoSend"); if (vS) vS.innerText = num;
+            } else if (param === 'efx_reverb_send') {
+                const sM = document.getElementById("sldModalRevSend"); if (sM) sM.value = num;
+                const vM = document.getElementById("valModalRevSend"); if (vM) vM.innerText = num;
+                const sS = document.getElementById("sldEfxRevSend"); if (sS && sS.value != num) sS.value = num;
+                const vS = document.getElementById("valEfxRevSend"); if (vS) vS.innerText = num;
+            }
+
             // Sincroniza sliders da aba Combinações caso alterados na aba Síntese
             if (param === 'rev_level') {
                 const s = document.getElementById("sldCombRev"); if (s) s.value = num;
                 const v = document.getElementById("valCombRev"); if (v) v.innerText = num;
+
+                // Opção 1 e 3: AUTO-LINK INTELIGENTE (1 Slider faz tudo proporcionalmente)
+                if (isEfxSendsLinked) {
+                    const linkedSendVal = Math.round(num * 0.75); // Send proporcional saudável (até ~95)
+                    userTouchedParams.common['efx_reverb_send'] = linkedSendVal;
+                    sendMidiCommand({ type: "common_param", param: "efx_reverb_send", value: linkedSendVal });
+                    
+                    const sS = document.getElementById("sldEfxRevSend"); if (sS) sS.value = linkedSendVal;
+                    const vS = document.getElementById("valEfxRevSend"); if (vS) vS.innerText = linkedSendVal;
+                    const sM = document.getElementById("sldModalRevSend"); if (sM) sM.value = linkedSendVal;
+                    const vM = document.getElementById("valModalRevSend"); if (vM) vM.innerText = linkedSendVal;
+                }
             } else if (param === 'cho_level') {
                 const s = document.getElementById("sldCombCho"); if (s) s.value = num;
                 const v = document.getElementById("valCombCho"); if (v) v.innerText = num;
+
+                // Opção 1 e 3: AUTO-LINK INTELIGENTE para Chorus
+                if (isEfxSendsLinked) {
+                    const linkedSendVal = Math.round(num * 0.75);
+                    userTouchedParams.common['efx_chorus_send'] = linkedSendVal;
+                    sendMidiCommand({ type: "common_param", param: "efx_chorus_send", value: linkedSendVal });
+
+                    const sS = document.getElementById("sldEfxChoSend"); if (sS) sS.value = linkedSendVal;
+                    const vS = document.getElementById("valEfxChoSend"); if (vS) vS.innerText = linkedSendVal;
+                    const sM = document.getElementById("sldModalChoSend"); if (sM) sM.value = linkedSendVal;
+                    const vM = document.getElementById("valModalChoSend"); if (vM) vM.innerText = linkedSendVal;
+                }
             } else if (param === 'efx_prm11') {
                 const s = document.getElementById("sldCombEq"); if (s) s.value = num;
                 const v = document.getElementById("valCombEq"); if (v) v.innerText = num;
@@ -6280,8 +6346,33 @@
                 </div>
             </div>
 
+            <!-- Seção de Roteamento Avançado de EFX & Sends (Opção 2 - Controle Completo no Modal) -->
+            <div style="background:#131320; padding:8px 12px; border-radius:6px; border:1px solid #202035; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-top:6px;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <span style="font-size:11px; font-weight:bold; color:#00E5FF;">🔀 Roteamento EFX:</span>
+                    <span style="font-size:10.5px; color:#8E8E9E;">Assign:</span>
+                    <select id="selModalOutputAssign" class="synth-select" style="font-size:10px; padding:2px 6px; height:22px;" onchange="onCommonParamChange('efx_output_assign', this.value)">
+                        <option value="0" selected>MIX</option>
+                        <option value="1">DIR-1</option>
+                        <option value="2">DIR-2</option>
+                    </select>
+                </div>
+                <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+                    <div style="display:flex; align-items:center; gap:6px;">
+                        <span style="font-size:10.5px; color:#2ECC71; font-weight:bold;">EFX → Chorus Send:</span>
+                        <input type="range" id="sldModalChoSend" min="0" max="127" value="0" class="synth-param-slider" style="width:75px; height:15px; accent-color:#2ECC71;" oninput="onCommonParamChange('efx_chorus_send', this.value, 'valModalChoSend')">
+                        <span id="valModalChoSend" style="font-family:monospace; font-size:10.5px; color:#2ECC71; min-width:24px; text-align:right;">0</span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:6px;">
+                        <span style="font-size:10.5px; color:#00E5FF; font-weight:bold;">EFX → Reverb Send:</span>
+                        <input type="range" id="sldModalRevSend" min="0" max="127" value="0" class="synth-param-slider" style="width:75px; height:15px; accent-color:#00E5FF;" oninput="onCommonParamChange('efx_reverb_send', this.value, 'valModalRevSend')">
+                        <span id="valModalRevSend" style="font-family:monospace; font-size:10.5px; color:#00E5FF; min-width:24px; text-align:right;">0</span>
+                    </div>
+                </div>
+            </div>
+
             <!-- Botão de Fechar no rodapé -->
-            <div style="display:flex; justify-content:flex-end; margin-top:4px;">
+            <div style="display:flex; justify-content:flex-end; margin-top:8px;">
                 <button class="btn-close-modal" onclick="closeEqModal()" style="background:#242436; border:1px solid #444460; color:#FFF; font-size:12px; font-weight:bold; padding:6px 18px; border-radius:5px; cursor:pointer;">Concluir</button>
             </div>
         </div>
