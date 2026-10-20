@@ -1292,7 +1292,7 @@
                     <option value="16">17: Stereo-Delay</option>
                     <option value="23">24: Reverb</option>
                 </select>
-                <button id="btnToggleCombEq" onclick="toggleCombEqPanel()" style="background:#2C2C40; border:1px solid #FFD700; color:#FFD700; font-size:10px; font-weight:bold; padding:2px 6px; border-radius:4px; cursor:pointer;" title="Mostrar/Ocultar painel compacto de equalização 4 bandas">🎚️ EQ 4-Bandas ▾</button>
+                <button id="btnOpenEqModalComb" onclick="openEqModal()" style="background:linear-gradient(135deg, #1A1A2E, #2A2035); border:1px solid #FFD700; color:#FFD700; font-size:10.5px; font-weight:bold; padding:2px 8px; height:22px; border-radius:4px; cursor:pointer; display:flex; align-items:center; gap:4px; box-shadow:0 0 8px rgba(255,215,0,0.25);" title="Abrir painel pop-up com o Equalizador Gráfico 4-Bandas e controles de EFX">🎚️ Equalizador & EFX...</button>
             </div>
 
             <!-- Slider 1: Reverb Geral -->
@@ -1319,126 +1319,6 @@
             </div>
         </div>
 
-        <!-- Painel Compacto de Equalização (Stereo EQ 4-Bandas) para a Aba Combinações -->
-        <div id="panelCombStereoEq" style="display:flex; flex-direction:column; gap:5px; background:#10101A; border:1px solid #232338; border-radius:8px; padding:6px 10px; margin-bottom:8px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; border-bottom:1px solid #1C1C2A; padding-bottom:4px;">
-                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-                    <span style="font-weight:bold; color:#FFD700; font-size:11px; white-space:nowrap;">🎚️ Equalizador Stereo-EQ (4 Bandas)</span>
-                    
-                    <!-- EQ Level ao lado do título, antes do botão de ligar EFX -->
-                    <div style="display:flex; align-items:center; gap:4px; background:rgba(255,215,0,0.08); padding:2px 6px; border-radius:4px; border:1px solid rgba(255,215,0,0.25);">
-                        <span style="font-size:10px; font-weight:bold; color:#FFD700; white-space:nowrap;">EQ Level:</span>
-                        <input type="range" id="sldCombEq" min="0" max="127" value="127" class="synth-param-slider" style="width:75px; height:16px; accent-color:#FFD700; margin:0;" oninput="onCombFxChange('efx_prm11', this.value, 'valCombEq')">
-                        <span id="valCombEq" style="font-size:10.5px; font-family:monospace; font-weight:bold; color:#FFD700; min-width:22px; text-align:right;">127</span>
-                    </div>
-
-                    <button onclick="sendMidiCommand({type:'route_efx'})" style="background:#27AE60; border:none; color:white; font-size:10px; font-weight:bold; padding:2px 7px; border-radius:3px; cursor:pointer;" title="Força o roteamento do sinal para passar 100% pelo EFX">⚡ Ligar EFX nos Timbres</button>
-                </div>
-                <!-- Barra de Presets Rápidos de EQ -->
-                <div style="display:flex; gap:4px; align-items:center; background:#161624; padding:2px 6px; border-radius:4px;">
-                    <span style="font-size:9.5px; color:#8E8E9E; font-weight:bold;">Presets:</span>
-                    <button class="btn-preset-eq" style="padding:1px 6px; font-size:9.5px;" onclick="applyEqPreset('flat')">Flat</button>
-                    <button class="btn-preset-eq" style="padding:1px 6px; font-size:9.5px;" onclick="applyEqPreset('bright_piano')">🎹 Bright Piano</button>
-                    <button class="btn-preset-eq" style="padding:1px 6px; font-size:9.5px;" onclick="applyEqPreset('warm_rhodes')">🎷 Warm Rhodes</button>
-                    <button class="btn-preset-eq" style="padding:1px 6px; font-size:9.5px;" onclick="applyEqPreset('solo_cut')">🎸 Solo Cut</button>
-                </div>
-            </div>
-
-            <!-- Mini Gráfico de Resposta de Frequência do EQ -->
-            <div style="background:#090910; border-radius:5px; border:1px solid #181828; padding:3px 6px; display:flex; align-items:center; justify-content:center;">
-                <canvas id="canvasEqCurve" width="700" height="42" style="width:100%; height:42px; display:block;"></canvas>
-            </div>
-
-            <!-- Grade com os 4 Controles de Bandas Compactos -->
-            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap:6px;">
-                <!-- Banda 1: Low Band -->
-                <div style="background:#141422; padding:4px 8px; border-radius:5px; border:1px solid #202030;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2px;">
-                        <span style="color:#00E5FF; font-weight:bold; font-size:10.5px;">Low Band:</span>
-                        <div style="display:flex; align-items:center; gap:4px;">
-                            <span style="color:#8E8E9E; font-size:9.5px;">Freq:</span>
-                            <select id="selCombLowFreq" class="synth-select" style="font-size:9.5px; padding:1px 3px; height:18px;" onchange="onCombEqSelectChange('efx_prm1', this.value)">
-                                <option value="0" selected>200 Hz</option>
-                                <option value="1">400 Hz</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="synth-param-row" style="margin:0;">
-                        <span class="synth-param-label" style="min-width:32px; font-size:10px;">Gain:</span>
-                        <input type="range" id="sldCombLowGain" min="0" max="30" value="15" class="synth-param-slider" style="flex:1; height:16px; accent-color:#00E5FF; margin:0;" oninput="onEqGainChange('efx_prm2', this.value, 'valLowGain')">
-                        <span class="synth-param-val" id="valCombLowGain" style="min-width:38px; font-size:10px; color:#00E5FF;">0 dB</span>
-                    </div>
-                </div>
-
-                <!-- Banda 2: Peaking 1 (Médio 1) -->
-                <div style="background:#141422; padding:4px 8px; border-radius:5px; border:1px solid #202030;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2px;">
-                        <span style="color:#FFD700; font-weight:bold; font-size:10.5px;">Peaking 1 (Médio 1):</span>
-                        <div style="display:flex; align-items:center; gap:4px;">
-                            <span style="color:#8E8E9E; font-size:9.5px;">Freq:</span>
-                            <select id="selCombP1Freq" class="synth-select" style="font-size:9.5px; padding:1px 3px; height:18px;" onchange="onCombEqSelectChange('efx_prm5', this.value)"></select>
-                            <span style="color:#8E8E9E; font-size:9.5px;">Q:</span>
-                            <select id="selCombP1Q" class="synth-select" style="font-size:9.5px; padding:1px 3px; height:18px;" onchange="onCombEqSelectChange('efx_prm6', this.value)">
-                                <option value="0">0.5</option>
-                                <option value="1" selected>1.0</option>
-                                <option value="2">2.0</option>
-                                <option value="3">4.0</option>
-                                <option value="4">8.0</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="synth-param-row" style="margin:0;">
-                        <span class="synth-param-label" style="min-width:32px; font-size:10px;">Gain:</span>
-                        <input type="range" id="sldCombP1Gain" min="0" max="30" value="15" class="synth-param-slider" style="flex:1; height:16px; accent-color:#FFD700; margin:0;" oninput="onEqGainChange('efx_prm7', this.value, 'valP1Gain')">
-                        <span class="synth-param-val" id="valCombP1Gain" style="min-width:38px; font-size:10px; color:#FFD700;">0 dB</span>
-                    </div>
-                </div>
-
-                <!-- Banda 3: Peaking 2 (Médio 2) -->
-                <div style="background:#141422; padding:4px 8px; border-radius:5px; border:1px solid #202030;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2px;">
-                        <span style="color:#76FF03; font-weight:bold; font-size:10.5px;">Peaking 2 (Médio 2):</span>
-                        <div style="display:flex; align-items:center; gap:4px;">
-                            <span style="color:#8E8E9E; font-size:9.5px;">Freq:</span>
-                            <select id="selCombP2Freq" class="synth-select" style="font-size:9.5px; padding:1px 3px; height:18px;" onchange="onCombEqSelectChange('efx_prm8', this.value)"></select>
-                            <span style="color:#8E8E9E; font-size:9.5px;">Q:</span>
-                            <select id="selCombP2Q" class="synth-select" style="font-size:9.5px; padding:1px 3px; height:18px;" onchange="onCombEqSelectChange('efx_prm9', this.value)">
-                                <option value="0">0.5</option>
-                                <option value="1" selected>1.0</option>
-                                <option value="2">2.0</option>
-                                <option value="3">4.0</option>
-                                <option value="4">8.0</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="synth-param-row" style="margin:0;">
-                        <span class="synth-param-label" style="min-width:32px; font-size:10px;">Gain:</span>
-                        <input type="range" id="sldCombP2Gain" min="0" max="30" value="15" class="synth-param-slider" style="flex:1; height:16px; accent-color:#76FF03; margin:0;" oninput="onEqGainChange('efx_prm10', this.value, 'valP2Gain')">
-                        <span class="synth-param-val" id="valCombP2Gain" style="min-width:38px; font-size:10px; color:#76FF03;">0 dB</span>
-                    </div>
-                </div>
-
-                <!-- Banda 4: High Band -->
-                <div style="background:#141422; padding:4px 8px; border-radius:5px; border:1px solid #202030;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2px;">
-                        <span style="color:#FF4081; font-weight:bold; font-size:10.5px;">High Band:</span>
-                        <div style="display:flex; align-items:center; gap:4px;">
-                            <span style="color:#8E8E9E; font-size:9.5px;">Freq:</span>
-                            <select id="selCombHighFreq" class="synth-select" style="font-size:9.5px; padding:1px 3px; height:18px;" onchange="onCombEqSelectChange('efx_prm3', this.value)">
-                                <option value="0" selected>4000 Hz</option>
-                                <option value="1">8000 Hz</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="synth-param-row" style="margin:0;">
-                        <span class="synth-param-label" style="min-width:32px; font-size:10px;">Gain:</span>
-                        <input type="range" id="sldCombHighGain" min="0" max="30" value="15" class="synth-param-slider" style="flex:1; height:16px; accent-color:#FF4081; margin:0;" oninput="onEqGainChange('efx_prm4', this.value, 'valHighGain')">
-                        <span class="synth-param-val" id="valCombHighGain" style="min-width:38px; font-size:10px; color:#FF4081;">0 dB</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div class="strip-container" id="partsStripContainer"></div>
 
         <div id="zoneMapBars" style="display:flex; flex-direction:column; gap:5px; background:#0E0E14; border:1px solid #1C1C28; border-radius:8px; padding:8px 10px; margin-top:8px;"></div>
@@ -1453,6 +1333,7 @@
             <span class="quick-label">Visualização:</span>
             <button class="btn-preset p-dual" id="btnViewStudio" onclick="setSynthView('studio')">🎛️ Painel Completo (Studio)</button>
             <button class="btn-preset p-split" id="btnViewFaders" onclick="setSynthView('faders')">⚡ Faders Rápidos (4 Tones)</button>
+            <button class="btn-preset" style="background:linear-gradient(135deg, #1A1A2E, #2A2035); border-color:#FFD700; color:#FFD700; font-weight:bold; box-shadow:0 0 8px rgba(255,215,0,0.25);" onclick="openEqModal()">🎚️ Equalizador & EFX...</button>
             <button class="btn-preset" style="background: linear-gradient(135deg, #8E44AD, #9B59B6); border-color:#8E44AD; color:#FFF; font-weight:bold; box-shadow:0 0 10px rgba(142,68,173,0.35);" onclick="openSaveCustomPatchModal()">⭐ Salvar Patch Editado nos Favoritos</button>
             <span id="synthTargetModeText" style="margin-left: auto; font-size: 11px; font-weight: bold; color: #00E5FF; font-family: monospace;">Modo: Patch Ativo</span>
         </div>
@@ -1904,114 +1785,13 @@
                             </div>
                         </div>
 
-                        <!-- Painel Específico do STEREO-EQ (Exato do ChangeIt) -->
-                        <div id="panelStereoEq" style="background:#10101A; padding:6px; border-radius:4px; border:1px solid #252538; display:flex; flex-direction:column; gap:6px; font-size:11px;">
-                            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #1E1E2C; padding-bottom:3px;">
-                                <span style="font-weight:bold; color:#FFD700; font-size:11px;">🎚️ 01: STEREO-EQ (Equalizador 4 Bandas)</span>
-                                <button onclick="sendMidiCommand({type:'route_efx'})" style="background:#27AE60; border:none; color:white; font-size:10px; font-weight:bold; padding:2px 8px; border-radius:3px; cursor:pointer;" title="Força o roteamento do sinal para passar 100% pelo EFX">⚡ Ligar EFX no Timbre</button>
-                            </div>
-
-                            <!-- Barra de Presets Rápidos de EQ -->
-                            <div style="display:flex; gap:4px; align-items:center; background:#141420; padding:4px 6px; border-radius:4px;">
-                                <span style="font-size:10px; color:#8E8E9E; font-weight:bold;">Presets:</span>
-                                <button class="btn-preset-eq" onclick="applyEqPreset('flat')">Flat</button>
-                                <button class="btn-preset-eq" onclick="applyEqPreset('bright_piano')">🎹 Bright Piano</button>
-                                <button class="btn-preset-eq" onclick="applyEqPreset('warm_rhodes')">🎷 Warm Rhodes</button>
-                                <button class="btn-preset-eq" onclick="applyEqPreset('solo_cut')">🎸 Solo Cut</button>
-                            </div>
-                            
-                            <!-- Low Freq & Low Gain Slider -->
-                            <div style="background:#141422; padding:5px 8px; border-radius:4px; border:1px solid #202030;">
-                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-                                    <span style="color:#00E5FF; font-weight:bold; font-size:11px;">Low Band:</span>
-                                    <div style="display:flex; align-items:center; gap:6px;">
-                                        <span style="color:#8E8E9E; font-size:10px;">Freq:</span>
-                                        <select class="synth-select" style="font-size:10px; padding:1px 4px;" onchange="onCommonParamChange('efx_prm1', this.value)">
-                                            <option value="0" selected>200 Hz</option>
-                                            <option value="1">400 Hz</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="synth-param-row">
-                                    <span class="synth-param-label" style="min-width:60px; font-size:11px;">Low Gain:</span>
-                                    <input type="range" min="0" max="30" value="15" class="synth-param-slider" oninput="onEqGainChange('efx_prm2', this.value, 'valLowGain')">
-                                    <span class="synth-param-val" id="valLowGain" style="min-width:50px;">0 dB</span>
-                                </div>
-                            </div>
-
-                            <!-- Peaking 1 (Médios 1) -->
-                            <div style="background:#141422; padding:5px 8px; border-radius:4px; border:1px solid #202030;">
-                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-                                    <span style="color:#FFD700; font-weight:bold; font-size:11px;">Peaking 1 (Médio 1):</span>
-                                    <div style="display:flex; align-items:center; gap:8px;">
-                                        <span style="color:#8E8E9E; font-size:10px;">Freq:</span>
-                                        <select class="synth-select" style="font-size:10px; padding:1px 4px;" id="selP1Freq" onchange="onCommonParamChange('efx_prm5', this.value)"></select>
-                                        <span style="color:#8E8E9E; font-size:10px;">Q:</span>
-                                        <select class="synth-select" style="font-size:10px; padding:1px 4px;" onchange="onCommonParamChange('efx_prm6', this.value)">
-                                            <option value="0">0.5</option>
-                                            <option value="1" selected>1.0</option>
-                                            <option value="2">2.0</option>
-                                            <option value="3">4.0</option>
-                                            <option value="4">8.0</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="synth-param-row">
-                                    <span class="synth-param-label" style="min-width:60px; font-size:11px;">P1 Gain:</span>
-                                    <input type="range" min="0" max="30" value="15" class="synth-param-slider" oninput="onEqGainChange('efx_prm7', this.value, 'valP1Gain')">
-                                    <span class="synth-param-val" id="valP1Gain" style="min-width:50px;">0 dB</span>
-                                </div>
-                            </div>
-
-                            <!-- Peaking 2 (Médios 2) -->
-                            <div style="background:#141422; padding:5px 8px; border-radius:4px; border:1px solid #202030;">
-                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-                                    <span style="color:#76FF03; font-weight:bold; font-size:11px;">Peaking 2 (Médio 2):</span>
-                                    <div style="display:flex; align-items:center; gap:8px;">
-                                        <span style="color:#8E8E9E; font-size:10px;">Freq:</span>
-                                        <select class="synth-select" style="font-size:10px; padding:1px 4px;" id="selP2Freq" onchange="onCommonParamChange('efx_prm8', this.value)"></select>
-                                        <span style="color:#8E8E9E; font-size:10px;">Q:</span>
-                                        <select class="synth-select" style="font-size:10px; padding:1px 4px;" onchange="onCommonParamChange('efx_prm9', this.value)">
-                                            <option value="0">0.5</option>
-                                            <option value="1" selected>1.0</option>
-                                            <option value="2">2.0</option>
-                                            <option value="3">4.0</option>
-                                            <option value="4">8.0</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="synth-param-row">
-                                    <span class="synth-param-label" style="min-width:60px; font-size:11px;">P2 Gain:</span>
-                                    <input type="range" min="0" max="30" value="15" class="synth-param-slider" oninput="onEqGainChange('efx_prm10', this.value, 'valP2Gain')">
-                                    <span class="synth-param-val" id="valP2Gain" style="min-width:50px;">0 dB</span>
-                                </div>
-                            </div>
-
-                            <!-- High Freq & High Gain Slider -->
-                            <div style="background:#141422; padding:5px 8px; border-radius:4px; border:1px solid #202030;">
-                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-                                    <span style="color:#FF4081; font-weight:bold; font-size:11px;">High Band:</span>
-                                    <div style="display:flex; align-items:center; gap:6px;">
-                                        <span style="color:#8E8E9E; font-size:10px;">Freq:</span>
-                                        <select class="synth-select" style="font-size:10px; padding:1px 4px;" onchange="onCommonParamChange('efx_prm3', this.value)">
-                                            <option value="0" selected>4000 Hz</option>
-                                            <option value="1">8000 Hz</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="synth-param-row">
-                                    <span class="synth-param-label" style="min-width:60px; font-size:11px;">High Gain:</span>
-                                    <input type="range" min="0" max="30" value="15" class="synth-param-slider" oninput="onEqGainChange('efx_prm4', this.value, 'valHighGain')">
-                                    <span class="synth-param-val" id="valHighGain" style="min-width:50px;">0 dB</span>
-                                </div>
-                            </div>
-
-                            <!-- EQ Output Level (Prm 11) -->
-                            <div class="synth-param-row" style="margin-top:2px;">
-                                <span class="synth-param-label" style="min-width:65px; font-size:11px;">EQ Level:</span>
-                                <input type="range" min="0" max="127" value="127" class="synth-param-slider" oninput="onCommonParamChange('efx_prm11', this.value, 'valEqLevel')">
-                                <span class="synth-param-val" id="valEqLevel" style="font-size:11px;">127</span>
-                            </div>
+                        <!-- Botão de Acesso Rápido ao Equalizador & EFX Modal -->
+                        <div style="background:#10101A; padding:12px; border-radius:6px; border:1px solid #252538; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; text-align:center;">
+                            <span style="font-weight:bold; color:#FFD700; font-size:12px;">🎚️ Stereo-EQ (Equalizador Gráfico 4-Bandas)</span>
+                            <span style="font-size:10px; color:#8E8E9E; max-width:260px;">Controle visual com curva interativa, 4 pontos coloridos arrastáveis e presets de áudio.</span>
+                            <button onclick="openEqModal()" style="background:linear-gradient(135deg, #1F1F35, #2F2445); border:1px solid #FFD700; color:#FFD700; font-size:11px; font-weight:bold; padding:6px 14px; border-radius:5px; cursor:pointer; display:flex; align-items:center; gap:6px; box-shadow:0 0 10px rgba(255,215,0,0.25);" title="Abrir Pop-up do Equalizador Gráfico e EFX">
+                                🎚️ Abrir Equalizador & EFX Modal...
+                            </button>
                         </div>
 
                         <!-- Fallback para outros tipos de EFX -->
@@ -2038,10 +1818,11 @@
                 <span style="font-size:14px; font-weight:bold; color:#2ECC71;">🎤 MODO PALCO LIVE</span>
                 <span style="font-size:11px; color:#8E8E9E;">Toque direto no card para disparar o timbre/combinação instantaneamente</span>
             </div>
-            <div style="display:flex; gap:6px;">
+            <div style="display:flex; gap:6px; align-items:center;">
                 <button class="btn-preset-eq" onclick="filterLiveStage('all')">Todos</button>
                 <button class="btn-preset-eq" onclick="filterLiveStage('perf')">🎹 Combinações</button>
                 <button class="btn-preset-eq" onclick="filterLiveStage('patch')">⭐ Patches</button>
+                <button onclick="openEqModal()" style="background:linear-gradient(135deg, #1A1A2E, #2A2035); border:1px solid #FFD700; color:#FFD700; font-size:10px; font-weight:bold; padding:3px 9px; border-radius:4px; cursor:pointer; display:flex; align-items:center; gap:4px; box-shadow:0 0 8px rgba(255,215,0,0.25); white-space:nowrap;" title="Abrir pop-up do Equalizador Gráfico 4-Bandas e EFX">🎚️ Equalizador & EFX...</button>
             </div>
         </div>
         <div class="live-stage-grid" id="liveStageGrid">
@@ -2897,7 +2678,7 @@
             const isOn = effectBypassState[eff];
             const btnIds = eff === "reverb" 
                 ? ["btnBypassRev"] 
-                : (eff === "chorus" ? ["btnBypassCho"] : ["btnBypassEfx", "btnCombBypassEfx"]);
+                : (eff === "chorus" ? ["btnBypassCho"] : ["btnBypassEfx", "btnCombBypassEfx", "btnModalBypassEfx"]);
             
             btnIds.forEach(id => {
                 const btn = document.getElementById(id);
@@ -5019,43 +4800,55 @@
             "4000 Hz", "5000 Hz", "6300 Hz", "8000 Hz"
         ];
 
-        function toggleCombEqPanel() {
-            const pnl = document.getElementById("panelCombStereoEq");
-            const btn = document.getElementById("btnToggleCombEq");
-            if (!pnl) return;
-            if (pnl.style.display === "none") {
-                pnl.style.display = "flex";
-                if (btn) btn.innerText = "🎚️ EQ 4-Bandas ▴";
-            } else {
-                pnl.style.display = "none";
-                if (btn) btn.innerText = "🎚️ EQ 4-Bandas ▾";
-            }
+        // ==========================================
+        // MODAL GLOBAL DE EQUALIZADOR STEREO-EQ & EFX
+        // ==========================================
+        let isEqDragging = false;
+        let dragBandIdx = -1; // 0=Low, 1=P1, 2=P2, 3=High
+        let eqCanvasListenersAttached = false;
+
+        function openEqModal() {
+            const modal = document.getElementById("modalEqEfx");
+            if (!modal) return;
+            modal.classList.add("active");
+            initStereoEqControls();
+            attachEqCanvasListeners();
+            setTimeout(drawEqCurve, 50);
+        }
+
+        function closeEqModal(evt) {
+            if (evt && evt.target && evt.target.id !== "modalEqEfx" && !evt.target.classList.contains("btn-close-modal")) return;
+            const modal = document.getElementById("modalEqEfx");
+            if (modal) modal.classList.remove("active");
         }
 
         function onCombEqSelectChange(param, val) {
             sendMidiCommand({ type: "common_param", param: param, value: parseInt(val) });
-            // Sincroniza o select correspondente na aba Síntese
+            // Sincroniza selects no modal e síntese
             const MAP_TO_SYNTH = {
-                "efx_prm1": "selLowFreq",
-                "efx_prm3": "selHighFreq",
-                "efx_prm5": "selP1Freq",
-                "efx_prm6": "selP1Q",
-                "efx_prm8": "selP2Freq",
-                "efx_prm9": "selP2Q"
+                "efx_prm1": ["selLowFreq", "selCombLowFreq"],
+                "efx_prm3": ["selHighFreq", "selCombHighFreq"],
+                "efx_prm5": ["selP1Freq", "selCombP1Freq"],
+                "efx_prm6": ["selP1Q", "selCombP1Q"],
+                "efx_prm8": ["selP2Freq", "selCombP2Freq"],
+                "efx_prm9": ["selP2Q", "selCombP2Q"]
             };
-            const sId = MAP_TO_SYNTH[param];
-            if (sId) {
-                const sEl = document.getElementById(sId);
-                if (sEl) sEl.value = val;
+            const sIds = MAP_TO_SYNTH[param];
+            if (sIds) {
+                sIds.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.value = val;
+                });
             }
+            drawEqCurve();
         }
 
         function onEqGainChange(param, val, labelId) {
-            const num = parseInt(val);
+            const num = Math.max(0, Math.min(30, parseInt(val)));
             const db = num - 15;
             const text = (db > 0 ? `+${db}` : `${db}`) + " dB";
 
-            // Sincroniza em ambas as abas
+            // Sincroniza em todos os elementos correspondentes
             const MAP_PAIRS = {
                 "efx_prm2": { sldComb: "sldCombLowGain", valComb: "valCombLowGain", sldSynth: "input[oninput*='valLowGain']", valSynth: "valLowGain" },
                 "efx_prm4": { sldComb: "sldCombHighGain", valComb: "valCombHighGain", sldSynth: "input[oninput*='valHighGain']", valSynth: "valHighGain" },
@@ -5079,8 +4872,41 @@
         }
 
         // ==========================================
-        // MINI GRÁFICO DA CURVA DE EQUALIZAÇÃO
+        // MOTOR GRÁFICO INTERATIVO DE EQUALIZAÇÃO
         // ==========================================
+        const EQ_BANDS_INFO = [
+            { id: "Low", param: "efx_prm2", sld: "sldCombLowGain", valLabel: "valCombLowGain", color: "#00E5FF", name: "Low", defaultFreq: 200 },
+            { id: "P1",  param: "efx_prm7", sld: "sldCombP1Gain",  valLabel: "valCombP1Gain",  color: "#FFD700", name: "P1",  defaultFreq: 630 },
+            { id: "P2",  param: "efx_prm10", sld: "sldCombP2Gain", valLabel: "valCombP2Gain", color: "#76FF03", name: "P2",  defaultFreq: 1600 },
+            { id: "High", param: "efx_prm4", sld: "sldCombHighGain", valLabel: "valCombHighGain", color: "#FF4081", name: "High", defaultFreq: 4000 }
+        ];
+
+        function getEqBandFreq(idx) {
+            if (idx === 0) {
+                const el = document.getElementById("selCombLowFreq");
+                return (el && el.value == "1") ? 400 : 200;
+            } else if (idx === 1) {
+                const el = document.getElementById("selCombP1Freq");
+                const fIdx = el ? parseInt(el.value) : 5;
+                const freqs = [200, 250, 315, 400, 500, 630, 800, 1000, 1250, 1600, 2000, 2500, 3150, 4000, 5000, 6300, 8000];
+                return freqs[fIdx] || 630;
+            } else if (idx === 2) {
+                const el = document.getElementById("selCombP2Freq");
+                const fIdx = el ? parseInt(el.value) : 9;
+                const freqs = [200, 250, 315, 400, 500, 630, 800, 1000, 1250, 1600, 2000, 2500, 3150, 4000, 5000, 6300, 8000];
+                return freqs[fIdx] || 1600;
+            } else {
+                const el = document.getElementById("selCombHighFreq");
+                return (el && el.value == "1") ? 8000 : 4000;
+            }
+        }
+
+        function getBandGainDb(idx) {
+            const b = EQ_BANDS_INFO[idx];
+            const el = document.getElementById(b.sld);
+            return el ? (parseInt(el.value) - 15) : 0;
+        }
+
         function drawEqCurve() {
             const canvas = document.getElementById("canvasEqCurve");
             if (!canvas) return;
@@ -5090,58 +4916,267 @@
 
             ctx.clearRect(0, 0, w, h);
 
-            // Linha central (0 dB)
-            const zeroY = h / 2;
-            ctx.strokeStyle = "rgba(255, 255, 255, 0.12)";
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(0, zeroY);
-            ctx.lineTo(w, zeroY);
-            ctx.stroke();
+            // Fundo escuro premium com grid logarítmico de estúdio
+            ctx.fillStyle = "#090910";
+            ctx.fillRect(0, 0, w, h);
 
-            // Pega os 4 ganhos (-15 a +15 dB)
-            const getDb = (id) => {
-                const el = document.getElementById(id);
-                return el ? (parseInt(el.value) - 15) : 0;
+            const minF = 20;
+            const maxF = 20000;
+            const logMin = Math.log10(minF);
+            const logMax = Math.log10(maxF);
+            const freqToX = (f) => {
+                return ((Math.log10(f) - logMin) / (logMax - logMin)) * w;
             };
 
-            const lowDb = getDb("sldCombLowGain");
-            const highDb = getDb("sldCombHighGain");
-            const p1Db = getDb("sldCombP1Gain");
-            const p2Db = getDb("sldCombP2Gain");
+            const zeroY = h / 2;
+            const maxDb = 15;
+            const dbToY = (db) => {
+                return zeroY - (db / maxDb) * (h * 0.40);
+            };
 
-            // Curva suave aproximada
-            ctx.strokeStyle = "#00E5FF";
-            ctx.lineWidth = 2.5;
+            // Grid Vertical: Linhas de Frequência (50Hz, 100Hz, 200Hz, 500Hz, 1kHz, 2kHz, 5kHz, 10kHz, 20kHz)
+            const gridFreqs = [50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000];
+            ctx.lineWidth = 1;
+            gridFreqs.forEach(f => {
+                const x = freqToX(f);
+                ctx.strokeStyle = "rgba(255, 255, 255, 0.05)";
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, h);
+                ctx.stroke();
+
+                // Rótulos de frequência discretos
+                if (f === 100 || f === 1000 || f === 10000) {
+                    ctx.fillStyle = "rgba(255, 255, 255, 0.25)";
+                    ctx.font = "9px monospace";
+                    ctx.textAlign = "center";
+                    const txt = f >= 1000 ? `${f / 1000}k` : `${f}`;
+                    ctx.fillText(txt, x, h - 5);
+                }
+            });
+
+            // Grid Horizontal: Linhas de Ganho (+15, +10, +5, 0, -5, -10, -15 dB)
+            [-15, -10, -5, 0, 5, 10, 15].forEach(db => {
+                const y = dbToY(db);
+                if (db === 0) {
+                    ctx.strokeStyle = "rgba(255, 255, 255, 0.28)";
+                    ctx.lineWidth = 1;
+                } else {
+                    ctx.strokeStyle = "rgba(255, 255, 255, 0.05)";
+                    ctx.lineWidth = 1;
+                }
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(w, y);
+                ctx.stroke();
+
+                if (db === 0 || db === 10 || db === -10) {
+                    ctx.fillStyle = "rgba(255, 255, 255, 0.22)";
+                    ctx.font = "8.5px monospace";
+                    ctx.textAlign = "right";
+                    ctx.fillText(`${db > 0 ? "+" + db : db}dB`, w - 6, y + 3);
+                }
+            });
+
+            // Cálculo dos 4 pontos
+            const pts = EQ_BANDS_INFO.map((b, i) => {
+                const f = getEqBandFreq(i);
+                const db = getBandGainDb(i);
+                return {
+                    bandIdx: i,
+                    freq: f,
+                    db: db,
+                    x: freqToX(f),
+                    y: dbToY(db),
+                    color: b.color,
+                    name: b.name
+                };
+            });
+
+            // Constrói a curva de equalização composta contínua
             ctx.beginPath();
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = "#FFD700";
 
-            const pts = [
-                { x: 0, y: zeroY - (lowDb * 1.1) },
-                { x: w * 0.18, y: zeroY - (lowDb * 1.1) },
-                { x: w * 0.38, y: zeroY - (p1Db * 1.1) },
-                { x: w * 0.65, y: zeroY - (p2Db * 1.1) },
-                { x: w * 0.85, y: zeroY - (highDb * 1.1) },
-                { x: w, y: zeroY - (highDb * 1.1) }
-            ];
+            // Interpolação suave sobre todo o espectro
+            const curvePoints = [];
+            for (let px = 0; px <= w; px += 2) {
+                const f = Math.pow(10, logMin + (px / w) * (logMax - logMin));
+                let totalDb = 0;
 
-            ctx.moveTo(pts[0].x, pts[0].y);
-            for (let i = 1; i < pts.length; i++) {
-                const xc = (pts[i - 1].x + pts[i].x) / 2;
-                const yc = (pts[i - 1].y + pts[i].y) / 2;
-                ctx.quadraticCurveTo(pts[i - 1].x, pts[i - 1].y, xc, yc);
+                // Banda 0: Low Shelf
+                const fLow = pts[0].freq;
+                const dbLow = pts[0].db;
+                totalDb += dbLow / (1 + Math.pow(f / fLow, 2));
+
+                // Banda 1: Peaking 1
+                const fP1 = pts[1].freq;
+                const dbP1 = pts[1].db;
+                const q1 = 1.0;
+                totalDb += dbP1 / (1 + Math.pow(q1 * (f / fP1 - fP1 / f), 2));
+
+                // Banda 2: Peaking 2
+                const fP2 = pts[2].freq;
+                const dbP2 = pts[2].db;
+                const q2 = 1.0;
+                totalDb += dbP2 / (1 + Math.pow(q2 * (f / fP2 - fP2 / f), 2));
+
+                // Banda 3: High Shelf
+                const fHigh = pts[3].freq;
+                const dbHigh = pts[3].db;
+                totalDb += dbHigh * (Math.pow(f / fHigh, 2) / (1 + Math.pow(f / fHigh, 2)));
+
+                const py = dbToY(totalDb);
+                curvePoints.push({ x: px, y: py });
+                if (px === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
             }
-            ctx.lineTo(pts[pts.length - 1].x, pts[pts.length - 1].y);
             ctx.stroke();
 
-            // Preenchimento gradiente suave sob a curva
-            ctx.lineTo(w, zeroY);
-            ctx.lineTo(0, zeroY);
-            ctx.closePath();
-            const grad = ctx.createLinearGradient(0, 0, 0, h);
-            grad.addColorStop(0, "rgba(0, 229, 255, 0.2)");
-            grad.addColorStop(1, "rgba(0, 229, 255, 0.0)");
-            ctx.fillStyle = grad;
-            ctx.fill();
+            // Preenchimento gradiente suave sob a curva até o 0 dB
+            if (curvePoints.length > 0) {
+                ctx.beginPath();
+                ctx.moveTo(curvePoints[0].x, zeroY);
+                for (let cp of curvePoints) ctx.lineTo(cp.x, cp.y);
+                ctx.lineTo(curvePoints[curvePoints.length - 1].x, zeroY);
+                ctx.closePath();
+
+                const grad = ctx.createLinearGradient(0, 0, 0, h);
+                grad.addColorStop(0, "rgba(255, 215, 0, 0.22)");
+                grad.addColorStop(0.5, "rgba(255, 215, 0, 0.05)");
+                grad.addColorStop(1, "rgba(255, 215, 0, 0.15)");
+                ctx.fillStyle = grad;
+                ctx.fill();
+            }
+
+            // Desenha os 4 nós / pontos coloridos com anel de destaque e glow
+            pts.forEach((pt, idx) => {
+                const isSelected = (isEqDragging && dragBandIdx === idx);
+
+                // Halo / Glow
+                ctx.beginPath();
+                ctx.arc(pt.x, pt.y, isSelected ? 15 : 10, 0, Math.PI * 2);
+                ctx.fillStyle = pt.color + (isSelected ? "66" : "33");
+                ctx.fill();
+
+                // Círculo sólido
+                ctx.beginPath();
+                ctx.arc(pt.x, pt.y, isSelected ? 8 : 6.5, 0, Math.PI * 2);
+                ctx.fillStyle = pt.color;
+                ctx.fill();
+
+                // Borda branca brilhante
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = "#FFFFFF";
+                ctx.stroke();
+
+                // Tag de texto acima do nó
+                ctx.fillStyle = pt.color;
+                ctx.font = "bold 10px monospace";
+                ctx.textAlign = "center";
+                const dbStr = (pt.db > 0 ? `+${pt.db}` : `${pt.db}`) + "dB";
+                const textY = pt.y > 25 ? (pt.y - 12) : (pt.y + 20);
+                ctx.fillText(`${pt.name}: ${dbStr}`, pt.x, textY);
+            });
+        }
+
+        // ==========================================
+        // HANDLERS DE INTERAÇÃO (MOUSE & TOUCH DRAG)
+        // ==========================================
+        function attachEqCanvasListeners() {
+            if (eqCanvasListenersAttached) return;
+            const canvas = document.getElementById("canvasEqCurve");
+            if (!canvas) return;
+
+            eqCanvasListenersAttached = true;
+
+            const getCanvasPos = (evt) => {
+                const rect = canvas.getBoundingClientRect();
+                const clientX = evt.touches ? evt.touches[0].clientX : evt.clientX;
+                const clientY = evt.touches ? evt.touches[0].clientY : evt.clientY;
+                const scaleX = canvas.width / rect.width;
+                const scaleY = canvas.height / rect.height;
+                return {
+                    x: (clientX - rect.left) * scaleX,
+                    y: (clientY - rect.top) * scaleY
+                };
+            };
+
+            const findClosestBand = (pos) => {
+                let closestIdx = -1;
+                let minDist = 9999;
+                const h = canvas.height;
+                const zeroY = h / 2;
+                const maxDb = 15;
+                const dbToY = (db) => zeroY - (db / maxDb) * (h * 0.40);
+                const minF = 20, maxF = 20000;
+                const logMin = Math.log10(minF), logMax = Math.log10(maxF);
+
+                EQ_BANDS_INFO.forEach((b, idx) => {
+                    const f = getEqBandFreq(idx);
+                    const db = getBandGainDb(idx);
+                    const bx = ((Math.log10(f) - logMin) / (logMax - logMin)) * canvas.width;
+                    const by = dbToY(db);
+                    const dist = Math.hypot(pos.x - bx, pos.y - by);
+                    if (dist < minDist) {
+                        minDist = dist;
+                        closestIdx = idx;
+                    }
+                });
+
+                // Limiar de toque (raio de 45px para facilitar dedos em telas touch)
+                return minDist <= 45 ? closestIdx : -1;
+            };
+
+            const handleStart = (evt) => {
+                const pos = getCanvasPos(evt);
+                const band = findClosestBand(pos);
+                if (band !== -1) {
+                    isEqDragging = true;
+                    dragBandIdx = band;
+                    evt.preventDefault();
+                    drawEqCurve();
+                }
+            };
+
+            const handleMove = (evt) => {
+                if (!isEqDragging || dragBandIdx === -1) {
+                    const pos = getCanvasPos(evt);
+                    const hoverBand = findClosestBand(pos);
+                    canvas.style.cursor = (hoverBand !== -1) ? "ns-resize" : "default";
+                    return;
+                }
+                evt.preventDefault();
+                const pos = getCanvasPos(evt);
+                const h = canvas.height;
+                const zeroY = h / 2;
+                const maxDb = 15;
+
+                // Converte a posição vertical Y de volta em dB (-15 a +15)
+                const db = (zeroY - pos.y) / (h * 0.40) * maxDb;
+                const clampedDb = Math.max(-15, Math.min(15, Math.round(db)));
+                const valRoland = clampedDb + 15; // 0..30
+
+                const band = EQ_BANDS_INFO[dragBandIdx];
+                onEqGainChange(band.param, valRoland, band.valLabel);
+            };
+
+            const handleEnd = () => {
+                if (isEqDragging) {
+                    isEqDragging = false;
+                    dragBandIdx = -1;
+                    drawEqCurve();
+                }
+            };
+
+            canvas.addEventListener("mousedown", handleStart);
+            window.addEventListener("mousemove", handleMove);
+            window.addEventListener("mouseup", handleEnd);
+
+            canvas.addEventListener("touchstart", handleStart, { passive: false });
+            window.addEventListener("touchmove", handleMove, { passive: false });
+            window.addEventListener("touchend", handleEnd);
+            window.addEventListener("touchcancel", handleEnd);
         }
 
         // ==========================================
@@ -5292,6 +5327,8 @@
             if (selSynth && selSynth.value != val) selSynth.value = val;
             const selComb = document.getElementById("selCombEfxType");
             if (selComb && selComb.value != val) selComb.value = val;
+            const selModal = document.getElementById("selModalEfxType");
+            if (selModal && selModal.value != val) selModal.value = val;
 
             sendMidiCommand({ type: "common_param", param: "mfx_type", value: val });
             const pnlEq = document.getElementById("panelStereoEq");
@@ -5709,6 +5746,150 @@
             <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:8px;">
                 <button style="background:#242436; border:1px solid #3A3A55; color:#C0C0D0; padding:6px 14px; border-radius:5px; font-size:12px; cursor:pointer;" onclick="closeSaveCustomPatchModal()">Cancelar</button>
                 <button style="background:linear-gradient(135deg, #8E44AD, #9B59B6); border:none; color:white; padding:6px 16px; border-radius:5px; font-size:12px; font-weight:bold; cursor:pointer; box-shadow:0 0 10px rgba(142,68,173,0.4);" onclick="saveCustomFavPatchFromModal()">⭐ Salvar nos Favoritos</button>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Pop-up de Equalização Gráfica (Stereo-EQ 4-Bandas) e EFX para Combinações, Síntese e Palco Live -->
+    <div class="modal-overlay" id="modalEqEfx" onclick="closeEqModal(event)">
+        <div class="modal-box" onclick="event.stopPropagation()" style="max-width:820px; width:95%; background:#101018; border:1px solid #3A3A55; border-radius:12px; padding:16px 18px; box-shadow:0 15px 40px rgba(0,0,0,0.85); max-height:92vh; overflow-y:auto;">
+            <!-- Topo do Modal: Título, EFX Type, Bypass, Ligar EFX nos Timbres e Fechar -->
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; border-bottom:1px solid #232338; padding-bottom:8px;">
+                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                    <span style="font-weight:bold; color:#FFD700; font-size:13px; display:flex; align-items:center; gap:5px;">
+                        🎚️ Equalizador Gráfico Stereo-EQ (4 Bandas) & EFX
+                    </span>
+                    <button class="btn-bypass active" id="btnModalBypassEfx" onclick="toggleEffectBypass('efx')" style="padding:2px 8px; font-size:10px; height:22px; border-radius:4px;" title="Liga/Desliga o processador EFX">ON</button>
+                    <select id="selModalEfxType" class="synth-select" style="font-size:10px; padding:2px 6px; height:22px; max-width:130px; border-color:#E74C3C;" onchange="onEfxTypeChange(this.value)">
+                        <option value="0" selected>01: STEREO-EQ</option>
+                        <option value="1">02: Overdrive</option>
+                        <option value="2">03: Distortion</option>
+                        <option value="3">04: Phaser</option>
+                        <option value="7">08: Rotary</option>
+                        <option value="13">14: Stereo-Chorus</option>
+                        <option value="16">17: Stereo-Delay</option>
+                        <option value="23">24: Reverb</option>
+                    </select>
+                    <button onclick="sendMidiCommand({type:'route_efx'})" style="background:#27AE60; border:none; color:white; font-size:10px; font-weight:bold; padding:3px 8px; height:22px; border-radius:4px; cursor:pointer;" title="Força o roteamento do som para passar 100% pelo EFX">⚡ Ligar EFX nos Timbres</button>
+                </div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <div style="display:flex; align-items:center; gap:4px; background:rgba(255,215,0,0.08); padding:2px 8px; border-radius:5px; border:1px solid rgba(255,215,0,0.25);">
+                        <span style="font-size:10.5px; font-weight:bold; color:#FFD700; white-space:nowrap;">EQ Level:</span>
+                        <input type="range" id="sldCombEq" min="0" max="127" value="127" class="synth-param-slider" style="width:70px; height:16px; accent-color:#FFD700; margin:0;" oninput="onCombFxChange('efx_prm11', this.value, 'valCombEq')">
+                        <span id="valCombEq" style="font-size:11px; font-family:monospace; font-weight:bold; color:#FFD700; min-width:24px; text-align:right;">127</span>
+                    </div>
+                    <button class="btn-close-modal" onclick="closeEqModal()" style="background:#242436; border:1px solid #444460; color:#FFF; font-size:14px; font-weight:bold; width:26px; height:26px; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center;" title="Fechar">✕</button>
+                </div>
+            </div>
+
+            <!-- Barra de Presets Rápidos de EQ -->
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; background:#141420; padding:4px 8px; border-radius:6px; border:1px solid #1F1F30;">
+                <div style="display:flex; gap:6px; align-items:center;">
+                    <span style="font-size:10.5px; color:#8E8E9E; font-weight:bold;">Presets de Resposta:</span>
+                    <button class="btn-preset-eq" onclick="applyEqPreset('flat')">Flat</button>
+                    <button class="btn-preset-eq" onclick="applyEqPreset('bright_piano')">🎹 Bright Piano</button>
+                    <button class="btn-preset-eq" onclick="applyEqPreset('warm_rhodes')">🎷 Warm Rhodes</button>
+                    <button class="btn-preset-eq" onclick="applyEqPreset('solo_cut')">🎸 Solo Cut</button>
+                </div>
+                <span style="font-size:9.5px; color:#A0A0B8; font-style:italic;">💡 Dica: Arraste os 4 círculos coloridos no gráfico ou use os sliders abaixo</span>
+            </div>
+
+            <!-- Gráfico Interativo com Muito Mais Espaço de Tela -->
+            <div style="background:#090910; border-radius:8px; border:1px solid #232338; padding:4px; position:relative; box-shadow:inset 0 0 20px rgba(0,0,0,0.8);">
+                <canvas id="canvasEqCurve" width="760" height="220" style="width:100%; height:220px; display:block; border-radius:6px; cursor:ns-resize;"></canvas>
+            </div>
+
+            <!-- Grade com os 4 Controles de Bandas e Sliders Numéricos -->
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap:8px;">
+                <!-- Banda 1: Low Band (Ciano) -->
+                <div style="background:#131320; padding:6px 10px; border-radius:6px; border:1px solid #202035; border-left:3px solid #00E5FF;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                        <span style="color:#00E5FF; font-weight:bold; font-size:11px;">● Low Band:</span>
+                        <div style="display:flex; align-items:center; gap:4px;">
+                            <span style="color:#8E8E9E; font-size:9.5px;">Freq:</span>
+                            <select id="selCombLowFreq" class="synth-select" style="font-size:9.5px; padding:1px 4px; height:20px;" onchange="onCombEqSelectChange('efx_prm1', this.value)">
+                                <option value="0" selected>200 Hz</option>
+                                <option value="1">400 Hz</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="synth-param-row" style="margin:0;">
+                        <span class="synth-param-label" style="min-width:34px; font-size:10px;">Gain:</span>
+                        <input type="range" id="sldCombLowGain" min="0" max="30" value="15" class="synth-param-slider" style="flex:1; height:16px; accent-color:#00E5FF; margin:0;" oninput="onEqGainChange('efx_prm2', this.value, 'valCombLowGain')">
+                        <span class="synth-param-val" id="valCombLowGain" style="min-width:42px; font-size:10px; color:#00E5FF; text-align:right;">0 dB</span>
+                    </div>
+                </div>
+
+                <!-- Banda 2: Peaking 1 (Amarelo) -->
+                <div style="background:#131320; padding:6px 10px; border-radius:6px; border:1px solid #202035; border-left:3px solid #FFD700;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                        <span style="color:#FFD700; font-weight:bold; font-size:11px;">● Peaking 1 (Médio 1):</span>
+                        <div style="display:flex; align-items:center; gap:4px;">
+                            <span style="color:#8E8E9E; font-size:9.5px;">Freq:</span>
+                            <select id="selCombP1Freq" class="synth-select" style="font-size:9.5px; padding:1px 3px; height:20px;" onchange="onCombEqSelectChange('efx_prm5', this.value)"></select>
+                            <span style="color:#8E8E9E; font-size:9.5px;">Q:</span>
+                            <select id="selCombP1Q" class="synth-select" style="font-size:9.5px; padding:1px 3px; height:20px;" onchange="onCombEqSelectChange('efx_prm6', this.value)">
+                                <option value="0">0.5</option>
+                                <option value="1" selected>1.0</option>
+                                <option value="2">2.0</option>
+                                <option value="3">4.0</option>
+                                <option value="4">8.0</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="synth-param-row" style="margin:0;">
+                        <span class="synth-param-label" style="min-width:34px; font-size:10px;">Gain:</span>
+                        <input type="range" id="sldCombP1Gain" min="0" max="30" value="15" class="synth-param-slider" style="flex:1; height:16px; accent-color:#FFD700; margin:0;" oninput="onEqGainChange('efx_prm7', this.value, 'valCombP1Gain')">
+                        <span class="synth-param-val" id="valCombP1Gain" style="min-width:42px; font-size:10px; color:#FFD700; text-align:right;">0 dB</span>
+                    </div>
+                </div>
+
+                <!-- Banda 3: Peaking 2 (Verde) -->
+                <div style="background:#131320; padding:6px 10px; border-radius:6px; border:1px solid #202035; border-left:3px solid #76FF03;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                        <span style="color:#76FF03; font-weight:bold; font-size:11px;">● Peaking 2 (Médio 2):</span>
+                        <div style="display:flex; align-items:center; gap:4px;">
+                            <span style="color:#8E8E9E; font-size:9.5px;">Freq:</span>
+                            <select id="selCombP2Freq" class="synth-select" style="font-size:9.5px; padding:1px 3px; height:20px;" onchange="onCombEqSelectChange('efx_prm8', this.value)"></select>
+                            <span style="color:#8E8E9E; font-size:9.5px;">Q:</span>
+                            <select id="selCombP2Q" class="synth-select" style="font-size:9.5px; padding:1px 3px; height:20px;" onchange="onCombEqSelectChange('efx_prm9', this.value)">
+                                <option value="0">0.5</option>
+                                <option value="1" selected>1.0</option>
+                                <option value="2">2.0</option>
+                                <option value="3">4.0</option>
+                                <option value="4">8.0</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="synth-param-row" style="margin:0;">
+                        <span class="synth-param-label" style="min-width:34px; font-size:10px;">Gain:</span>
+                        <input type="range" id="sldCombP2Gain" min="0" max="30" value="15" class="synth-param-slider" style="flex:1; height:16px; accent-color:#76FF03; margin:0;" oninput="onEqGainChange('efx_prm10', this.value, 'valCombP2Gain')">
+                        <span class="synth-param-val" id="valCombP2Gain" style="min-width:42px; font-size:10px; color:#76FF03; text-align:right;">0 dB</span>
+                    </div>
+                </div>
+
+                <!-- Banda 4: High Band (Rosa) -->
+                <div style="background:#131320; padding:6px 10px; border-radius:6px; border:1px solid #202035; border-left:3px solid #FF4081;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                        <span style="color:#FF4081; font-weight:bold; font-size:11px;">● High Band:</span>
+                        <div style="display:flex; align-items:center; gap:4px;">
+                            <span style="color:#8E8E9E; font-size:9.5px;">Freq:</span>
+                            <select id="selCombHighFreq" class="synth-select" style="font-size:9.5px; padding:1px 4px; height:20px;" onchange="onCombEqSelectChange('efx_prm3', this.value)">
+                                <option value="0" selected>4000 Hz</option>
+                                <option value="1">8000 Hz</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="synth-param-row" style="margin:0;">
+                        <span class="synth-param-label" style="min-width:34px; font-size:10px;">Gain:</span>
+                        <input type="range" id="sldCombHighGain" min="0" max="30" value="15" class="synth-param-slider" style="flex:1; height:16px; accent-color:#FF4081; margin:0;" oninput="onEqGainChange('efx_prm4', this.value, 'valCombHighGain')">
+                        <span class="synth-param-val" id="valCombHighGain" style="min-width:42px; font-size:10px; color:#FF4081; text-align:right;">0 dB</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botão de Fechar no rodapé -->
+            <div style="display:flex; justify-content:flex-end; margin-top:4px;">
+                <button class="btn-close-modal" onclick="closeEqModal()" style="background:#242436; border:1px solid #444460; color:#FFF; font-size:12px; font-weight:bold; padding:6px 18px; border-radius:5px; cursor:pointer;">Concluir</button>
             </div>
         </div>
     </div>
