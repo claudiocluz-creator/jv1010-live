@@ -570,6 +570,51 @@
         }
         .fader-label { font-size: 9.5px; color: #8E8E9E; text-transform: uppercase; margin-top: 2px; }
 
+        /* Fader Vertical Estilo Console/Mixer para Combinações */
+        .part-fader-section {
+            width: 100%;
+            box-sizing: border-box;
+            background: #14141E;
+            border: 1px solid #252536;
+            border-radius: 6px;
+            padding: 6px 4px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 6px;
+        }
+        .part-fader-vertical-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            background: #0E0E14;
+            border: 1px solid #1E1E2C;
+            border-radius: 5px;
+            padding: 4px 6px;
+            min-width: 48px;
+            flex: 1;
+            height: 125px;
+            box-sizing: border-box;
+        }
+        .part-fader-input {
+            -webkit-appearance: slider-vertical;
+            appearance: slider-vertical;
+            width: 24px;
+            height: 80px;
+            cursor: pointer;
+            outline: none;
+            margin: 2px 0;
+        }
+        .part-side-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            flex: 1.1;
+            min-width: 0;
+            box-sizing: border-box;
+        }
+
         .stepper-row {
             width: 100%;
             box-sizing: border-box;
@@ -1196,9 +1241,9 @@
             <div class="title">🎛️ JV-1010 Live</div>
             <div class="tab-bar">
                 <button class="tab-btn active" id="tabBtnPatches" onclick="switchTab('patches')">📑 Lista</button>
-                <button class="tab-btn" id="tabBtnFavs" onclick="switchTab('favorites')">⭐ Favoritos</button>
                 <button class="tab-btn" id="tabBtnComb" onclick="switchTab('combination')">🎹 Combinações</button>
                 <button class="tab-btn" id="tabBtnSynth" onclick="switchTab('synth')">🎛️ Síntese</button>
+                <button class="tab-btn" id="tabBtnFavs" onclick="switchTab('favorites')">⭐ Favoritos</button>
                 <button class="tab-btn" id="tabBtnLive" style="background:#1B3022; color:#2ECC71; border-color:#27AE60;" onclick="switchTab('live')">🎤 Palco Live</button>
             </div>
         </div>
@@ -4219,31 +4264,36 @@
 
                     <div class="patch-box" onclick="openPatchPicker(${i})" title="Clique para trocar este timbre">${p.patch}</div>
 
-                    <div class="knob-box" style="width: 100%; box-sizing: border-box;">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2px;">
-                            <div style="display:flex; align-items:center; gap:4px;">
-                                <span class="knob-label" style="font-weight:bold; margin:0;">Volume</span>
-                                <button class="btn-learn" id="btnLearnPartVol${i}" onclick="toggleMidiLearn('part_vol_${i}', this)" style="padding:1px 4px; font-size:8.5px; margin:0; height:16px;" title="Mapear Volume da Parte ${i + 1} para um Fader/Knob MIDI">🎓 Learn</button>
+                    <div class="part-fader-section">
+                        <div class="part-fader-vertical-box">
+                            <div style="display:flex; align-items:center; justify-content:space-between; width:100%; margin-bottom:2px;">
+                                <span class="knob-label" style="font-weight:bold; font-size:9.5px; margin:0;">Vol</span>
+                                <button class="btn-learn" id="btnLearnPartVol${i}" onclick="toggleMidiLearn('part_vol_${i}', this)" style="padding:1px 3px; font-size:8px; margin:0; height:15px;" title="Mapear Volume da Parte ${i + 1} para um Fader/Knob MIDI">🎓</button>
                             </div>
-                            <span class="knob-val" id="valPartFader${i}" style="color:${partColor}; margin:0;">${p.level}</span>
+                            <span class="fader-val" id="valPartFader${i}" style="color:${partColor}; font-size:12px; margin:1px 0;">${p.level}</span>
+                            <input type="range" id="sldPartFader${i}" min="0" max="127" value="${p.level}" orient="vertical" class="part-fader-input" style="accent-color:${partColor};" oninput="updatePartVal(${i}, 'level', this.value)">
+                            <span style="font-size:8.5px; color:#7E7E94; font-weight:bold; text-transform:uppercase; margin-top:2px;">Fader</span>
                         </div>
-                        <input type="range" id="sldPartFader${i}" min="0" max="127" value="${p.level}" class="synth-param-slider" style="width:100%; height:18px; margin:0; accent-color:${partColor};" oninput="updatePartVal(${i}, 'level', this.value)">
-                    </div>
 
-                    <div class="knob-box" style="width: 100%; box-sizing: border-box;">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2px;">
-                            <span class="knob-label" style="font-weight:bold; margin:0;">Pan</span>
-                            <span class="knob-val" style="color:${p.color}; margin:0;">${panText}</span>
-                        </div>
-                        <input type="range" min="0" max="127" value="${p.pan}" class="synth-param-slider" oninput="updatePartVal(${i}, 'pan', this.value)" style="width:100%; height:18px; margin:0; accent-color:${p.color};">
-                    </div>
+                        <div class="part-side-controls">
+                            <!-- Pan Control -->
+                            <div class="knob-box" style="width:100%; box-sizing:border-box; padding:3px 4px;">
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1px;">
+                                    <span class="knob-label" style="font-weight:bold; margin:0; font-size:9px;">Pan</span>
+                                    <span class="knob-val" style="color:${p.color}; margin:0; font-size:10px;">${panText}</span>
+                                </div>
+                                <input type="range" min="0" max="127" value="${p.pan}" class="synth-param-slider" oninput="updatePartVal(${i}, 'pan', this.value)" style="width:100%; height:14px; margin:0; accent-color:${p.color};">
+                            </div>
 
-                    <div class="stepper-row">
-                        <span class="stepper-label">Oitava/Tom:</span>
-                        <div class="stepper-ctrls">
-                            <button class="stepper-btn" onclick="stepCoarse(${i}, -1)">−</button>
-                            <span class="stepper-val" style="color:${p.color}">${p.coarse >= 0 ? '+' : ''}${p.coarse} semit.</span>
-                            <button class="stepper-btn" onclick="stepCoarse(${i}, 1)">+</button>
+                            <!-- Oitava / Coarse -->
+                            <div class="stepper-row" style="padding:2px 4px;">
+                                <span class="stepper-label" style="font-size:9.5px;">Oit/Tom:</span>
+                                <div class="stepper-ctrls">
+                                    <button class="stepper-btn" style="width:18px; height:18px; font-size:10px;" onclick="stepCoarse(${i}, -1)">−</button>
+                                    <span class="stepper-val" style="color:${p.color}; font-size:9.5px; min-width:32px;">${p.coarse >= 0 ? '+' : ''}${p.coarse}</span>
+                                    <button class="stepper-btn" style="width:18px; height:18px; font-size:10px;" onclick="stepCoarse(${i}, 1)">+</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
