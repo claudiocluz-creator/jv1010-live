@@ -86,8 +86,85 @@
             font-size: 11px;
             color: #00E5FF;
             padding: 0 4px;
-            min-width: 42px;
+            min-width: 44px;
             text-align: center;
+            cursor: pointer;
+            border-radius: 3px;
+            transition: all 0.15s;
+        }
+        .zoom-label:hover {
+            background: rgba(0, 229, 255, 0.15);
+            text-shadow: 0 0 6px rgba(0, 229, 255, 0.6);
+        }
+        .zoom-dropdown {
+            position: absolute;
+            top: 40px;
+            background: #14141E;
+            border: 1px solid #00E5FF;
+            border-radius: 8px;
+            padding: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.8), 0 0 10px rgba(0,229,255,0.3);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            width: 140px;
+        }
+        .zoom-dropdown.active {
+            display: flex;
+        }
+        .zoom-input-box {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .zoom-num-input {
+            width: 60px;
+            background: #0B0E14;
+            border: 1px solid #00E5FF;
+            color: #FFF;
+            font-family: monospace;
+            font-size: 13px;
+            font-weight: bold;
+            padding: 3px 6px;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .zoom-num-input:focus {
+            outline: none;
+            box-shadow: 0 0 6px #00E5FF;
+        }
+        .zoom-presets-list {
+            max-height: 140px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            margin-top: 4px;
+            border-top: 1px solid #282838;
+            padding-top: 4px;
+        }
+        .zoom-preset-item {
+            padding: 4px 8px;
+            font-size: 11.5px;
+            font-family: monospace;
+            color: #C0C0D0;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.15s;
+        }
+        .zoom-preset-item:hover {
+            background: rgba(0, 229, 255, 0.2);
+            color: #00E5FF;
+            font-weight: bold;
+        }
+        .zoom-preset-item.selected {
+            background: rgba(0, 229, 255, 0.3);
+            color: #00E5FF;
+            font-weight: bold;
         }
         
         /* Tabs Switcher */
@@ -559,7 +636,7 @@
         }
         .synth-top-grid {
             display: grid;
-            grid-template-columns: minmax(320px, 1fr) minmax(380px, 1.4fr);
+            grid-template-columns: 1fr 1fr;
             gap: 12px;
             align-items: stretch;
         }
@@ -1047,10 +1124,10 @@
                 box-sizing: border-box !important;
             }
             .synth-top-grid {
-                grid-template-columns: minmax(320px, 1fr) minmax(380px, 1.4fr) !important;
+                grid-template-columns: 1fr 1fr !important;
             }
             #subTabEffects {
-                grid-template-columns: minmax(280px, 1fr) minmax(340px, 1.4fr) !important;
+                grid-template-columns: 1fr 1fr !important;
             }
         }
     </style>
@@ -1071,12 +1148,25 @@
             </div>
         </div>
         <div style="display:flex; gap:8px; align-items:center;">
-            <!-- Controles de Escala / Zoom (Ajuste Perfeito no iPad) -->
-            <div class="zoom-controls" title="Ajustar proporção da tela no iPad">
+            <!-- Controles de Escala / Zoom (Ajuste Perfeito no iPad com Digitação e Rolagem) -->
+            <div class="zoom-controls" style="position:relative;" title="Ajustar proporção da tela no iPad">
                 <button class="btn-zoom" onclick="changeZoom(-0.05)">−</button>
-                <span class="zoom-label" id="zoomVal">100%</span>
+                <span class="zoom-label" id="zoomVal" onclick="toggleZoomPicker(event)" title="Toque para digitar porcentagem ou escolher opções em rolagem">100%</span>
                 <button class="btn-zoom" onclick="changeZoom(0.05)">+</button>
                 <button class="btn-zoom" style="width: auto; padding: 0 6px; font-size: 11px;" onclick="resetZoom()">Auto</button>
+                
+                <!-- Mini Tela / Pop-up de Zoom (Digitação + Opções em Rolagem) -->
+                <div id="zoomPickerDropdown" class="zoom-dropdown" onclick="event.stopPropagation()">
+                    <div style="font-size:10px; font-weight:bold; color:#00E5FF; text-transform:uppercase; letter-spacing:0.5px;">Definir Zoom</div>
+                    <div class="zoom-input-box">
+                        <input type="number" id="zoomCustomInput" class="zoom-num-input" min="65" max="125" step="1" placeholder="95" onkeydown="handleZoomInputKey(event)">
+                        <span style="font-family:monospace; color:#A0A0B0; font-size:12px;">%</span>
+                        <button class="synth-btn" style="padding:2px 8px; font-size:11px; height:24px; background:#00E5FF; color:#000; font-weight:bold; border:none;" onclick="applyCustomZoomInput()">OK</button>
+                    </div>
+                    <div class="zoom-presets-list" id="zoomPresetsList">
+                        <!-- Gerado via JavaScript -->
+                    </div>
+                </div>
             </div>
             <!-- Botão de Pânico MIDI Instantâneo -->
             <button class="btn-panic" onclick="triggerMidiPanic()" title="Corta todas as notas presas e reseta controles (Panic)">
@@ -1151,11 +1241,11 @@
                     <thead>
                         <tr>
                             <th style="width: 38px; text-align: center;">⭐</th>
-                            <th style="width: 120px;">Nº / Ref</th>
+                            <th style="width: 110px;">Nº / Ref</th>
                             <th>Nome do Timbre</th>
-                            <th>Categoria</th>
-                            <th style="width: 110px;">Banco Origem</th>
-                            <th style="width: 70px; text-align: center;">Vozes</th>
+                            <th style="width: 130px;">Categoria</th>
+                            <th style="width: 105px;">Banco Origem</th>
+                            <th style="width: 85px; text-align: center;">Vozes</th>
                         </tr>
                     </thead>
                     <tbody id="patchesTableBody">
@@ -1681,7 +1771,7 @@
                 </div>
 
                 <!-- Sub-aba 1: Efeitos (Reverb/Chorus/MFX) -->
-                <div id="subTabEffects" class="synth-subtab-content" style="display:grid; grid-template-columns: minmax(280px, 1fr) minmax(340px, 1.4fr); gap:10px;">
+                <div id="subTabEffects" class="synth-subtab-content" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
                     <!-- Coluna Reverb Global & Chorus Global Empilhados -->
                     <div style="display:flex; flex-direction:column; gap:10px;">
                         <!-- Reverb Global -->
@@ -1832,15 +1922,90 @@
         // ==========================================
         let currentZoom = parseFloat(localStorage.getItem("jv1010_zoom") || "0.95");
 
+        const ZOOM_PRESETS = [70, 75, 80, 85, 90, 92, 95, 100, 105, 110, 115, 120, 125];
+
         function applyZoom(z) {
             currentZoom = Math.max(0.65, Math.min(1.25, parseFloat(z.toFixed(2))));
             const container = document.getElementById("appContainer");
             container.style.transform = `scale(${currentZoom})`;
             container.style.width = `${(100 / currentZoom).toFixed(2)}%`;
             container.style.height = `${(100 / currentZoom).toFixed(2)}%`;
-            document.getElementById("zoomVal").innerText = `${Math.round(currentZoom * 100)}%`;
+            const zoomPercent = Math.round(currentZoom * 100);
+            const valEl = document.getElementById("zoomVal");
+            if (valEl) valEl.innerText = `${zoomPercent}%`;
+            const inputEl = document.getElementById("zoomCustomInput");
+            if (inputEl) inputEl.value = zoomPercent;
             localStorage.setItem("jv1010_zoom", currentZoom);
+            renderZoomPresetsList();
         }
+
+        function toggleZoomPicker(event) {
+            if (event) event.stopPropagation();
+            const dropdown = document.getElementById("zoomPickerDropdown");
+            if (!dropdown) return;
+            const isOpen = dropdown.classList.contains("active");
+            if (isOpen) {
+                dropdown.classList.remove("active");
+            } else {
+                dropdown.classList.add("active");
+                renderZoomPresetsList();
+                const inputEl = document.getElementById("zoomCustomInput");
+                if (inputEl) {
+                    inputEl.value = Math.round(currentZoom * 100);
+                    setTimeout(() => inputEl.focus(), 50);
+                }
+            }
+        }
+
+        function renderZoomPresetsList() {
+            const listEl = document.getElementById("zoomPresetsList");
+            if (!listEl) return;
+            const currentPercent = Math.round(currentZoom * 100);
+            listEl.innerHTML = ZOOM_PRESETS.map(pct => {
+                const isSel = pct === currentPercent;
+                return `
+                    <div class="zoom-preset-item ${isSel ? 'selected' : ''}" onclick="selectZoomPreset(${pct})">
+                        <span>${pct}%</span>
+                        ${isSel ? '<span style="font-size:10px;">✓</span>' : ''}
+                    </div>
+                `;
+            }).join("");
+        }
+
+        function selectZoomPreset(pct) {
+            applyZoom(pct / 100);
+            const dropdown = document.getElementById("zoomPickerDropdown");
+            if (dropdown) dropdown.classList.remove("active");
+        }
+
+        function applyCustomZoomInput() {
+            const inputEl = document.getElementById("zoomCustomInput");
+            if (!inputEl) return;
+            let val = parseInt(inputEl.value, 10);
+            if (isNaN(val)) val = 95;
+            val = Math.max(65, Math.min(125, val));
+            applyZoom(val / 100);
+            const dropdown = document.getElementById("zoomPickerDropdown");
+            if (dropdown) dropdown.classList.remove("active");
+        }
+
+        function handleZoomInputKey(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                applyCustomZoomInput();
+            } else if (event.key === "Escape") {
+                const dropdown = document.getElementById("zoomPickerDropdown");
+                if (dropdown) dropdown.classList.remove("active");
+            }
+        }
+
+        // Fecha o mini pop-up de zoom ao clicar fora
+        document.addEventListener("click", (e) => {
+            const dropdown = document.getElementById("zoomPickerDropdown");
+            if (dropdown && dropdown.classList.contains("active") && !e.target.closest(".zoom-controls")) {
+                dropdown.classList.remove("active");
+            }
+        });
 
         // Aplica o zoom inicial ao carregar
         applyZoom(currentZoom);
