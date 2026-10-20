@@ -1441,10 +1441,7 @@
 
         <div class="strip-container" id="partsStripContainer"></div>
 
-        <div class="zone-footer">
-            <div class="zone-header">🗺️ Mapa Visual de Zonas do Teclado (Zonas de Split / Layer)</div>
-            <div class="zone-info" id="zoneMapText">Carregando zonas...</div>
-        </div>
+        <div id="zoneMapBars" style="display:flex; flex-direction:column; gap:5px; background:#0E0E14; border:1px solid #1C1C28; border-radius:8px; padding:8px 10px; margin-top:8px;"></div>
     </div>
 
     <!-- ========================================== -->
@@ -4202,15 +4199,17 @@
         }
 
         function updateZoneMap() {
-            const activeParts = parts.filter(p => p.active);
-            if (activeParts.length === 0) {
-                document.getElementById("zoneMapText").innerHTML = "<i>Nenhum Part ativo no momento.</i>";
-                return;
-            }
-            const items = activeParts.map(p => 
-                `<span style="color:${p.color}; font-weight:bold;">${p.name} (${p.patch.split(' ')[1] || p.patch})</span>: [${noteNumToName(p.lower)}..${noteNumToName(p.upper)}] Vol=${p.level}`
-            );
-            document.getElementById("zoneMapText").innerHTML = items.join(" • ");
+            const container = document.getElementById("zoneMapBars");
+            if (!container) return;
+            container.innerHTML = parts.map((p, i) => {
+                const color = p.color || DEFAULT_PART_COLORS[i];
+                const left = (p.lower / 127) * 100;
+                const width = Math.max(1, ((p.upper - p.lower) / 127) * 100);
+                const tip = `${p.name || 'Part ' + (i + 1)}: ${noteNumToName(p.lower)} → ${noteNumToName(p.upper)}`;
+                return `<div title="${escapeHtml(tip)}" style="position:relative; height:8px; background:#1A1A24; border-radius:4px; opacity:${p.active ? 1 : 0.25};">
+                    <div style="position:absolute; top:0; bottom:0; left:${left}%; width:${width}%; background:${color}; border-radius:4px; box-shadow:0 0 6px ${color}55;"></div>
+                </div>`;
+            }).join("");
         }
 
         function updatePartsBadge() {
