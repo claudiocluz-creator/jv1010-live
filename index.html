@@ -1308,6 +1308,130 @@
         }
 
         /* ======================================================== */
+        /* MULTI-MÚSICAS NO MODO PALCO LIVE (PAINÉIS LADO A LADO)   */
+        /* ======================================================== */
+        .live-songs-viewport {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            flex: 1;
+            min-height: 0;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding-bottom: 4px;
+            box-sizing: border-box;
+        }
+        .live-song-panel {
+            flex: 1 1 0;
+            min-width: 280px;
+            max-width: 100%;
+            background: #11111A;
+            border: 1.5px solid #232338;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.6);
+            overflow: hidden;
+            box-sizing: border-box;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .live-song-panel.active-song {
+            border-color: #2ECC71;
+            box-shadow: 0 0 14px rgba(46, 204, 113, 0.35);
+        }
+        .live-song-header {
+            background: #171724;
+            padding: 8px 12px;
+            border-bottom: 1.5px solid #242436;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+        .live-song-title-box {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            overflow: hidden;
+        }
+        .live-song-title {
+            font-size: 14px;
+            font-weight: 900;
+            color: #FFFFFF;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .live-song-meta {
+            font-size: 10px;
+            color: #2ECC71;
+            font-family: monospace;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .live-song-body {
+            padding: 8px;
+            flex: 1;
+            min-height: 0;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .live-song-part-card {
+            background: #181826;
+            border: 1.5px solid #2E2E44;
+            border-radius: 6px;
+            padding: 10px 12px;
+            cursor: pointer;
+            transition: all 0.12s ease-out;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .live-song-part-card:active {
+            transform: scale(0.97);
+            background: #1E2235;
+        }
+        .live-song-part-card.active-part {
+            border-color: #00E5FF;
+            background: #132438;
+            box-shadow: 0 0 12px rgba(0, 229, 255, 0.4);
+        }
+        .live-song-part-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .live-song-part-tag {
+            font-size: 10.5px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 1px 6px;
+            border-radius: 3px;
+        }
+        .live-song-part-title {
+            font-size: 15px;
+            font-weight: 900;
+            color: #FFF;
+            line-height: 1.2;
+        }
+        .live-song-part-desc {
+            font-size: 11px;
+            color: #A0A0B8;
+            font-family: monospace;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* ======================================================== */
         /* RESPONSIVIDADE ERGONÔMICA: TOUCH ACTIONS PARA SLIDERS    */
         /* ======================================================== */
         /* Sliders Horizontais: Permite rolagem vertical da página enquanto desliza horizontalmente */
@@ -2203,30 +2327,50 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- ABA 5: MODO PALCO LIVE (BOTÕES GIGANTES)  -->
+    <!-- ABA 5: MODO PALCO LIVE (MULTI-MÚSICAS)      -->
     <!-- ========================================== -->
-    <div class="tab-content" id="tabLive" style="background:#09090E; padding:8px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; padding:6px 10px; border-bottom:1px solid #1E1E2C; margin-bottom:8px; background:#12121B; border-radius:6px;">
+    <div class="tab-content" id="tabLive" style="background:#09090E; padding:8px; display:flex; flex-direction:column; flex:1; min-height:0;">
+        <!-- Barra Superior do Palco Live -->
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; padding:6px 10px; border-bottom:1px solid #1E1E2C; margin-bottom:6px; background:#12121B; border-radius:6px; flex-shrink:0;">
             <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-                <span style="font-size:14px; font-weight:bold; color:#2ECC71;">🎤 MODO PALCO LIVE</span>
-                <!-- Controles de Setlist / Sequência de Músicas -->
-                <div style="display:inline-flex; align-items:center; gap:4px; background:#0B0B12; border:1px solid #2ECC71; border-radius:6px; padding:2px 6px;">
-                    <button class="setlist-nav-btn" onclick="triggerPrevLiveSong()" title="Voltar para a música anterior do repertório">◀ ANTERIOR</button>
-                    <span id="setlistCurrentIndicator" style="font-family:monospace; font-weight:bold; font-size:11px; color:#FFF; padding:0 6px; min-width:85px; text-align:center;">MÚSICA --</span>
-                    <button class="setlist-nav-btn" onclick="triggerNextLiveSong()" title="Avançar para a próxima música do repertório">PRÓXIMA ▶</button>
-                </div>
+                <span style="font-size:14px; font-weight:900; color:#2ECC71;">🎤 PALCO LIVE</span>
+                
+                <!-- Botão Nova Música -->
+                <button class="synth-btn" style="background:#27AE60; border-color:#2ECC71; color:#FFF; font-weight:bold; font-size:11px; padding:3px 10px; height:26px;" onclick="openNewSongModal()">➕ Nova Música</button>
+                
+                <!-- Salvar Configuração Atual como Parte da Música Ativa -->
+                <button class="synth-btn" style="background:#8E44AD; border-color:#9B59B6; color:#FFF; font-weight:bold; font-size:10.5px; padding:3px 8px; height:26px;" onclick="addCurrentSetupToActiveSong()" title="Salva a Combinação/Síntese atual como uma nova seção (ex: Refrão, Solo) na Música ativa">+ Adicionar Seção Atual</button>
             </div>
-            <div style="display:flex; gap:6px; align-items:center;">
+            
+            <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
+                <!-- Alternador de Visualização: Músicas Abertas (Painéis Lado a Lado) vs Biblioteca Completa -->
+                <div style="display:inline-flex; background:#0B0B14; border:1px solid #2ECC71; border-radius:5px; padding:2px;">
+                    <button id="btnLiveModeSongs" class="btn-preset-eq" style="background:#2ECC71; color:#000; font-weight:bold;" onclick="setLiveStageViewMode('songs')">📑 Músicas Abertas</button>
+                    <button id="btnLiveModeGrid" class="btn-preset-eq" style="background:transparent; color:#8E8E9E;" onclick="setLiveStageViewMode('grid')">⭐ Todos os Favoritos</button>
+                </div>
+
                 <!-- Chave de Transição Suave (Patch Remain) -->
                 <button id="btnPatchRemain" class="btn-preset-eq" style="background:#1B2E23; border-color:#2ECC71; color:#2ECC71; font-weight:bold; font-size:10.5px;" onclick="togglePatchRemain()" title="Ativa troca suave preservando cauda do reverb">🍃 Suave (ON)</button>
-                <button class="btn-preset-eq" onclick="filterLiveStage('all')">Todos</button>
-                <button class="btn-preset-eq" onclick="filterLiveStage('perf')">🎹 Combinações</button>
-                <button class="btn-preset-eq" onclick="filterLiveStage('patch')">⭐ Patches</button>
-                <button onclick="openEqModal()" style="background:linear-gradient(135deg, #1A1A2E, #2A2035); border:1px solid #FFD700; color:#FFD700; font-size:10px; font-weight:bold; padding:3px 9px; border-radius:4px; cursor:pointer; display:flex; align-items:center; gap:4px; box-shadow:0 0 8px rgba(255,215,0,0.25); white-space:nowrap;" title="Abrir pop-up do Equalizador Gráfico 4-Bandas e EFX">🎚️ Equalizador & EFX...</button>
+                <button onclick="openEqModal()" style="background:linear-gradient(135deg, #1A1A2E, #2A2035); border:1px solid #FFD700; color:#FFD700; font-size:10px; font-weight:bold; padding:3px 9px; border-radius:4px; cursor:pointer; display:flex; align-items:center; gap:4px; box-shadow:0 0 8px rgba(255,215,0,0.25); white-space:nowrap;" title="Abrir pop-up do Equalizador Gráfico 4-Bandas e EFX">🎚️ EQ & EFX...</button>
             </div>
         </div>
-        <div class="live-stage-grid" id="liveStageGrid">
-            <!-- Cards Grandes Injetados Dinamicamente -->
+
+        <!-- Barra de Seleção / Abertura Rápida de Músicas no Show -->
+        <div id="liveSongBar" style="display:flex; align-items:center; gap:8px; padding:4px 8px; background:#0D0D15; border:1px solid #1A1A26; border-radius:6px; margin-bottom:8px; flex-shrink:0; overflow-x:auto;">
+            <span style="font-size:11px; font-weight:bold; color:#8E8E9E; white-space:nowrap;">Músicas do Show:</span>
+            <div id="liveSongPills" style="display:flex; align-items:center; gap:6px; flex:1; overflow-x:auto; min-height:28px;">
+                <!-- Pílulas de seleção/abertura de músicas inseridas aqui -->
+            </div>
+        </div>
+
+        <!-- VIEW A: Painéis de Músicas Lado a Lado (Multi-Música no Palco) -->
+        <div class="live-songs-viewport" id="liveSongsViewport">
+            <!-- Colunas de Músicas abertas lado a lado injetadas dinamicamente -->
+        </div>
+
+        <!-- VIEW B: Grade Clássica de Favoritos -->
+        <div class="live-stage-grid" id="liveStageGrid" style="display:none;">
+            <!-- Cards Grandes Clássicos Injetados Dinamicamente -->
         </div>
     </div>
 
@@ -3289,16 +3433,487 @@
         }
 
         // ==========================================
-        // RENDERIZAÇÃO DO MODO PALCO LIVE (SETLIST)
+        // RENDERIZAÇÃO DO MODO PALCO LIVE (SETLIST & MULTI-MÚSICAS)
         // ==========================================
         let liveStageFilter = "all"; // 'all', 'perf', 'patch'
-
-        function filterLiveStage(mode) {
-            liveStageFilter = mode;
-            renderLiveStage();
+        let liveStageViewMode = localStorage.getItem("jv1010_live_view_mode") || "songs"; // 'songs' (Painéis Multi-Músicas) ou 'grid' (Favoritos Gerais)
+        
+        // Estrutura de Músicas do Show
+        // Cada música contém: { id, title, key, bpm, notes, sections: [ { id, name, badge, type: 'comb'|'patch', data: {...} } ] }
+        let liveSongs = JSON.parse(localStorage.getItem("jv1010_live_songs") || "null");
+        if (!liveSongs || !Array.isArray(liveSongs) || liveSongs.length === 0) {
+            // Músicas padrão de demonstração para o músico já ver na primeira inicialização
+            liveSongs = [
+                {
+                    id: "song_demo_1",
+                    title: "Evidências (Chitãozinho & Xororó)",
+                    key: "Tom: E",
+                    bpm: "108 BPM",
+                    notes: "Entrada suave com piano acústico; refrão com cordas encorpadas",
+                    sections: [
+                        { id: "sec_1", name: "1. Intro Suave", badge: "INTRO", type: "patch", patch_name: "64VoicePiano", bank: "USER", prog: 1, desc: "Piano de Cauda Acústico" },
+                        { id: "sec_2", name: "2. Verso / Melodia", badge: "VERSO", type: "patch", patch_name: "West Coast", bank: "PR-A", prog: 5, desc: "Piano Acústico Brilhante" },
+                        { id: "sec_3", name: "3. Refrão Emocionante", badge: "REFRÃO", type: "patch", patch_name: "Warm Strings", bank: "PR-B", prog: 49, desc: "Layer Cordas Orquestrais" },
+                        { id: "sec_4", name: "4. Solo / Modulação", badge: "SOLO", type: "patch", patch_name: "Brite Rhodes", bank: "PR-A", prog: 12, desc: "Rhodes Vintage com Tremolo" }
+                    ]
+                },
+                {
+                    id: "song_demo_2",
+                    title: "Billie Jean (Michael Jackson)",
+                    key: "Tom: F#m",
+                    bpm: "117 BPM",
+                    notes: "Atenção ao bass synth sincronizado na mão esquerda",
+                    sections: [
+                        { id: "sec_5", name: "1. Bass Groove", badge: "INTRO", type: "patch", patch_name: "Synth Bass 1", bank: "PR-A", prog: 33, desc: "Moog Bass Clássico 80s" },
+                        { id: "sec_6", name: "2. Verso Stabs", badge: "VERSO", type: "patch", patch_name: "Poly Brass", bank: "PR-B", prog: 1, desc: "Metais Sintéticos Curtos" },
+                        { id: "sec_7", name: "3. Refrão Strings", badge: "REFRÃO", type: "patch", patch_name: "Session Orch", bank: "PR-B", prog: 55, desc: "Cordas de Ataque Rápido" }
+                    ]
+                }
+            ];
+            localStorage.setItem("jv1010_live_songs", JSON.stringify(liveSongs));
         }
 
-        function renderLiveStage() {
+        // IDs das músicas atualmente abertas na tela (Multi-Música / Colunas Lado a Lado)
+        let openSongIds = JSON.parse(localStorage.getItem("jv1010_open_song_ids") || "null");
+        if (!openSongIds || !Array.isArray(openSongIds) || openSongIds.length === 0) {
+            openSongIds = [liveSongs[0]?.id || "song_demo_1"];
+            localStorage.setItem("jv1010_open_song_ids", JSON.stringify(openSongIds));
+        }
+
+        // ID da música atualmente ativa (para receber novas seções)
+        let activeLiveSongId = localStorage.getItem("jv1010_active_song_id") || openSongIds[0] || (liveSongs[0]?.id || "");
+        let activeSongSectionId = null; // Seção que está tocando no momento
+
+        function saveLiveSongsToStorage() {
+            localStorage.setItem("jv1010_live_songs", JSON.stringify(liveSongs));
+            localStorage.setItem("jv1010_open_song_ids", JSON.stringify(openSongIds));
+            localStorage.setItem("jv1010_active_song_id", activeLiveSongId);
+        }
+
+        function setLiveStageViewMode(mode) {
+            liveStageViewMode = mode;
+            localStorage.setItem("jv1010_live_view_mode", mode);
+            const btnSongs = document.getElementById("btnLiveModeSongs");
+            const btnGrid = document.getElementById("btnLiveModeGrid");
+            const viewSongs = document.getElementById("liveSongsViewport");
+            const viewGrid = document.getElementById("liveStageGrid");
+            const songBar = document.getElementById("liveSongBar");
+
+            if (mode === "songs") {
+                if (btnSongs) { btnSongs.style.background = "#2ECC71"; btnSongs.style.color = "#000"; }
+                if (btnGrid) { btnGrid.style.background = "transparent"; btnGrid.style.color = "#8E8E9E"; }
+                if (viewSongs) viewSongs.style.display = "flex";
+                if (viewGrid) viewGrid.style.display = "none";
+                if (songBar) songBar.style.display = "flex";
+                renderLiveSongsViewport();
+            } else {
+                if (btnSongs) { btnSongs.style.background = "transparent"; btnSongs.style.color = "#8E8E9E"; }
+                if (btnGrid) { btnGrid.style.background = "#2ECC71"; btnGrid.style.color = "#000"; }
+                if (viewSongs) viewSongs.style.display = "none";
+                if (viewGrid) viewGrid.style.display = "grid";
+                if (songBar) songBar.style.display = "none";
+                renderLiveStageGrid();
+            }
+        }
+
+        function renderLiveSongPills() {
+            const pillsContainer = document.getElementById("liveSongPills");
+            if (!pillsContainer) return;
+            pillsContainer.innerHTML = "";
+
+            if (!liveSongs || liveSongs.length === 0) {
+                pillsContainer.innerHTML = `<span style="font-size:11px; color:#7E7E94; font-style:italic;">Nenhuma música criada ainda. Clique em "➕ Nova Música" para começar.</span>`;
+                return;
+            }
+
+            liveSongs.forEach(song => {
+                const isOpen = openSongIds.includes(song.id);
+                const isActive = (song.id === activeLiveSongId);
+
+                const pill = document.createElement("button");
+                pill.style.cssText = `
+                    display:inline-flex; align-items:center; gap:6px; padding:3px 10px; border-radius:14px;
+                    font-size:11px; font-weight:bold; cursor:pointer; transition:all 0.15s ease; white-space:nowrap;
+                    border: 1px solid ${isOpen ? '#2ECC71' : '#33334D'};
+                    background: ${isOpen ? 'rgba(46,204,113,0.18)' : '#161622'};
+                    color: ${isOpen ? '#2ECC71' : '#AAA'};
+                    box-shadow: ${isOpen ? '0 0 8px rgba(46,204,113,0.25)' : 'none'};
+                `;
+
+                pill.title = isOpen ? "Clique para fechar da tela" : "Clique para abrir esta música na tela";
+                pill.innerHTML = `
+                    <span>${isOpen ? '👁️' : '📖'}</span>
+                    <span>${escapeHtml(song.title)}</span>
+                    <span style="font-size:9.5px; opacity:0.8; font-weight:normal;">(${song.sections ? song.sections.length : 0})</span>
+                `;
+
+                pill.onclick = () => toggleOpenSongOnStage(song.id);
+                pillsContainer.appendChild(pill);
+            });
+        }
+
+        function toggleOpenSongOnStage(songId) {
+            const idx = openSongIds.indexOf(songId);
+            if (idx >= 0) {
+                // Se já estiver aberta, fecha se houver mais de uma aberta
+                if (openSongIds.length > 1) {
+                    openSongIds.splice(idx, 1);
+                } else {
+                    // Se for a única aberta, mantém
+                    showToast("Pelo menos uma música deve permanecer aberta no palco.");
+                    return;
+                }
+            } else {
+                // Abre a música lado a lado
+                openSongIds.push(songId);
+            }
+            activeLiveSongId = songId;
+            saveLiveSongsToStorage();
+            renderLiveSongPills();
+            renderLiveSongsViewport();
+        }
+
+        function renderLiveSongsViewport() {
+            renderLiveSongPills();
+            const viewport = document.getElementById("liveSongsViewport");
+            if (!viewport) return;
+            viewport.innerHTML = "";
+
+            if (!liveSongs || liveSongs.length === 0) {
+                viewport.innerHTML = `
+                    <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#7E7E94; padding:40px 20px; text-align:center;">
+                        <span style="font-size:40px; margin-bottom:12px;">🎵</span>
+                        <b style="font-size:14px; color:#E0E0F0; margin-bottom:6px;">Nenhuma música salva ainda!</b>
+                        <p style="max-width:400px; font-size:12px; margin:0 0 16px 0;">Crie músicas do seu repertório com seções (Intro, Verso, Refrão, Solo) para disparar instantaneamente com 1 toque no palco.</p>
+                        <button class="synth-btn" style="background:#27AE60; border-color:#2ECC71; color:#FFF; font-weight:bold; font-size:12px; padding:6px 16px;" onclick="openNewSongModal()">➕ Criar Primeira Música</button>
+                    </div>
+                `;
+                return;
+            }
+
+            const visibleSongs = liveSongs.filter(s => openSongIds.includes(s.id));
+            if (visibleSongs.length === 0 && liveSongs.length > 0) {
+                openSongIds = [liveSongs[0].id];
+                saveLiveSongsToStorage();
+                return renderLiveSongsViewport();
+            }
+
+            visibleSongs.forEach(song => {
+                const isActive = (song.id === activeLiveSongId);
+                const panel = document.createElement("div");
+                panel.className = `live-song-panel ${isActive ? 'active-song' : ''}`;
+                panel.onclick = () => {
+                    if (activeLiveSongId !== song.id) {
+                        activeLiveSongId = song.id;
+                        saveLiveSongsToStorage();
+                        renderLiveSongsViewport();
+                    }
+                };
+
+                const sectionsHtml = (song.sections && song.sections.length > 0) ? song.sections.map((sec, secIdx) => {
+                    const isSecPlaying = (sec.id === activeSongSectionId);
+                    let badgeBg = "#1E3A2F";
+                    let badgeCol = "#2ECC71";
+                    const b = (sec.badge || "").toUpperCase();
+                    if (b.includes("INTRO")) { badgeBg = "#3A341B"; badgeCol = "#F1C40F"; }
+                    else if (b.includes("VERSO")) { badgeBg = "#1B283A"; badgeCol = "#3498DB"; }
+                    else if (b.includes("REFRÃO") || b.includes("REFRAO")) { badgeBg = "#1B3A26"; badgeCol = "#2ECC71"; }
+                    else if (b.includes("SOLO")) { badgeBg = "#3A1B28"; badgeCol = "#E91E63"; }
+                    else if (b.includes("PONTE")) { badgeBg = "#3A2B1B"; badgeCol = "#E67E22"; }
+                    else if (b.includes("FINAL")) { badgeBg = "#2E1B3A"; badgeCol = "#9B59B6"; }
+
+                    return `
+                        <div class="live-song-part-card ${isSecPlaying ? 'playing' : ''}" onclick="triggerSongSection('${song.id}', '${sec.id}', event)">
+                            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:4px;">
+                                <span class="badge" style="background:${badgeBg}; color:${badgeCol}; font-size:10px; font-weight:bold; padding:2px 6px; border-radius:3px;">
+                                    ${escapeHtml(sec.badge || "SEÇÃO")}
+                                </span>
+                                <div style="display:flex; align-items:center; gap:4px;">
+                                    <button class="synth-btn" style="background:transparent; border:none; color:#E74C3C; font-size:12px; padding:0 4px; height:auto;" onclick="removeSongSection('${song.id}', '${sec.id}', event)" title="Excluir esta seção">✕</button>
+                                </div>
+                            </div>
+                            <div class="part-name" style="font-size:13px; font-weight:bold; color:#FFF; margin-bottom:2px;">${escapeHtml(sec.name)}</div>
+                            <div class="part-desc" style="font-size:11px; color:#8E8E9E; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                ${escapeHtml(sec.desc || (sec.type === 'comb' ? 'Combinação Live' : sec.patch_name || 'Patch Solo'))}
+                            </div>
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px; font-size:10px; color:#6E6E82;">
+                                <span>${sec.type === 'comb' ? '🎛️ COMB' : '🎹 PATCH'}</span>
+                                <span style="color:#2ECC71; font-weight:bold;">${isSecPlaying ? '● TOCANDO' : '⚡ DISPARAR'}</span>
+                            </div>
+                        </div>
+                    `;
+                }).join("") : `
+                    <div style="text-align:center; padding:30px 10px; color:#6E6E82; font-size:11.5px;">
+                        <span>Nenhuma seção nesta música.</span><br>
+                        <button class="synth-btn" style="margin-top:8px; background:#8E44AD; border-color:#9B59B6; color:#FFF; font-size:10px; padding:3px 8px;" onclick="addCurrentSetupToSong('${song.id}', event)">+ Salvar Som Atual Aqui</button>
+                    </div>
+                `;
+
+                panel.innerHTML = `
+                    <div class="live-song-header">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:4px;">
+                            <div class="title" style="font-size:13px; font-weight:900; color:#2ECC71;">${escapeHtml(song.title)}</div>
+                            <div style="display:flex; align-items:center; gap:4px;">
+                                <button class="synth-btn" style="background:#1F1F2E; border-color:#3A3A55; color:#00E5FF; font-size:10px; padding:1px 5px; height:20px;" onclick="editSongDetails('${song.id}', event)" title="Editar dados da música">✏️</button>
+                                <button class="synth-btn" style="background:#2D1B20; border-color:#E74C3C; color:#E74C3C; font-size:10px; padding:1px 5px; height:20px;" onclick="deleteSong('${song.id}', event)" title="Excluir música">🗑️</button>
+                            </div>
+                        </div>
+                        <div class="meta" style="font-size:10px; color:#8E8E9E; font-weight:bold; display:flex; gap:8px;">
+                            ${song.key ? `<span style="color:#F1C40F;">${escapeHtml(song.key)}</span>` : ''}
+                            ${song.bpm ? `<span style="color:#00E5FF;">${escapeHtml(song.bpm)}</span>` : ''}
+                        </div>
+                        ${song.notes ? `<div style="font-size:9.5px; color:#AAA; margin-top:4px; font-style:italic;">📌 ${escapeHtml(song.notes)}</div>` : ''}
+                    </div>
+
+                    <div class="live-song-sections-list">
+                        ${sectionsHtml}
+                    </div>
+                `;
+
+                viewport.appendChild(panel);
+            });
+        }
+
+        function triggerSongSection(songId, secId, evt) {
+            if (evt) evt.stopPropagation();
+            const song = liveSongs.find(s => s.id === songId);
+            if (!song) return;
+            const sec = (song.sections || []).find(x => x.id === secId);
+            if (!sec) return;
+
+            activeSongSectionId = secId;
+            activeLiveSongId = songId;
+
+            // Se Patch Remain estiver desligado, corta sons antes de disparar
+            if (!isPatchRemainSmooth) {
+                sendRawWebMidi([0xB0, 120, 0]);
+                sendRawWebMidi([0xB0, 123, 0]);
+            }
+
+            if (sec.type === 'comb' && sec.comb_data) {
+                selectedComb = sec.comb_data;
+                loadAndTransmitSelectedComb();
+            } else if (sec.type === 'patch') {
+                if (sec.custom_data) {
+                    playCustomPatchObject(sec.custom_data);
+                } else if (sec.patch_data) {
+                    selectedPatch = sec.patch_data;
+                    playSelectedSolo(false);
+                } else if (sec.bank && sec.prog) {
+                    const found = allPatches.find(p => p.bank === sec.bank && p.prog === sec.prog);
+                    if (found) {
+                        selectedPatch = found;
+                        playSelectedSolo(false);
+                    }
+                }
+            }
+
+            renderLiveSongsViewport();
+        }
+
+        function openNewSongModal() {
+            const titleEl = document.getElementById("modalSongEditTitle");
+            if (titleEl) titleEl.innerText = "🎵 Nova Música do Show";
+            document.getElementById("modalSongId").value = "";
+            document.getElementById("modalSongTitleInput").value = "";
+            document.getElementById("modalSongKeyInput").value = "";
+            document.getElementById("modalSongBpmInput").value = "";
+            document.getElementById("modalSongNotesInput").value = "";
+            const modal = document.getElementById("modalSongEdit");
+            if (modal) modal.style.display = "flex";
+            setTimeout(() => document.getElementById("modalSongTitleInput").focus(), 60);
+        }
+
+        function editSongDetails(songId, evt) {
+            if (evt) evt.stopPropagation();
+            const song = liveSongs.find(s => s.id === songId);
+            if (!song) return;
+
+            const titleEl = document.getElementById("modalSongEditTitle");
+            if (titleEl) titleEl.innerText = "✏️ Editar Música";
+            document.getElementById("modalSongId").value = song.id;
+            document.getElementById("modalSongTitleInput").value = song.title || "";
+            document.getElementById("modalSongKeyInput").value = song.key || "";
+            document.getElementById("modalSongBpmInput").value = song.bpm || "";
+            document.getElementById("modalSongNotesInput").value = song.notes || "";
+            const modal = document.getElementById("modalSongEdit");
+            if (modal) modal.style.display = "flex";
+        }
+
+        function closeSongEditModal() {
+            const modal = document.getElementById("modalSongEdit");
+            if (modal) modal.style.display = "none";
+        }
+
+        function saveSongFromModal() {
+            const title = (document.getElementById("modalSongTitleInput").value || "").trim();
+            if (!title) {
+                alert("Por favor, digite o nome da música!");
+                return;
+            }
+            const songId = document.getElementById("modalSongId").value;
+            const key = (document.getElementById("modalSongKeyInput").value || "").trim();
+            const bpm = (document.getElementById("modalSongBpmInput").value || "").trim();
+            const notes = (document.getElementById("modalSongNotesInput").value || "").trim();
+
+            if (songId) {
+                // Editando existente
+                const song = liveSongs.find(s => s.id === songId);
+                if (song) {
+                    song.title = title;
+                    song.key = key;
+                    song.bpm = bpm;
+                    song.notes = notes;
+                }
+            } else {
+                // Nova música
+                const newId = "song_" + Date.now();
+                const newSong = {
+                    id: newId,
+                    title: title,
+                    key: key,
+                    bpm: bpm,
+                    notes: notes,
+                    sections: []
+                };
+                liveSongs.push(newSong);
+                if (!openSongIds.includes(newId)) {
+                    openSongIds.push(newId);
+                }
+                activeLiveSongId = newId;
+            }
+
+            saveLiveSongsToStorage();
+            closeSongEditModal();
+            renderLiveSongsViewport();
+        }
+
+        function deleteSong(songId, evt) {
+            if (evt) evt.stopPropagation();
+            const song = liveSongs.find(s => s.id === songId);
+            if (!song) return;
+            if (!confirm(`Tem certeza que deseja excluir a música "${song.title}"?`)) return;
+
+            liveSongs = liveSongs.filter(s => s.id !== songId);
+            openSongIds = openSongIds.filter(id => id !== songId);
+            if (activeLiveSongId === songId) {
+                activeLiveSongId = openSongIds[0] || (liveSongs[0]?.id || "");
+            }
+            saveLiveSongsToStorage();
+            renderLiveSongsViewport();
+        }
+
+        function addCurrentSetupToActiveSong() {
+            if (!liveSongs || liveSongs.length === 0) {
+                openNewSongModal();
+                return;
+            }
+            openAddSectionModal(activeLiveSongId);
+        }
+
+        function addCurrentSetupToSong(songId, evt) {
+            if (evt) evt.stopPropagation();
+            openAddSectionModal(songId);
+        }
+
+        function openAddSectionModal(targetSongId = null) {
+            const selectEl = document.getElementById("modalAddSectionSongSelect");
+            if (!selectEl) return;
+            selectEl.innerHTML = liveSongs.map(s => `
+                <option value="${s.id}" ${s.id === (targetSongId || activeLiveSongId) ? 'selected' : ''}>
+                    ${escapeHtml(s.title)}
+                </option>
+            `).join("");
+
+            // Prévia da configuração atual
+            const prevEl = document.getElementById("modalSectionCurrentPreview");
+            let previewText = "";
+            let defaultName = "";
+            if (activeMode === "comb" || currentActiveTab === "comb" || selectedComb) {
+                const combName = selectedComb ? selectedComb.name : "Combinação Atual";
+                previewText = `<b>Tipo:</b> Combinação de Parts<br><b>Nome:</b> ${escapeHtml(combName)}`;
+                defaultName = combName;
+            } else {
+                const patchName = selectedPatch ? selectedPatch.name : "Patch Atual";
+                const bankRef = selectedPatch ? `[${selectedPatch.bank}:${selectedPatch.prog}]` : "";
+                previewText = `<b>Tipo:</b> Patch Solo<br><b>Nome:</b> ${escapeHtml(patchName)} ${bankRef}`;
+                defaultName = patchName;
+            }
+            if (prevEl) prevEl.innerHTML = previewText;
+
+            const nameInput = document.getElementById("modalSectionNameInput");
+            if (nameInput) nameInput.value = defaultName;
+
+            const modal = document.getElementById("modalAddSection");
+            if (modal) modal.style.display = "flex";
+            setTimeout(() => nameInput && nameInput.focus(), 60);
+        }
+
+        function closeAddSectionModal() {
+            const modal = document.getElementById("modalAddSection");
+            if (modal) modal.style.display = "none";
+        }
+
+        function saveSectionFromModal() {
+            const songSelect = document.getElementById("modalAddSectionSongSelect");
+            const songId = songSelect ? songSelect.value : activeLiveSongId;
+            const song = liveSongs.find(s => s.id === songId);
+            if (!song) {
+                alert("Selecione uma música válida!");
+                return;
+            }
+
+            const name = (document.getElementById("modalSectionNameInput").value || "").trim() || "Nova Seção";
+            const badge = document.getElementById("modalSectionBadgeSelect").value || "SEÇÃO";
+            const newSecId = "sec_" + Date.now();
+
+            let newSection = null;
+            if (activeMode === "comb" || currentActiveTab === "comb" || selectedComb) {
+                newSection = {
+                    id: newSecId,
+                    name: name,
+                    badge: badge,
+                    type: "comb",
+                    desc: selectedComb ? (selectedComb.desc || selectedComb.name) : "Combinação Personalizada",
+                    comb_data: JSON.parse(JSON.stringify(selectedComb || currentCombSetup || {}))
+                };
+            } else {
+                newSection = {
+                    id: newSecId,
+                    name: name,
+                    badge: badge,
+                    type: "patch",
+                    patch_name: selectedPatch ? selectedPatch.name : "Patch Solo",
+                    bank: selectedPatch ? selectedPatch.bank : "USER",
+                    prog: selectedPatch ? selectedPatch.prog : 1,
+                    desc: selectedPatch ? `Categoria: ${selectedPatch.studio_cat || selectedPatch.category || 'Patch'}` : "Patch Solo",
+                    patch_data: selectedPatch ? JSON.parse(JSON.stringify(selectedPatch)) : null,
+                    custom_data: (selectedPatch && selectedPatch.is_custom) ? JSON.parse(JSON.stringify(selectedPatch)) : null
+                };
+            }
+
+            if (!song.sections) song.sections = [];
+            song.sections.push(newSection);
+
+            saveLiveSongsToStorage();
+            closeAddSectionModal();
+            renderLiveSongsViewport();
+            showToast(`✓ Seção "${name}" adicionada à música "${song.title}"!`);
+        }
+
+        function removeSongSection(songId, secId, evt) {
+            if (evt) evt.stopPropagation();
+            const song = liveSongs.find(s => s.id === songId);
+            if (!song || !song.sections) return;
+            if (!confirm("Deseja remover esta seção da música?")) return;
+
+            song.sections = song.sections.filter(sec => sec.id !== secId);
+            if (activeSongSectionId === secId) activeSongSectionId = null;
+            saveLiveSongsToStorage();
+            renderLiveSongsViewport();
+        }
+
+        function renderLiveStageGrid() {
             const container = document.getElementById("liveStageGrid");
             if (!container) return;
             container.innerHTML = "";
@@ -3427,6 +4042,15 @@
                 container.appendChild(card);
             });
             updateSetlistIndicator();
+        }
+
+        function filterLiveStage(mode) {
+            liveStageFilter = mode;
+            renderLiveStageGrid();
+        }
+
+        function renderLiveStage() {
+            setLiveStageViewMode(liveStageViewMode);
         }
 
         let currentLiveStageItems = [];
@@ -6889,6 +7513,99 @@
             <!-- Botão de Fechar no rodapé -->
             <div style="display:flex; justify-content:flex-end; margin-top:8px;">
                 <button class="btn-close-modal" onclick="closeEqModal()" style="background:#242436; border:1px solid #444460; color:#FFF; font-size:12px; font-weight:bold; padding:6px 18px; border-radius:5px; cursor:pointer;">Concluir</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL: NOVA MÚSICA / EDITAR MÚSICA DO SHOW -->
+    <!-- ========================================== -->
+    <div id="modalSongEdit" class="modal-backdrop" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:99999; justify-content:center; align-items:center; backdrop-filter:blur(3px);">
+        <div style="background:#12121E; border:1px solid #2ECC71; border-radius:10px; width:92%; max-width:480px; padding:16px 20px; box-shadow:0 0 25px rgba(46,204,113,0.3); color:#E0E0F0;">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #2ECC71; padding-bottom:8px; margin-bottom:14px;">
+                <h3 id="modalSongEditTitle" style="margin:0; font-size:15px; color:#2ECC71; display:flex; align-items:center; gap:8px;">
+                    <span>🎵 Nova Música do Show</span>
+                </h3>
+                <button onclick="closeSongEditModal()" style="background:transparent; border:none; color:#8E8E9E; font-size:18px; cursor:pointer; font-weight:bold;">✕</button>
+            </div>
+            
+            <input type="hidden" id="modalSongId" value="">
+
+            <div style="display:flex; flex-direction:column; gap:12px;">
+                <div>
+                    <label style="font-size:11px; color:#8E8E9E; font-weight:bold; display:block; margin-bottom:4px;">NOME DA MÚSICA:</label>
+                    <input type="text" id="modalSongTitleInput" placeholder="Ex: Evidências, Billie Jean, Trem das Onze..." style="width:100%; box-sizing:border-box; background:#0B0B14; border:1px solid #2ECC71; color:#FFF; font-size:13px; font-weight:bold; padding:8px 10px; border-radius:5px; outline:none;">
+                </div>
+
+                <div style="display:flex; gap:10px;">
+                    <div style="flex:1;">
+                        <label style="font-size:11px; color:#8E8E9E; font-weight:bold; display:block; margin-bottom:4px;">TOM / ESCALA:</label>
+                        <input type="text" id="modalSongKeyInput" placeholder="Ex: Tom: E, Gm, C#m..." style="width:100%; box-sizing:border-box; background:#0B0B14; border:1px solid #33334D; color:#FFF; font-size:12px; padding:6px 8px; border-radius:5px; outline:none;">
+                    </div>
+                    <div style="flex:1;">
+                        <label style="font-size:11px; color:#8E8E9E; font-weight:bold; display:block; margin-bottom:4px;">ANDAMENTO (BPM):</label>
+                        <input type="text" id="modalSongBpmInput" placeholder="Ex: 108 BPM" style="width:100%; box-sizing:border-box; background:#0B0B14; border:1px solid #33334D; color:#FFF; font-size:12px; padding:6px 8px; border-radius:5px; outline:none;">
+                    </div>
+                </div>
+
+                <div>
+                    <label style="font-size:11px; color:#8E8E9E; font-weight:bold; display:block; margin-bottom:4px;">ANOTAÇÃO / OBSERVAÇÃO DE PALCO:</label>
+                    <input type="text" id="modalSongNotesInput" placeholder="Ex: Entra teclado solo após contagem no chimbal" style="width:100%; box-sizing:border-box; background:#0B0B14; border:1px solid #33334D; color:#CCC; font-size:11px; padding:6px 8px; border-radius:5px; outline:none;">
+                </div>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:18px;">
+                <button onclick="closeSongEditModal()" style="background:#1F1F2E; border:1px solid #3A3A55; color:#AAA; font-size:12px; padding:6px 14px; border-radius:5px; cursor:pointer;">Cancelar</button>
+                <button onclick="saveSongFromModal()" style="background:#27AE60; border:1px solid #2ECC71; color:#FFF; font-weight:bold; font-size:12px; padding:6px 16px; border-radius:5px; cursor:pointer; box-shadow:0 0 10px rgba(46,204,113,0.3);">Salvar Música</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL: ADICIONAR SEÇÃO/PARTE NA MÚSICA     -->
+    <!-- ========================================== -->
+    <div id="modalAddSection" class="modal-backdrop" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:99999; justify-content:center; align-items:center; backdrop-filter:blur(3px);">
+        <div style="background:#12121E; border:1px solid #9B59B6; border-radius:10px; width:92%; max-width:440px; padding:16px 20px; box-shadow:0 0 25px rgba(155,89,182,0.3); color:#E0E0F0;">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #9B59B6; padding-bottom:8px; margin-bottom:14px;">
+                <h3 style="margin:0; font-size:15px; color:#D2B4DE; display:flex; align-items:center; gap:8px;">
+                    <span>⚡ Adicionar Seção à Música</span>
+                </h3>
+                <button onclick="closeAddSectionModal()" style="background:transparent; border:none; color:#8E8E9E; font-size:18px; cursor:pointer; font-weight:bold;">✕</button>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:12px;">
+                <div>
+                    <label style="font-size:11px; color:#8E8E9E; font-weight:bold; display:block; margin-bottom:4px;">SELECIONE A MÚSICA DESTINO:</label>
+                    <select id="modalAddSectionSongSelect" style="width:100%; box-sizing:border-box; background:#0B0B14; border:1px solid #9B59B6; color:#FFF; font-size:13px; font-weight:bold; padding:7px 10px; border-radius:5px; outline:none;"></select>
+                </div>
+
+                <div>
+                    <label style="font-size:11px; color:#8E8E9E; font-weight:bold; display:block; margin-bottom:4px;">NOME DA SEÇÃO / PARTE DO SHOW:</label>
+                    <input type="text" id="modalSectionNameInput" placeholder="Ex: Intro, Verso, Refrão, Solo, Ponte, Final..." style="width:100%; box-sizing:border-box; background:#0B0B14; border:1px solid #33334D; color:#FFF; font-size:12px; font-weight:bold; padding:6px 8px; border-radius:5px; outline:none;">
+                </div>
+
+                <div>
+                    <label style="font-size:11px; color:#8E8E9E; font-weight:bold; display:block; margin-bottom:4px;">ETIQUETA VISUAL (BADGE):</label>
+                    <select id="modalSectionBadgeSelect" style="width:100%; box-sizing:border-box; background:#0B0B14; border:1px solid #33334D; color:#FFF; font-size:12px; padding:6px 8px; border-radius:5px; outline:none;">
+                        <option value="INTRO" selected>INTRO (Amarelo)</option>
+                        <option value="VERSO">VERSO (Azul)</option>
+                        <option value="REFRÃO">REFRÃO (Verde Neon)</option>
+                        <option value="SOLO">SOLO (Vermelho/Rosa)</option>
+                        <option value="PONTE">PONTE (Laranja)</option>
+                        <option value="FINAL">FINAL (Roxo)</option>
+                        <option value="PAD">PAD / AMBIÊNCIA</option>
+                        <option value="LEAD">LEAD / SYNTH</option>
+                    </select>
+                </div>
+
+                <div id="modalSectionCurrentPreview" style="background:#09090E; padding:8px 10px; border-radius:5px; border:1px solid #202035; font-size:11px; color:#AAA;">
+                    <!-- Prévia da configuração atual carregada -->
+                </div>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:18px;">
+                <button onclick="closeAddSectionModal()" style="background:#1F1F2E; border:1px solid #3A3A55; color:#AAA; font-size:12px; padding:6px 14px; border-radius:5px; cursor:pointer;">Cancelar</button>
+                <button onclick="saveSectionFromModal()" style="background:#8E44AD; border:1px solid #9B59B6; color:#FFF; font-weight:bold; font-size:12px; padding:6px 16px; border-radius:5px; cursor:pointer; box-shadow:0 0 10px rgba(155,89,182,0.3);">Salvar Seção</button>
             </div>
         </div>
     </div>
