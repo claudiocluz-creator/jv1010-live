@@ -2327,21 +2327,32 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- ABA 5: MODO PALCO LIVE (MULTI-MÚSICAS)      -->
+    <!-- ABA 5: MODO PALCO LIVE (SHOWS & MULTI-MÚSICAS) -->
     <!-- ========================================== -->
     <div class="tab-content" id="tabLive" style="background:#09090E; padding:8px; display:flex; flex-direction:column; flex:1; min-height:0;">
-        <!-- Barra Superior do Palco Live -->
+        <!-- Barra Superior 1: Gerenciamento de SHOWS e Ações Globais -->
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; padding:6px 10px; border-bottom:1px solid #1E1E2C; margin-bottom:6px; background:#12121B; border-radius:6px; flex-shrink:0;">
+            <!-- Seção de Shows -->
             <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-                <span style="font-size:14px; font-weight:900; color:#2ECC71;">🎤 PALCO LIVE</span>
-                
-                <!-- Botão Nova Música -->
-                <button class="synth-btn" style="background:#27AE60; border-color:#2ECC71; color:#FFF; font-weight:bold; font-size:11px; padding:3px 10px; height:26px;" onclick="openNewSongModal()">➕ Nova Música</button>
-                
-                <!-- Salvar Configuração Atual como Parte da Música Ativa -->
-                <button class="synth-btn" style="background:#8E44AD; border-color:#9B59B6; color:#FFF; font-weight:bold; font-size:10.5px; padding:3px 8px; height:26px;" onclick="addCurrentSetupToActiveSong()" title="Salva a Combinação/Síntese atual como uma nova seção (ex: Refrão, Solo) na Música ativa">+ Adicionar Seção Atual</button>
+                <span style="font-size:13px; font-weight:900; color:#2ECC71; display:flex; align-items:center; gap:4px;">
+                    <span>🎤 PALCO</span>
+                </span>
+
+                <!-- Dropdown de Seleção de Show Ativo -->
+                <div style="display:flex; align-items:center; gap:4px; background:#0D0D15; border:1px solid #2ECC71; border-radius:5px; padding:2px 6px;">
+                    <span style="font-size:10px; font-weight:bold; color:#2ECC71;">SHOW:</span>
+                    <select id="selLiveShow" class="synth-select" style="font-size:11.5px; font-weight:bold; padding:2px 6px; height:24px; color:#FFF; background:transparent; border:none; outline:none; max-width:180px;" onchange="onLiveShowChange(this.value)"></select>
+                </div>
+
+                <!-- Botões de Gerenciamento do Show -->
+                <button class="synth-btn" style="background:#27AE60; border-color:#2ECC71; color:#FFF; font-weight:bold; font-size:10.5px; padding:3px 8px; height:24px;" onclick="openNewShowModal()" title="Criar um novo Show/Setlist">➕ Novo Show</button>
+                <button class="synth-btn" style="background:#1F1F2E; border-color:#3A3A55; color:#00E5FF; font-weight:bold; font-size:10.5px; padding:3px 8px; height:24px;" onclick="editCurrentShowDetails()" title="Editar nome e data do Show atual">✏️</button>
+                <button class="synth-btn" style="background:rgba(0,229,255,0.12); border-color:#00E5FF; color:#00E5FF; font-weight:bold; font-size:10.5px; padding:3px 8px; height:24px;" onclick="exportCurrentShow()" title="Exportar este Show completo com todas as suas músicas (.json)">💾 Exportar Show</button>
+                <button class="synth-btn" style="background:rgba(255,215,0,0.12); border-color:#FFD700; color:#FFD700; font-weight:bold; font-size:10.5px; padding:3px 8px; height:24px;" onclick="document.getElementById('fileShowImportInput').click()" title="Importar Show ou Música externa (.json)">📂 Importar Show/Música</button>
+                <input type="file" id="fileShowImportInput" accept=".json" style="display:none;" onchange="importShowOrSongFile(event)">
             </div>
             
+            <!-- Controles Globais do Palco (Remain, EQ, Alternador de View) -->
             <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
                 <!-- Alternador de Visualização: Músicas Abertas (Painéis Lado a Lado) vs Biblioteca Completa -->
                 <div style="display:inline-flex; background:#0B0B14; border:1px solid #2ECC71; border-radius:5px; padding:2px;">
@@ -2355,12 +2366,15 @@
             </div>
         </div>
 
-        <!-- Barra de Seleção / Abertura Rápida de Músicas no Show -->
+        <!-- Barra Superior 2: Seleção e Ações de Músicas do Show Atual -->
         <div id="liveSongBar" style="display:flex; align-items:center; gap:8px; padding:4px 8px; background:#0D0D15; border:1px solid #1A1A26; border-radius:6px; margin-bottom:8px; flex-shrink:0; overflow-x:auto;">
-            <span style="font-size:11px; font-weight:bold; color:#8E8E9E; white-space:nowrap;">Músicas do Show:</span>
-            <div id="liveSongPills" style="display:flex; align-items:center; gap:6px; flex:1; overflow-x:auto; min-height:28px;">
-                <!-- Pílulas de seleção/abertura de músicas inseridas aqui -->
-            </div>
+            <span style="font-size:11px; font-weight:bold; color:#8E8E9E; white-space:nowrap;">Músicas:</span>
+            
+            <button class="synth-btn" style="background:#27AE60; border-color:#2ECC71; color:#FFF; font-weight:bold; font-size:10.5px; padding:2px 8px; height:24px; white-space:nowrap;" onclick="openNewSongModal()">➕ Nova Música</button>
+            <button class="synth-btn" style="background:#8E44AD; border-color:#9B59B6; color:#FFF; font-weight:bold; font-size:10.5px; padding:2px 8px; height:24px; white-space:nowrap;" onclick="addCurrentSetupToActiveSong()" title="Salva a Combinação/Síntese atual como uma nova seção na Música ativa">+ Adicionar Seção Atual</button>
+
+            <!-- Pílulas de seleção/abertura de músicas inseridas aqui -->
+            <div id="liveSongPills" style="display:flex; align-items:center; gap:6px; flex:1; overflow-x:auto; min-height:28px;"></div>
         </div>
 
         <!-- VIEW A: Painéis de Músicas Lado a Lado (Multi-Música no Palco) -->
@@ -3433,14 +3447,19 @@
         }
 
         // ==========================================
-        // RENDERIZAÇÃO DO MODO PALCO LIVE (SETLIST & MULTI-MÚSICAS)
+        // RENDERIZAÇÃO DO MODO PALCO LIVE (SHOWS, SETLISTS & MULTI-MÚSICAS)
         // ==========================================
         let liveStageFilter = "all"; // 'all', 'perf', 'patch'
         let liveStageViewMode = localStorage.getItem("jv1010_live_view_mode") || "songs"; // 'songs' (Painéis Multi-Músicas) ou 'grid' (Favoritos Gerais)
         
-        // Estrutura de Músicas do Show
+        // Estrutura de SHOWS do Palco
+        // Cada Show contém: { id, name, date, notes, song_ids: [...] }
+        let liveShows = JSON.parse(localStorage.getItem("jv1010_live_shows") || "null");
+        
+        // Estrutura de MÚSICAS
         // Cada música contém: { id, title, key, bpm, notes, sections: [ { id, name, badge, type: 'comb'|'patch', data: {...} } ] }
         let liveSongs = JSON.parse(localStorage.getItem("jv1010_live_songs") || "null");
+
         if (!liveSongs || !Array.isArray(liveSongs) || liveSongs.length === 0) {
             // Músicas padrão de demonstração para o músico já ver na primeira inicialização
             liveSongs = [
@@ -3473,10 +3492,45 @@
             localStorage.setItem("jv1010_live_songs", JSON.stringify(liveSongs));
         }
 
+        if (!liveShows || !Array.isArray(liveShows) || liveShows.length === 0) {
+            // Show inicial padrão reunindo as músicas do repertório
+            liveShows = [
+                {
+                    id: "show_default_1",
+                    name: "Show Principal (Setlist 1)",
+                    date: "Repertório Ativo",
+                    notes: "Setlist com músicas principais e clássicos",
+                    song_ids: liveSongs.map(s => s.id)
+                }
+            ];
+            localStorage.setItem("jv1010_live_shows", JSON.stringify(liveShows));
+        }
+
+        // Show atualmente selecionado
+        let currentLiveShowId = localStorage.getItem("jv1010_current_show_id") || (liveShows[0]?.id || "show_default_1");
+
+        // Retorna o objeto do show atual garantindo consistência
+        function getCurrentLiveShow() {
+            let show = liveShows.find(s => s.id === currentLiveShowId);
+            if (!show && liveShows.length > 0) {
+                currentLiveShowId = liveShows[0].id;
+                show = liveShows[0];
+            }
+            return show;
+        }
+
+        // Retorna as músicas pertencentes ao show atual
+        function getSongsForCurrentShow() {
+            const show = getCurrentLiveShow();
+            if (!show || !Array.isArray(show.song_ids)) return liveSongs;
+            return liveSongs.filter(s => show.song_ids.includes(s.id));
+        }
+
         // IDs das músicas atualmente abertas na tela (Multi-Música / Colunas Lado a Lado)
         let openSongIds = JSON.parse(localStorage.getItem("jv1010_open_song_ids") || "null");
         if (!openSongIds || !Array.isArray(openSongIds) || openSongIds.length === 0) {
-            openSongIds = [liveSongs[0]?.id || "song_demo_1"];
+            const showSongs = getSongsForCurrentShow();
+            openSongIds = [showSongs[0]?.id || liveSongs[0]?.id || "song_demo_1"];
             localStorage.setItem("jv1010_open_song_ids", JSON.stringify(openSongIds));
         }
 
@@ -3484,9 +3538,11 @@
         let activeLiveSongId = localStorage.getItem("jv1010_active_song_id") || openSongIds[0] || (liveSongs[0]?.id || "");
         let activeSongSectionId = null; // Seção que está tocando no momento
 
-        function saveLiveSongsToStorage() {
+        function saveLiveShowsAndSongsToStorage() {
+            localStorage.setItem("jv1010_live_shows", JSON.stringify(liveShows));
             localStorage.setItem("jv1010_live_songs", JSON.stringify(liveSongs));
             localStorage.setItem("jv1010_open_song_ids", JSON.stringify(openSongIds));
+            localStorage.setItem("jv1010_current_show_id", currentLiveShowId);
             localStorage.setItem("jv1010_active_song_id", activeLiveSongId);
         }
 
@@ -3505,6 +3561,7 @@
                 if (viewSongs) viewSongs.style.display = "flex";
                 if (viewGrid) viewGrid.style.display = "none";
                 if (songBar) songBar.style.display = "flex";
+                renderLiveShowDropdown();
                 renderLiveSongsViewport();
             } else {
                 if (btnSongs) { btnSongs.style.background = "transparent"; btnSongs.style.color = "#8E8E9E"; }
@@ -3516,17 +3573,45 @@
             }
         }
 
+        function renderLiveShowDropdown() {
+            const sel = document.getElementById("selLiveShow");
+            if (!sel) return;
+            sel.innerHTML = liveShows.map(show => `
+                <option value="${show.id}" ${show.id === currentLiveShowId ? 'selected' : ''}>
+                    ${escapeHtml(show.name)} (${show.song_ids ? show.song_ids.length : 0} msgs)
+                </option>
+            `).join("");
+        }
+
+        function onLiveShowChange(showId) {
+            currentLiveShowId = showId;
+            const currentShow = getCurrentLiveShow();
+            if (currentShow && Array.isArray(currentShow.song_ids) && currentShow.song_ids.length > 0) {
+                // Abre as primeiras músicas deste show
+                openSongIds = [currentShow.song_ids[0]];
+                activeLiveSongId = currentShow.song_ids[0];
+            } else {
+                openSongIds = [];
+            }
+            saveLiveShowsAndSongsToStorage();
+            renderLiveShowDropdown();
+            renderLiveSongPills();
+            renderLiveSongsViewport();
+        }
+
         function renderLiveSongPills() {
             const pillsContainer = document.getElementById("liveSongPills");
             if (!pillsContainer) return;
             pillsContainer.innerHTML = "";
 
-            if (!liveSongs || liveSongs.length === 0) {
-                pillsContainer.innerHTML = `<span style="font-size:11px; color:#7E7E94; font-style:italic;">Nenhuma música criada ainda. Clique em "➕ Nova Música" para começar.</span>`;
+            const showSongs = getSongsForCurrentShow();
+
+            if (!showSongs || showSongs.length === 0) {
+                pillsContainer.innerHTML = `<span style="font-size:11px; color:#7E7E94; font-style:italic;">Nenhuma música neste show ainda. Clique em "➕ Nova Música" para adicionar.</span>`;
                 return;
             }
 
-            liveSongs.forEach(song => {
+            showSongs.forEach(song => {
                 const isOpen = openSongIds.includes(song.id);
                 const isActive = (song.id === activeLiveSongId);
 
@@ -3559,42 +3644,46 @@
                 if (openSongIds.length > 1) {
                     openSongIds.splice(idx, 1);
                 } else {
-                    // Se for a única aberta, mantém
                     showToast("Pelo menos uma música deve permanecer aberta no palco.");
                     return;
                 }
             } else {
-                // Abre a música lado a lado
                 openSongIds.push(songId);
             }
             activeLiveSongId = songId;
-            saveLiveSongsToStorage();
+            saveLiveShowsAndSongsToStorage();
             renderLiveSongPills();
             renderLiveSongsViewport();
         }
 
         function renderLiveSongsViewport() {
+            renderLiveShowDropdown();
             renderLiveSongPills();
             const viewport = document.getElementById("liveSongsViewport");
             if (!viewport) return;
             viewport.innerHTML = "";
 
-            if (!liveSongs || liveSongs.length === 0) {
+            const showSongs = getSongsForCurrentShow();
+
+            if (!showSongs || showSongs.length === 0) {
                 viewport.innerHTML = `
                     <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#7E7E94; padding:40px 20px; text-align:center;">
                         <span style="font-size:40px; margin-bottom:12px;">🎵</span>
-                        <b style="font-size:14px; color:#E0E0F0; margin-bottom:6px;">Nenhuma música salva ainda!</b>
-                        <p style="max-width:400px; font-size:12px; margin:0 0 16px 0;">Crie músicas do seu repertório com seções (Intro, Verso, Refrão, Solo) para disparar instantaneamente com 1 toque no palco.</p>
-                        <button class="synth-btn" style="background:#27AE60; border-color:#2ECC71; color:#FFF; font-weight:bold; font-size:12px; padding:6px 16px;" onclick="openNewSongModal()">➕ Criar Primeira Música</button>
+                        <b style="font-size:14px; color:#E0E0F0; margin-bottom:6px;">Nenhuma música neste show!</b>
+                        <p style="max-width:420px; font-size:12px; margin:0 0 16px 0;">Adicione músicas ao repertório deste show ou crie novas para ter seus timbres e seções (Intro, Verso, Refrão, Solo) com disparo instantâneo no palco.</p>
+                        <div style="display:flex; gap:10px;">
+                            <button class="synth-btn" style="background:#27AE60; border-color:#2ECC71; color:#FFF; font-weight:bold; font-size:12px; padding:6px 16px;" onclick="openNewSongModal()">➕ Nova Música</button>
+                            <button class="synth-btn" style="background:rgba(255,215,0,0.15); border-color:#FFD700; color:#FFD700; font-weight:bold; font-size:12px; padding:6px 16px;" onclick="document.getElementById('fileShowImportInput').click()">📂 Importar Música/Show</button>
+                        </div>
                     </div>
                 `;
                 return;
             }
 
-            const visibleSongs = liveSongs.filter(s => openSongIds.includes(s.id));
-            if (visibleSongs.length === 0 && liveSongs.length > 0) {
-                openSongIds = [liveSongs[0].id];
-                saveLiveSongsToStorage();
+            const visibleSongs = showSongs.filter(s => openSongIds.includes(s.id));
+            if (visibleSongs.length === 0 && showSongs.length > 0) {
+                openSongIds = [showSongs[0].id];
+                saveLiveShowsAndSongsToStorage();
                 return renderLiveSongsViewport();
             }
 
@@ -3605,7 +3694,7 @@
                 panel.onclick = () => {
                     if (activeLiveSongId !== song.id) {
                         activeLiveSongId = song.id;
-                        saveLiveSongsToStorage();
+                        saveLiveShowsAndSongsToStorage();
                         renderLiveSongsViewport();
                     }
                 };
@@ -3654,6 +3743,7 @@
                         <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:4px;">
                             <div class="title" style="font-size:13px; font-weight:900; color:#2ECC71;">${escapeHtml(song.title)}</div>
                             <div style="display:flex; align-items:center; gap:4px;">
+                                <button class="synth-btn" style="background:rgba(0,229,255,0.15); border-color:#00E5FF; color:#00E5FF; font-size:10px; padding:1px 5px; height:20px;" onclick="exportSingleSong('${song.id}', event)" title="Exportar apenas esta música (.json)">💾</button>
                                 <button class="synth-btn" style="background:#1F1F2E; border-color:#3A3A55; color:#00E5FF; font-size:10px; padding:1px 5px; height:20px;" onclick="editSongDetails('${song.id}', event)" title="Editar dados da música">✏️</button>
                                 <button class="synth-btn" style="background:#2D1B20; border-color:#E74C3C; color:#E74C3C; font-size:10px; padding:1px 5px; height:20px;" onclick="deleteSong('${song.id}', event)" title="Excluir música">🗑️</button>
                             </div>
@@ -3672,6 +3762,235 @@
 
                 viewport.appendChild(panel);
             });
+        }
+
+        // ==========================================
+        // GERENCIAMENTO DE SHOWS (CRIAR, EDITAR, EXCLUIR)
+        // ==========================================
+        function openNewShowModal() {
+            const titleEl = document.getElementById("modalShowEditTitle");
+            if (titleEl) titleEl.innerText = "🎤 Novo Show / Repertório";
+            document.getElementById("modalShowId").value = "";
+            document.getElementById("modalShowNameInput").value = "";
+            document.getElementById("modalShowDateInput").value = "";
+            document.getElementById("modalShowNotesInput").value = "";
+            const btnDel = document.getElementById("btnDeleteCurrentShow");
+            if (btnDel) btnDel.style.display = "none";
+
+            const modal = document.getElementById("modalShowEdit");
+            if (modal) modal.style.display = "flex";
+            setTimeout(() => document.getElementById("modalShowNameInput").focus(), 60);
+        }
+
+        function editCurrentShowDetails() {
+            const currentShow = getCurrentLiveShow();
+            if (!currentShow) return;
+
+            const titleEl = document.getElementById("modalShowEditTitle");
+            if (titleEl) titleEl.innerText = "✏️ Editar Show / Repertório";
+            document.getElementById("modalShowId").value = currentShow.id;
+            document.getElementById("modalShowNameInput").value = currentShow.name || "";
+            document.getElementById("modalShowDateInput").value = currentShow.date || "";
+            document.getElementById("modalShowNotesInput").value = currentShow.notes || "";
+            const btnDel = document.getElementById("btnDeleteCurrentShow");
+            if (btnDel) btnDel.style.display = liveShows.length > 1 ? "block" : "none";
+
+            const modal = document.getElementById("modalShowEdit");
+            if (modal) modal.style.display = "flex";
+        }
+
+        function closeShowEditModal() {
+            const modal = document.getElementById("modalShowEdit");
+            if (modal) modal.style.display = "none";
+        }
+
+        function saveShowFromModal() {
+            const name = (document.getElementById("modalShowNameInput").value || "").trim();
+            if (!name) {
+                alert("Por favor, digite o nome do show!");
+                return;
+            }
+            const showId = document.getElementById("modalShowId").value;
+            const date = (document.getElementById("modalShowDateInput").value || "").trim();
+            const notes = (document.getElementById("modalShowNotesInput").value || "").trim();
+
+            if (showId) {
+                // Atualiza existente
+                const show = liveShows.find(s => s.id === showId);
+                if (show) {
+                    show.name = name;
+                    show.date = date;
+                    show.notes = notes;
+                }
+            } else {
+                // Cria novo show
+                const newShowId = "show_" + Date.now();
+                const newShow = {
+                    id: newShowId,
+                    name: name,
+                    date: date,
+                    notes: notes,
+                    song_ids: []
+                };
+                liveShows.push(newShow);
+                currentLiveShowId = newShowId;
+                openSongIds = [];
+            }
+
+            saveLiveShowsAndSongsToStorage();
+            closeShowEditModal();
+            renderLiveShowDropdown();
+            renderLiveSongPills();
+            renderLiveSongsViewport();
+            showToast(`✓ Show "${name}" salvo com sucesso!`);
+        }
+
+        function deleteCurrentShow() {
+            if (liveShows.length <= 1) {
+                alert("Você deve manter ao menos um Show cadastrado.");
+                return;
+            }
+            const currentShow = getCurrentLiveShow();
+            if (!currentShow) return;
+            if (!confirm(`Tem certeza que deseja excluir o show "${currentShow.name}"? As músicas não serão perdidas.`)) return;
+
+            liveShows = liveShows.filter(s => s.id !== currentShow.id);
+            currentLiveShowId = liveShows[0].id;
+            saveLiveShowsAndSongsToStorage();
+            closeShowEditModal();
+            renderLiveShowDropdown();
+            renderLiveSongPills();
+            renderLiveSongsViewport();
+            showToast(`Show excluído com sucesso.`);
+        }
+
+        // ==========================================
+        // EXPORTAÇÃO E IMPORTAÇÃO EXTERNA (JSON)
+        // ==========================================
+        function exportCurrentShow() {
+            const show = getCurrentLiveShow();
+            if (!show) return;
+
+            // Coleta todas as músicas vinculadas a este show
+            const songsInShow = liveSongs.filter(s => (show.song_ids || []).includes(s.id));
+
+            const exportObj = {
+                type: "jv1010_show",
+                version: "1.0",
+                exported_at: new Date().toISOString(),
+                device: "Roland JV-1010",
+                show: show,
+                songs: songsInShow
+            };
+
+            const jsonStr = JSON.stringify(exportObj, null, 2);
+            const blob = new Blob([jsonStr], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            const safeName = (show.name || "Show").replace(/[^a-zA-Z0-9_-]/g, "_");
+            a.download = `JV1010_Show_${safeName}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast(`✓ Show "${show.name}" exportado com sucesso!`);
+        }
+
+        function exportSingleSong(songId, evt) {
+            if (evt) evt.stopPropagation();
+            const song = liveSongs.find(s => s.id === songId);
+            if (!song) return;
+
+            const exportObj = {
+                type: "jv1010_song",
+                version: "1.0",
+                exported_at: new Date().toISOString(),
+                device: "Roland JV-1010",
+                song: song
+            };
+
+            const jsonStr = JSON.stringify(exportObj, null, 2);
+            const blob = new Blob([jsonStr], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            const safeTitle = (song.title || "Musica").replace(/[^a-zA-Z0-9_-]/g, "_");
+            a.download = `JV1010_Musica_${safeTitle}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast(`✓ Música "${song.title}" exportada com sucesso!`);
+        }
+
+        function importShowOrSongFile(evt) {
+            const file = evt.target.files && evt.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (!data) throw new Error("Arquivo vazio ou inválido.");
+
+                    if (data.type === "jv1010_song" && data.song) {
+                        // Importação de Música Avulsa
+                        const importedSong = data.song;
+                        // Gera novo ID para evitar colisões
+                        importedSong.id = "song_" + Date.now();
+                        liveSongs.push(importedSong);
+
+                        // Adiciona ao show atual
+                        const currentShow = getCurrentLiveShow();
+                        if (currentShow) {
+                            if (!currentShow.song_ids) currentShow.song_ids = [];
+                            currentShow.song_ids.push(importedSong.id);
+                        }
+                        if (!openSongIds.includes(importedSong.id)) {
+                            openSongIds.push(importedSong.id);
+                        }
+                        activeLiveSongId = importedSong.id;
+                        saveLiveShowsAndSongsToStorage();
+                        renderLiveShowDropdown();
+                        renderLiveSongPills();
+                        renderLiveSongsViewport();
+                        alert(`✓ Música "${importedSong.title}" importada e adicionada ao show atual!`);
+                    } else if (data.type === "jv1010_show" && data.show) {
+                        // Importação de Show Completo com Músicas
+                        const importedShow = data.show;
+                        const newShowId = "show_" + Date.now();
+                        importedShow.id = newShowId;
+                        importedShow.song_ids = [];
+
+                        if (Array.isArray(data.songs)) {
+                            data.songs.forEach((s, idx) => {
+                                const newSongId = "song_" + Date.now() + "_" + idx;
+                                s.id = newSongId;
+                                liveSongs.push(s);
+                                importedShow.song_ids.push(newSongId);
+                            });
+                        }
+
+                        liveShows.push(importedShow);
+                        currentLiveShowId = newShowId;
+                        openSongIds = importedShow.song_ids.slice(0, 2);
+                        activeLiveSongId = openSongIds[0] || "";
+                        saveLiveShowsAndSongsToStorage();
+                        renderLiveShowDropdown();
+                        renderLiveSongPills();
+                        renderLiveSongsViewport();
+                        alert(`✓ Show "${importedShow.name}" importado com sucesso com ${importedShow.song_ids.length} música(s)!`);
+                    } else {
+                        throw new Error("Formato de arquivo não reconhecido (deve ser um .json exportado de Show ou Música).");
+                    }
+                } catch(err) {
+                    alert("Erro ao importar: " + err.message);
+                } finally {
+                    evt.target.value = "";
+                }
+            };
+            reader.readAsText(file);
         }
 
         function triggerSongSection(songId, secId, evt) {
@@ -3777,14 +4096,24 @@
                     sections: []
                 };
                 liveSongs.push(newSong);
+
+                // Associa ao show atual automaticamente
+                const currentShow = getCurrentLiveShow();
+                if (currentShow) {
+                    if (!currentShow.song_ids) currentShow.song_ids = [];
+                    currentShow.song_ids.push(newId);
+                }
+
                 if (!openSongIds.includes(newId)) {
                     openSongIds.push(newId);
                 }
                 activeLiveSongId = newId;
             }
 
-            saveLiveSongsToStorage();
+            saveLiveShowsAndSongsToStorage();
             closeSongEditModal();
+            renderLiveShowDropdown();
+            renderLiveSongPills();
             renderLiveSongsViewport();
         }
 
@@ -3795,16 +4124,25 @@
             if (!confirm(`Tem certeza que deseja excluir a música "${song.title}"?`)) return;
 
             liveSongs = liveSongs.filter(s => s.id !== songId);
+            // Remove de todos os shows
+            liveShows.forEach(sh => {
+                if (sh.song_ids) {
+                    sh.song_ids = sh.song_ids.filter(id => id !== songId);
+                }
+            });
             openSongIds = openSongIds.filter(id => id !== songId);
             if (activeLiveSongId === songId) {
                 activeLiveSongId = openSongIds[0] || (liveSongs[0]?.id || "");
             }
-            saveLiveSongsToStorage();
+            saveLiveShowsAndSongsToStorage();
+            renderLiveShowDropdown();
+            renderLiveSongPills();
             renderLiveSongsViewport();
         }
 
         function addCurrentSetupToActiveSong() {
-            if (!liveSongs || liveSongs.length === 0) {
+            const showSongs = getSongsForCurrentShow();
+            if (!showSongs || showSongs.length === 0) {
                 openNewSongModal();
                 return;
             }
@@ -3819,7 +4157,8 @@
         function openAddSectionModal(targetSongId = null) {
             const selectEl = document.getElementById("modalAddSectionSongSelect");
             if (!selectEl) return;
-            selectEl.innerHTML = liveSongs.map(s => `
+            const showSongs = getSongsForCurrentShow();
+            selectEl.innerHTML = showSongs.map(s => `
                 <option value="${s.id}" ${s.id === (targetSongId || activeLiveSongId) ? 'selected' : ''}>
                     ${escapeHtml(s.title)}
                 </option>
@@ -3895,7 +4234,7 @@
             if (!song.sections) song.sections = [];
             song.sections.push(newSection);
 
-            saveLiveSongsToStorage();
+            saveLiveShowsAndSongsToStorage();
             closeAddSectionModal();
             renderLiveSongsViewport();
             showToast(`✓ Seção "${name}" adicionada à música "${song.title}"!`);
@@ -3909,7 +4248,7 @@
 
             song.sections = song.sections.filter(sec => sec.id !== secId);
             if (activeSongSectionId === secId) activeSongSectionId = null;
-            saveLiveSongsToStorage();
+            saveLiveShowsAndSongsToStorage();
             renderLiveSongsViewport();
         }
 
@@ -6821,14 +7160,16 @@
         // ==========================================
         function exportFullBackup() {
             const backupData = {
-                version: "1.0",
+                version: "1.1",
                 created_at: new Date().toISOString(),
                 device: "Roland JV-1010",
                 favorites: Array.from(favoriteKeys),
                 custom_patches: customFavoritePatches,
                 combinations: favoriteCombinations,
                 perf_favorites: Array.from(favPerformanceKeys),
-                midi_learn: midiLearnMap
+                midi_learn: midiLearnMap,
+                live_shows: liveShows,
+                live_songs: liveSongs
             };
 
             const jsonStr = JSON.stringify(backupData, null, 2);
@@ -6875,6 +7216,16 @@
                     if (data.midi_learn) {
                         midiLearnMap = data.midi_learn;
                         localStorage.setItem("jv1010_midi_learn_map", JSON.stringify(midiLearnMap));
+                    }
+                    if (Array.isArray(data.live_shows) && data.live_shows.length > 0) {
+                        liveShows = data.live_shows;
+                        currentLiveShowId = liveShows[0].id;
+                        localStorage.setItem("jv1010_live_shows", JSON.stringify(liveShows));
+                        localStorage.setItem("jv1010_current_show_id", currentLiveShowId);
+                    }
+                    if (Array.isArray(data.live_songs) && data.live_songs.length > 0) {
+                        liveSongs = data.live_songs;
+                        localStorage.setItem("jv1010_live_songs", JSON.stringify(liveSongs));
                     }
 
                     // Sincroniza tudo com o servidor
@@ -7606,6 +7957,47 @@
             <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:18px;">
                 <button onclick="closeAddSectionModal()" style="background:#1F1F2E; border:1px solid #3A3A55; color:#AAA; font-size:12px; padding:6px 14px; border-radius:5px; cursor:pointer;">Cancelar</button>
                 <button onclick="saveSectionFromModal()" style="background:#8E44AD; border:1px solid #9B59B6; color:#FFF; font-weight:bold; font-size:12px; padding:6px 16px; border-radius:5px; cursor:pointer; box-shadow:0 0 10px rgba(155,89,182,0.3);">Salvar Seção</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL: NOVO SHOW / EDITAR SHOW DO PALCO   -->
+    <!-- ========================================== -->
+    <div id="modalShowEdit" class="modal-backdrop" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:99999; justify-content:center; align-items:center; backdrop-filter:blur(3px);">
+        <div style="background:#12121E; border:1px solid #2ECC71; border-radius:10px; width:92%; max-width:460px; padding:16px 20px; box-shadow:0 0 25px rgba(46,204,113,0.3); color:#E0E0F0;">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #2ECC71; padding-bottom:8px; margin-bottom:14px;">
+                <h3 id="modalShowEditTitle" style="margin:0; font-size:15px; color:#2ECC71; display:flex; align-items:center; gap:8px;">
+                    <span>🎤 Novo Show / Repertório</span>
+                </h3>
+                <button onclick="closeShowEditModal()" style="background:transparent; border:none; color:#8E8E9E; font-size:18px; cursor:pointer; font-weight:bold;">✕</button>
+            </div>
+            
+            <input type="hidden" id="modalShowId" value="">
+
+            <div style="display:flex; flex-direction:column; gap:12px;">
+                <div>
+                    <label style="font-size:11px; color:#8E8E9E; font-weight:bold; display:block; margin-bottom:4px;">NOME DO SHOW / EVENTO:</label>
+                    <input type="text" id="modalShowNameInput" placeholder="Ex: Show Acústico Bar, Turnê 2026, Casamento Julho..." style="width:100%; box-sizing:border-box; background:#0B0B14; border:1px solid #2ECC71; color:#FFF; font-size:13px; font-weight:bold; padding:8px 10px; border-radius:5px; outline:none;">
+                </div>
+
+                <div>
+                    <label style="font-size:11px; color:#8E8E9E; font-weight:bold; display:block; margin-bottom:4px;">DATA / LOCAL (OPCIONAL):</label>
+                    <input type="text" id="modalShowDateInput" placeholder="Ex: 24/10/2026 - Teatro Municipal" style="width:100%; box-sizing:border-box; background:#0B0B14; border:1px solid #33334D; color:#FFF; font-size:12px; padding:6px 8px; border-radius:5px; outline:none;">
+                </div>
+
+                <div>
+                    <label style="font-size:11px; color:#8E8E9E; font-weight:bold; display:block; margin-bottom:4px;">NOTAS / SETLIST / OBSERVAÇÕES:</label>
+                    <input type="text" id="modalShowNotesInput" placeholder="Ex: Primeiro bloco MPB, segundo bloco Pop/Rock" style="width:100%; box-sizing:border-box; background:#0B0B14; border:1px solid #33334D; color:#CCC; font-size:11px; padding:6px 8px; border-radius:5px; outline:none;">
+                </div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:18px;">
+                <button id="btnDeleteCurrentShow" onclick="deleteCurrentShow()" style="background:#2D1B20; border:1px solid #E74C3C; color:#E74C3C; font-size:11px; padding:6px 12px; border-radius:5px; cursor:pointer; display:none;">Excluir Show</button>
+                <div style="display:flex; gap:8px; margin-left:auto;">
+                    <button onclick="closeShowEditModal()" style="background:#1F1F2E; border:1px solid #3A3A55; color:#AAA; font-size:12px; padding:6px 14px; border-radius:5px; cursor:pointer;">Cancelar</button>
+                    <button onclick="saveShowFromModal()" style="background:#27AE60; border:1px solid #2ECC71; color:#FFF; font-weight:bold; font-size:12px; padding:6px 16px; border-radius:5px; cursor:pointer; box-shadow:0 0 10px rgba(46,204,113,0.3);">Salvar Show</button>
+                </div>
             </div>
         </div>
     </div>
