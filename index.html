@@ -474,20 +474,23 @@
             box-sizing: border-box;
         }
 
+        /* Channel Strip Pro Audio (Inspirado em Synth Module & Midi Quest) */
         .column-card { 
             flex: 1 1 0; 
             min-width: 0;
-            background: #12121A; 
-            border: 1.5px solid #2A2A38; 
-            border-radius: 8px; 
-            padding: 6px 5px; 
+            background: linear-gradient(180deg, #1A2232 0%, #131924 100%);
+            border: 1px solid #2B374E; 
+            border-radius: 10px; 
+            padding: 8px 7px; 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
             gap: 6px; 
             min-height: 0;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 6px 18px rgba(0,0,0,0.65);
             box-sizing: border-box;
+            position: relative;
+            transition: border-color 0.25s, box-shadow 0.25s;
         }
 
         .card-header {
@@ -497,22 +500,42 @@
             align-items: center;
             gap: 2px;
         }
-        .card-title { font-weight: bold; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .card-subtitle { font-size: 10px; color: #7E7E94; font-family: monospace; }
+        .card-title { 
+            font-weight: 800; 
+            font-size: 12px; 
+            text-transform: uppercase; 
+            letter-spacing: 0.8px; 
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .part-led-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 5px;
+            background: #252D3E;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.8);
+            display: inline-block;
+            transition: all 0.25s ease;
+        }
+        .part-led-dot.active {
+            box-shadow: 0 0 8px currentColor, inset 0 0 2px #FFF;
+        }
+        .card-subtitle { font-size: 9.5px; color: #72829D; font-family: monospace; font-weight: 600; }
 
         .patch-box {
             width: 100%;
             box-sizing: border-box;
-            background: #09090D;
-            border: 1px solid #2A2A38;
-            border-radius: 5px;
-            padding: 5px 4px;
+            background: linear-gradient(180deg, #0A0E16 0%, #06090E 100%);
+            border: 1px solid #1E2838;
+            border-radius: 6px;
+            padding: 6px 5px;
             text-align: center;
-            color: #FFFFFF;
-            font-weight: bold;
+            color: #E2E8F0;
+            font-weight: 700;
             font-size: 11px;
             line-height: 1.25;
-            min-height: 34px;
+            min-height: 36px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -520,28 +543,46 @@
             overflow-wrap: break-word;
             white-space: normal;
             cursor: pointer;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.7);
+            transition: border-color 0.2s, background 0.2s;
         }
-        .patch-box:hover { border-color: #00E5FF; }
+        .patch-box:hover { 
+            border-color: #3B82F6; 
+            background: #0E1420;
+        }
 
+        /* Botão On/Off Estilo Switch Hardware com LED Embutido */
         .btn-toggle { 
             width: 100%; 
-            height: 28px; 
-            border-radius: 5px; 
-            background: #161622; 
-            border: 1.5px solid #2A2A38; 
-            color: #7E7E94; 
-            font-weight: bold; 
-            font-size: 11px; 
+            height: 38px; 
+            border-radius: 6px; 
+            background: linear-gradient(180deg, #252F42 0%, #171E2B 100%); 
+            border: 1px solid #334155; 
+            color: #94A3B8; 
+            font-weight: 800; 
+            font-size: 11.5px; 
+            letter-spacing: 0.5px;
             cursor: pointer; 
-            transition: all 0.2s; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+        .btn-toggle.active {
+            background: linear-gradient(180deg, #1C2B3F 0%, #122030 100%);
+            border-color: #38BDF8;
+            color: #F0F9FF;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.5), 0 0 10px rgba(56, 189, 248, 0.25);
         }
 
         .knob-row { display: flex; gap: 4px; width: 100%; justify-content: space-around; }
         .knob-box { 
-            background: #171724; 
-            border: 1px solid #2A2A38; 
-            border-radius: 5px; 
-            padding: 4px; 
+            background: #121824; 
+            border: 1px solid #243044; 
+            border-radius: 6px; 
+            padding: 5px 6px; 
             width: 48%; 
             text-align: center; 
         }
@@ -581,23 +622,26 @@
             align-items: stretch;
             width: 100%;
             height: 100%;
-            gap: 8px;
+            gap: 9px;
             box-sizing: border-box;
         }
 
+        /* Painel do Fader Vertical: Relevo Hardware com Régua de dB e Medidor VU */
         .part-left-fader-panel {
             display: flex;
             flex-direction: column;
             align-items: center;
-            background: #0D0D14;
-            border: 1px solid #1E1E2C;
+            background: linear-gradient(180deg, #101622 0%, #0A0E17 100%);
+            border: 1px solid #202A3C;
             border-radius: 8px;
-            padding: 8px 6px;
-            width: 82px;
-            min-width: 72px;
+            padding: 7px 5px 6px 5px;
+            width: 86px;
+            min-width: 80px;
             box-sizing: border-box;
             flex-shrink: 0;
             height: 100%;
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.65), 0 1px 0 rgba(255,255,255,0.04);
+            position: relative;
         }
 
         .part-fader-header-row {
@@ -605,52 +649,145 @@
             align-items: center;
             justify-content: space-between;
             width: 100%;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
+            padding: 0 2px;
         }
 
         .part-fader-vol-tag {
-            font-size: 11.5px;
+            font-size: 10px;
             font-weight: 900;
-            color: #8E8E9E;
+            color: #64748B;
             letter-spacing: 0.5px;
         }
 
         .part-fader-numeric {
             font-family: monospace;
-            font-size: 14.5px;
-            font-weight: bold;
+            font-size: 13.5px;
+            font-weight: 800;
+            color: #F8FAFC;
+            background: #06090E;
+            padding: 1px 4px;
+            border-radius: 4px;
+            border: 1px solid #1E2838;
+            min-width: 28px;
+            text-align: center;
         }
 
         .part-fader-learn-btn {
-            background: #1E1E2C;
-            border: 1px solid #3A3A4E;
-            color: #B0B0C0;
+            background: #172030;
+            border: 1px solid #2D3B52;
+            color: #94A3B8;
             border-radius: 4px;
-            padding: 2px 5px;
-            font-size: 9px;
-            font-weight: bold;
+            padding: 2px 4px;
+            font-size: 8.5px;
+            font-weight: 800;
             cursor: pointer;
             transition: all 0.2s;
         }
+        .part-fader-learn-btn:hover {
+            background: #23314A;
+            color: #E2E8F0;
+        }
 
+        /* Área do Fader com Régua dB e Barra de LED VU Meter */
+        .fader-bay-wrapper {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            flex: 1;
+            min-height: 180px;
+            position: relative;
+            margin: 4px 0;
+            gap: 3px;
+        }
+
+        .fader-scale-ticks {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 90%;
+            font-size: 7.5px;
+            font-family: monospace;
+            font-weight: 700;
+            color: #475569;
+            user-select: none;
+            padding-right: 1px;
+            text-align: right;
+            line-height: 1;
+        }
+
+        /* Barra de LED Simulada (VU-Meter Estilo Mesa Digital / Synth Module) */
+        .fader-vu-meter {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 5px;
+            height: 88%;
+            background: #06090E;
+            border: 1px solid #172030;
+            border-radius: 2px;
+            padding: 1px;
+            box-sizing: border-box;
+            gap: 1px;
+        }
+        .vu-seg {
+            flex: 1;
+            width: 100%;
+            border-radius: 1px;
+            background: #1E293B;
+            transition: background 0.15s, box-shadow 0.15s;
+        }
+        .vu-seg.lit-green { background: #10B981; box-shadow: 0 0 3px #10B981; }
+        .vu-seg.lit-yellow { background: #F59E0B; box-shadow: 0 0 3px #F59E0B; }
+        .vu-seg.lit-red { background: #EF4444; box-shadow: 0 0 3px #EF4444; }
+
+        /* Fader Físico com Trilho Escuro Encovado e Cap Metálico Realista */
         .part-fader-input-full {
             -webkit-appearance: slider-vertical;
             appearance: slider-vertical;
-            writing-mode: bt-lr; /* IE/Legacy */
-            -webkit-writing-mode: vertical-lr; /* Safari */
-            width: 36px;
+            writing-mode: bt-lr;
+            -webkit-writing-mode: vertical-lr;
+            width: 32px;
             flex: 1;
-            min-height: 200px;
+            height: 100%;
+            min-height: 180px;
             cursor: pointer;
             outline: none;
-            margin: 6px 0;
+            margin: 0;
+            background: transparent;
             touch-action: pan-x !important;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
+        }
+
+        /* Estilização Realista de Cap Metálico nos Navegadores */
+        .part-fader-input-full::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 36px;
+            height: 22px;
+            border-radius: 3px;
+            background: linear-gradient(180deg, #D1D5DB 0%, #9CA3AF 25%, #4B5563 50%, #374151 75%, #1F2937 100%);
+            border: 1px solid #111827;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.7), inset 0 -1px 0 rgba(0,0,0,0.8);
+            cursor: ns-resize;
+            position: relative;
+        }
+
+        .part-fader-input-full::-moz-range-thumb {
+            width: 36px;
+            height: 22px;
+            border-radius: 3px;
+            background: linear-gradient(180deg, #D1D5DB 0%, #9CA3AF 25%, #4B5563 50%, #374151 75%, #1F2937 100%);
+            border: 1px solid #111827;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.7);
+            cursor: ns-resize;
         }
 
         .part-right-controls-panel {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 7px;
             flex: 1;
             min-width: 0;
             box-sizing: border-box;
@@ -658,7 +795,50 @@
             height: 100%;
         }
 
-        .stepper-row {
+        /* Knobs Rotativos Circulares de Hardware Pro Audio */
+        .hardware-knob-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(180deg, #101622 0%, #0A0E17 100%);
+            border: 1px solid #1E2838;
+            border-radius: 6px;
+            padding: 5px 8px;
+            box-sizing: border-box;
+            width: 100%;
+        }
+        .knob-left-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+        .knob-cap-rotary {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 40% 35%, #94A3B8 0%, #475569 50%, #1E293B 100%);
+            border: 2px solid #0F172A;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.7), inset 0 1px 1px rgba(255,255,255,0.5);
+            position: relative;
+            cursor: pointer;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.05s ease-out;
+        }
+        .knob-indicator-line {
+            position: absolute;
+            top: 2px;
+            left: 50%;
+            width: 2.5px;
+            height: 10px;
+            background: #F8FAFC;
+            border-radius: 2px;
+            transform: translateX(-50%);
+            box-shadow: 0 0 3px rgba(255,255,255,0.8);
+        }
+.stepper-row {
             width: 100%;
             box-sizing: border-box;
             display: flex;
@@ -874,11 +1054,21 @@
             box-shadow: inset 0 1px 3px rgba(0,0,0,0.5), 0 0 8px #FF4081;
         }
 
-        /* Cores Temáticas Part 1..4 */
-        .part-p0 .card-title { color: #00E5FF; } .part-p0 .btn-toggle.active { border-color: #00E5FF; color: #00E5FF; background: rgba(0,229,255,0.2); } .part-p0 .fader-input, .part-p0 .part-fader-input-full { accent-color: #00E5FF; }
-        .part-p1 .card-title { color: #2ECC71; } .part-p1 .btn-toggle.active { border-color: #2ECC71; color: #2ECC71; background: rgba(46,204,113,0.2); } .part-p1 .fader-input, .part-p1 .part-fader-input-full { accent-color: #2ECC71; }
-        .part-p2 .card-title { color: #F39C12; } .part-p2 .btn-toggle.active { border-color: #F39C12; color: #F39C12; background: rgba(243,156,18,0.2); } .part-p2 .fader-input, .part-p2 .part-fader-input-full { accent-color: #F39C12; }
-        .part-p3 .card-title { color: #E74C3C; } .part-p3 .btn-toggle.active { border-color: #E74C3C; color: #E74C3C; background: rgba(231,76,60,0.2); } .part-p3 .fader-input, .part-p3 .part-fader-input-full { accent-color: #E74C3C; }
+        /* Cores Temáticas Funcionais (LEDs e Sinalizadores - Sem Molduras Berrantes) */
+        .part-p0 .part-led-dot.active { background: #00E5FF; color: #00E5FF; }
+        .part-p1 .part-led-dot.active { background: #10B981; color: #10B981; }
+        .part-p2 .part-led-dot.active { background: #F59E0B; color: #F59E0B; }
+        .part-p3 .part-led-dot.active { background: #EF4444; color: #EF4444; }
+
+        .part-p0 .card-title { color: #E2E8F0; } 
+        .part-p1 .card-title { color: #E2E8F0; } 
+        .part-p2 .card-title { color: #E2E8F0; } 
+        .part-p3 .card-title { color: #E2E8F0; } 
+
+        .part-p0.active-part { border-color: #2E405E; box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 8px 24px rgba(0,0,0,0.75), 0 0 1px #00E5FF; }
+        .part-p1.active-part { border-color: #2E405E; box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 8px 24px rgba(0,0,0,0.75), 0 0 1px #10B981; }
+        .part-p2.active-part { border-color: #2E405E; box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 8px 24px rgba(0,0,0,0.75), 0 0 1px #F59E0B; }
+        .part-p3.active-part { border-color: #2E405E; box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 8px 24px rgba(0,0,0,0.75), 0 0 1px #EF4444; }
 
         /* Cores dos 4 Tones */
         .tone-t0 .card-title { color: #00E5FF; } .tone-t0 .btn-toggle.active { border-color: #00E5FF; color: #00E5FF; background: rgba(0,229,255,0.2); } .tone-t0 .fader-input { accent-color: #00E5FF; }
@@ -1979,7 +2169,7 @@
     <!-- ========================================== -->
     <!-- ABA 2: COMB (4 PARTS LAYER & SPLIT) -->
     <!-- ========================================== -->
-    <div class="tab-content" id="tabCombination" style="overflow-y:auto; overflow-x:hidden; padding-right:4px; flex:1; min-height:0; display:flex; flex-direction:column;">
+    <div class="tab-content" id="tabCombination" style="overflow-y:auto; overflow-x:hidden; padding:6px 8px; flex:1; min-height:0; display:flex; flex-direction:column; background:#111622;">
         <div class="quick-bar" style="flex-shrink:0;">
             <span class="quick-label">Combinações Rápidas:</span>
             <button class="btn-preset p-dual" onclick="applyPreset('dual')">🎹 Dual Layer</button>
@@ -5672,21 +5862,54 @@
                 p.color = partColor;
 
                 const col = document.createElement("div");
-                col.className = `column-card part-p${i}`;
-                col.style.borderColor = p.active ? partColor : "#2A2A38";
+                col.className = `column-card part-p${i} ${p.active ? 'active-part' : ''}`;
 
                 const panText = p.pan === 64 ? "Center" : (p.pan < 64 ? `L${64 - p.pan}` : `R${p.pan - 64}`);
+                // Rotação do Knob de Pan (-135° para 0, 0° para 64, +135° para 127)
+                const panAngle = ((p.pan - 64) / 64) * 135;
+
+                // Cálculo dos 12 segmentos do LED VU Meter baseado no level atual
+                const litCount = Math.round((p.level / 127) * 12);
+                let vuSegmentsHtml = "";
+                for (let seg = 11; seg >= 0; seg--) {
+                    let segClass = "vu-seg";
+                    if (seg < litCount) {
+                        if (seg >= 10) segClass += " lit-red";
+                        else if (seg >= 8) segClass += " lit-yellow";
+                        else segClass += " lit-green";
+                    }
+                    vuSegmentsHtml += `<div class="${segClass}"></div>`;
+                }
 
                 col.innerHTML = `
                     <div class="part-split-card">
-                        <!-- Coluna Esquerda: Fader de Volume Vertical de Altura Total -->
+                        <!-- Coluna Esquerda: Fader de Volume Pro Audio (Régua dB + VU Meter + Cap Metálico) -->
                         <div class="part-left-fader-panel">
                             <div class="part-fader-header-row">
                                 <span class="part-fader-vol-tag">VOL</span>
-                                <span class="part-fader-numeric" id="valPartFader${i}" style="color:${partColor};">${p.level}</span>
-                                <button class="part-fader-learn-btn" id="btnLearnPartVol${i}" onclick="toggleMidiLearn('part_vol_${i}', this)" title="Mapear Volume da Parte ${i + 1} para um Fader MIDI">🎓 Learn</button>
+                                <span class="part-fader-numeric" id="valPartFader${i}">${p.level}</span>
+                                <button class="part-fader-learn-btn" id="btnLearnPartVol${i}" onclick="toggleMidiLearn('part_vol_${i}', this)" title="Mapear Volume da Parte ${i + 1} para um Fader MIDI">🎓</button>
                             </div>
-                            <input type="range" id="sldPartFader${i}" min="0" max="127" value="${p.level}" orient="vertical" class="part-fader-input-full" style="accent-color:${partColor};" oninput="updatePartVal(${i}, 'level', this.value)">
+
+                            <div class="fader-bay-wrapper">
+                                <!-- Régua de Escala dB Lateral -->
+                                <div class="fader-scale-ticks">
+                                    <span>+6</span>
+                                    <span>0</span>
+                                    <span>-6</span>
+                                    <span>-12</span>
+                                    <span>-24</span>
+                                    <span>-inf</span>
+                                </div>
+
+                                <!-- Barra de LED VU Meter -->
+                                <div class="fader-vu-meter" id="vuMeterPart${i}">
+                                    ${vuSegmentsHtml}
+                                </div>
+
+                                <!-- Fader com Cap Metálico Realista e Trilho Escuro -->
+                                <input type="range" id="sldPartFader${i}" min="0" max="127" value="${p.level}" orient="vertical" class="part-fader-input-full" oninput="updatePartVal(${i}, 'level', this.value)">
+                            </div>
                             
                             <!-- Botões de Bypass de Pedal / Controle por Part (SUS e BEND) -->
                             <div class="part-pedal-bar">
@@ -5695,35 +5918,42 @@
                             </div>
                         </div>
 
-                        <!-- Coluna Direita: Header, Botão ON/OFF, Patch, Pan, Oit/Tom e Range -->
+                        <!-- Coluna Direita: Header, Botão ON/OFF com LED, Patch, Pan Knob, Oit/Tom e Range -->
                         <div class="part-right-controls-panel">
                             <div class="card-header" style="margin-bottom:0;">
-                                <div class="card-title" style="color:${partColor};">${p.active ? '✓ ' : ''}<b>${partName.toUpperCase()}</b></div>
-                                <div class="card-subtitle" style="font-size:9.5px;">MIDI Ch: 1 (Layer)</div>
+                                <div class="card-title">
+                                    <span class="part-led-dot ${p.active ? 'active' : ''}" style="color:${partColor};"></span>
+                                    <b>${partName.toUpperCase()}</b>
+                                </div>
+                                <div class="card-subtitle">CH 1 • LAYER</div>
                             </div>
 
-                            <button class="btn-toggle ${p.active ? 'active' : ''}" style="height:48px; min-height:48px; font-size:12px; font-weight:900; letter-spacing:0.5px;" onclick="togglePart(${i})">
-                                ${p.active ? 'LIGADO (ON)' : 'MUTADO (OFF)'}
+                            <button class="btn-toggle ${p.active ? 'active' : ''}" onclick="togglePart(${i})">
+                                <span class="part-led-dot ${p.active ? 'active' : ''}" style="color:${partColor}; width:7px; height:7px;"></span>
+                                <span>${p.active ? 'LIGADO (ON)' : 'MUTADO (OFF)'}</span>
                             </button>
 
-                            <div class="patch-box" style="padding:6px 4px; min-height:38px; font-size:11px;" onclick="openPatchPicker(${i})" title="Clique para trocar este timbre">${p.patch}</div>
+                            <div class="patch-box" onclick="openPatchPicker(${i})" title="Clique para trocar este timbre">${p.patch}</div>
 
-                            <!-- Pan Control -->
-                            <div class="knob-box" style="width:100%; box-sizing:border-box; padding:5px 6px; background:#14141E;">
-                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2px;">
-                                    <span class="knob-label" style="font-weight:bold; margin:0; font-size:10px;">PAN</span>
-                                    <span class="knob-val" id="valPartPan${i}" style="color:${p.color}; margin:0; font-size:10.5px;">${panText}</span>
+                            <!-- Knob Circular Metálico de PAN -->
+                            <div class="hardware-knob-container">
+                                <div class="knob-left-info">
+                                    <span style="font-size:9px; font-weight:800; color:#64748B;">PAN</span>
+                                    <span id="valPartPan${i}" style="font-family:monospace; font-size:11px; font-weight:700; color:#E2E8F0;">${panText}</span>
                                 </div>
-                                <input type="range" id="sldPartPan${i}" min="0" max="127" value="${p.pan}" class="synth-param-slider" oninput="updatePartVal(${i}, 'pan', this.value)" style="width:100%; height:16px; margin:0; accent-color:${p.color};">
+                                <div class="knob-cap-rotary" id="knobRotaryPan${i}" title="Girar Pan (Arraste ou clique)" onclick="cyclePartPan(${i})" onwheel="handlePartPanWheel(event, ${i})">
+                                    <div class="knob-indicator-line" style="transform: translateX(-50%) rotate(${panAngle}deg);"></div>
+                                </div>
+                                <input type="range" id="sldPartPan${i}" min="0" max="127" value="${p.pan}" style="display:none;" oninput="updatePartVal(${i}, 'pan', this.value)">
                             </div>
 
                             <!-- Oitava / Coarse com Dropdown Rolável de Opções -->
-                            <div class="stepper-row" style="padding:4px 6px; background:#14141E; position:relative;">
-                                <span class="stepper-label" style="font-size:10px;">Oit/Tom:</span>
+                            <div class="stepper-row" style="padding:4px 6px; background:#101622; border-color:#1E2838; position:relative;">
+                                <span class="stepper-label" style="font-size:10px; color:#64748B; font-weight:700;">Oit/Tom:</span>
                                 <div class="stepper-ctrls">
-                                    <button class="stepper-btn" style="width:22px; height:22px; font-size:12px;" onclick="stepCoarse(${i}, -1)">−</button>
-                                    <span class="stepper-val" id="valPartCoarse${i}" style="color:${p.color}; font-size:11px; min-width:38px;" onclick="toggleCoarsePicker(event, ${i})" title="Clique para abrir menu rolável de opções de oitava e afinação">${p.coarse >= 0 ? '+' : ''}${p.coarse}</span>
-                                    <button class="stepper-btn" style="width:22px; height:22px; font-size:12px;" onclick="stepCoarse(${i}, 1)">+</button>
+                                    <button class="stepper-btn" style="width:22px; height:22px; font-size:12px; background:#1E293B; border-color:#334155;" onclick="stepCoarse(${i}, -1)">−</button>
+                                    <span class="stepper-val" id="valPartCoarse${i}" style="color:#F8FAFC; font-size:11px; min-width:38px;" onclick="toggleCoarsePicker(event, ${i})" title="Clique para abrir menu rolável de opções de oitava e afinação">${p.coarse >= 0 ? '+' : ''}${p.coarse}</span>
+                                    <button class="stepper-btn" style="width:22px; height:22px; font-size:12px; background:#1E293B; border-color:#334155;" onclick="stepCoarse(${i}, 1)">+</button>
                                 </div>
                                 <!-- Dropdown Rolável de Opções -->
                                 <div class="coarse-dropdown" id="coarseDropdownPart${i}" onclick="event.stopPropagation()">
@@ -5736,17 +5966,17 @@
                             </div>
 
                             <!-- Efeitos Integrados da Part: Reverb Send & Chorus Send -->
-                            <div class="part-fx-grid">
+                            <div class="part-fx-grid" style="background:#101622; border-color:#1E2838;">
                                 <div class="part-fx-box">
                                     <div class="part-fx-header">
-                                        <span class="part-fx-label">REV</span>
-                                        <span class="part-fx-val" id="valPartRev${i}" style="color:#00E5FF;">${p.reverb !== undefined ? p.reverb : 40}</span>
+                                        <span class="part-fx-label" style="color:#64748B;">REV</span>
+                                        <span class="part-fx-val" id="valPartRev${i}" style="color:#38BDF8;">${p.reverb !== undefined ? p.reverb : 40}</span>
                                     </div>
-                                    <input type="range" id="sldPartRev${i}" min="0" max="127" value="${p.reverb !== undefined ? p.reverb : 40}" class="synth-param-slider part-fx-slider" style="accent-color:#00E5FF;" oninput="updatePartVal(${i}, 'reverb', this.value)">
+                                    <input type="range" id="sldPartRev${i}" min="0" max="127" value="${p.reverb !== undefined ? p.reverb : 40}" class="synth-param-slider part-fx-slider" style="accent-color:#38BDF8;" oninput="updatePartVal(${i}, 'reverb', this.value)">
                                 </div>
                                 <div class="part-fx-box">
                                     <div class="part-fx-header">
-                                        <span class="part-fx-label">CHO</span>
+                                        <span class="part-fx-label" style="color:#64748B;">CHO</span>
                                         <span class="part-fx-val" id="valPartCho${i}" style="color:#A78BFA;">${p.chorus !== undefined ? p.chorus : 0}</span>
                                     </div>
                                     <input type="range" id="sldPartCho${i}" min="0" max="127" value="${p.chorus !== undefined ? p.chorus : 0}" class="synth-param-slider part-fx-slider" style="accent-color:#A78BFA;" oninput="updatePartVal(${i}, 'chorus', this.value)">
@@ -5754,24 +5984,24 @@
                             </div>
 
                             <!-- Output Assign (MIX / EFX) -->
-                            <div class="part-out-row">
-                                <span style="color:#8E8E9E;">OUTPUT:</span>
+                            <div class="part-out-row" style="background:#101622; border-color:#1E2838;">
+                                <span style="color:#64748B; font-weight:700;">OUTPUT:</span>
                                 <button class="part-out-btn ${p.output_assign === 1 ? 'efx' : 'mix'}" id="btnPartOut${i}" onclick="togglePartOutputAssign(${i})" title="Alternar Roteamento de Efeito (MIX = Direto / EFX = Inserção Multi-Efeito)">
                                     ${p.output_assign === 1 ? '⚡ EFX' : '🎛️ MIX'}
                                 </button>
                             </div>
 
-                            <!-- Faixa Teclas (Range) -->
-                            <div class="range-row" style="padding:5px 6px; background:#14141E; margin-top:auto;">
+                            <!-- Faixa Teclas (Range) com Barra Fina e Elegante -->
+                            <div class="range-row" style="padding:5px 6px; background:#101622; border-color:#1E2838; margin-top:auto;">
                                 <div class="range-title-bar" style="margin-bottom:3px;">
-                                    <span class="range-label" style="font-size:10px;">Range:</span>
-                                    <span class="range-span-val" style="color:${p.color}; font-size:10px;">${noteNumToName(p.lower)} → ${noteNumToName(p.upper)}</span>
+                                    <span class="range-label" style="font-size:9.5px; color:#64748B; font-weight:700;">RANGE:</span>
+                                    <span class="range-span-val" style="color:#CBD5E1; font-size:10px;">${noteNumToName(p.lower)} → ${noteNumToName(p.upper)}</span>
                                 </div>
                                 <div class="range-ctrls" style="gap:4px;">
-                                    <select class="range-select" style="font-size:10px; padding:2px 3px; height:22px;" onchange="updatePartRange(${i}, 'lower', this.value)" title="Nota Mínima (Início da faixa)">
+                                    <select class="range-select" style="font-size:10px; padding:2px 3px; height:22px; background:#1A2333; border-color:#334155; color:#E2E8F0;" onchange="updatePartRange(${i}, 'lower', this.value)" title="Nota Mínima (Início da faixa)">
                                         ${buildNoteOptions(p.lower)}
                                     </select>
-                                    <select class="range-select" style="font-size:10px; padding:2px 3px; height:22px;" onchange="updatePartRange(${i}, 'upper', this.value)" title="Nota Máxima (Fim da faixa)">
+                                    <select class="range-select" style="font-size:10px; padding:2px 3px; height:22px; background:#1A2333; border-color:#334155; color:#E2E8F0;" onchange="updatePartRange(${i}, 'upper', this.value)" title="Nota Máxima (Fim da faixa)">
                                         ${buildNoteOptions(p.upper)}
                                     </select>
                                 </div>
@@ -5780,6 +6010,7 @@
                     </div>
                 `;
                 container.appendChild(col);
+                attachPanKnobInteractions(i);
             });
 
             updateZoneMap();
@@ -5788,9 +6019,57 @@
         }
 
         // ==========================================
-        // TRAVA DE SEGURANÇA DIRECIONAL NOS FADERS
-        // (Anti-Esbarrão de Palco - Gesto Vertical Obrigatório)
+        // INTERAÇÃO COM KNOB DE PAN DE HARDWARE
         // ==========================================
+        function attachPanKnobInteractions(partIdx) {
+            const knob = document.getElementById(`knobRotaryPan${partIdx}`);
+            if (!knob) return;
+
+            let isDragging = false;
+            let startY = 0;
+            let startPan = 64;
+
+            knob.onpointerdown = (e) => {
+                isDragging = true;
+                startY = e.clientY;
+                startPan = parts[partIdx].pan;
+                knob.setPointerCapture(e.pointerId);
+                e.preventDefault();
+            };
+
+            knob.onpointermove = (e) => {
+                if (!isDragging) return;
+                const deltaY = startY - e.clientY; // Arrastar pra cima aumenta, pra baixo diminui
+                const newPan = Math.max(0, Math.min(127, Math.round(startPan + (deltaY * 0.7))));
+                if (newPan !== parts[partIdx].pan) {
+                    updatePartVal(partIdx, 'pan', newPan);
+                }
+            };
+
+            knob.onpointerup = (e) => {
+                isDragging = false;
+                try { knob.releasePointerCapture(e.pointerId); } catch(_) {}
+            };
+            knob.onpointercancel = knob.onpointerup;
+        }
+
+        function cyclePartPan(partIdx) {
+            // Ciclo rápido ao clicar: Centro (64) -> L64 (0) -> R63 (127) -> Centro (64)
+            const cur = parts[partIdx].pan;
+            let next = 64;
+            if (cur === 64) next = 0;
+            else if (cur === 0) next = 127;
+            else next = 64;
+            updatePartVal(partIdx, 'pan', next);
+        }
+
+        function handlePartPanWheel(event, partIdx) {
+            event.preventDefault();
+            const delta = event.deltaY < 0 ? 3 : -3;
+            const next = Math.max(0, Math.min(127, parts[partIdx].pan + delta));
+            updatePartVal(partIdx, 'pan', next);
+        }
+
         function attachDirectionalFaderLock() {
             const faders = document.querySelectorAll('.part-fader-input-full');
             faders.forEach(fader => {
@@ -5906,11 +6185,36 @@
                 if (el) el.innerText = num;
                 const sld = document.getElementById(`sldPartFader${i}`);
                 if (sld && sld.value != num) sld.value = num;
+
+                // Atualiza barra de LED do VU Meter
+                const vuContainer = document.getElementById(`vuMeterPart${i}`);
+                if (vuContainer) {
+                    const litCount = Math.round((num / 127) * 12);
+                    let segsHtml = "";
+                    for (let seg = 11; seg >= 0; seg--) {
+                        let segClass = "vu-seg";
+                        if (seg < litCount) {
+                            if (seg >= 10) segClass += " lit-red";
+                            else if (seg >= 8) segClass += " lit-yellow";
+                            else segClass += " lit-green";
+                        }
+                        segsHtml += `<div class="${segClass}"></div>`;
+                    }
+                    vuContainer.innerHTML = segsHtml;
+                }
             } else if (param === 'pan') {
                 const el = document.getElementById(`valPartPan${i}`);
                 if (el) el.innerText = num === 64 ? "Center" : (num < 64 ? `L${64 - num}` : `R${num - 64}`);
                 const sld = document.getElementById(`sldPartPan${i}`);
                 if (sld && sld.value != num) sld.value = num;
+
+                // Atualiza a rotação do Knob Circular de Pan (-135° a +135°)
+                const knob = document.getElementById(`knobRotaryPan${i}`);
+                if (knob) {
+                    const line = knob.querySelector('.knob-indicator-line');
+                    const panAngle = ((num - 64) / 64) * 135;
+                    if (line) line.style.transform = `translateX(-50%) rotate(${panAngle}deg)`;
+                }
             } else if (param === 'reverb') {
                 const el = document.getElementById(`valPartRev${i}`);
                 if (el) el.innerText = num;
@@ -6037,8 +6341,8 @@
                 const left = (p.lower / 127) * 100;
                 const width = Math.max(1, ((p.upper - p.lower) / 127) * 100);
                 const tip = `${p.name || 'Part ' + (i + 1)}: ${noteNumToName(p.lower)} → ${noteNumToName(p.upper)}`;
-                return `<div title="${escapeHtml(tip)}" style="position:relative; height:8px; background:#1A1A24; border-radius:4px; opacity:${p.active ? 1 : 0.25};">
-                    <div style="position:absolute; top:0; bottom:0; left:${left}%; width:${width}%; background:${color}; border-radius:4px; box-shadow:0 0 6px ${color}55;"></div>
+                return `<div title="${escapeHtml(tip)}" style="position:relative; height:4px; background:#141C2B; border-radius:2px; opacity:${p.active ? 1 : 0.2}; margin-bottom:2px;">
+                    <div style="position:absolute; top:0; bottom:0; left:${left}%; width:${width}%; background:${color}; border-radius:2px; box-shadow:0 0 5px ${color}88;"></div>
                 </div>`;
             }).join("");
 
