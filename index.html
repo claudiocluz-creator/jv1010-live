@@ -2175,6 +2175,7 @@
             <div id="quickPresetsContainer" style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;"></div>
             
             <button class="btn-preset" style="background:linear-gradient(180deg, #2D3748 0%, #1A202C 100%); border:1px solid #4A5568; color:#E2E8F0; font-size:11px; padding:5px 9px;" onclick="openQuickPresetsManagerModal()" title="Gerenciar, reordenar, exportar ou importar combinações rápidas">⚙️ Gerenciar</button>
+            <button class="btn-preset" style="background:linear-gradient(180deg, #374151 0%, #1F2937 100%); border:1px solid #6B7280; color:#F3F4F6; font-size:11px; padding:5px 9px;" onclick="clearCombinationToZero()" title="Começar combinação do zero (todos desligados, Reverb=25 e Chorus=0)">🧹 Do Zero</button>
             <button class="btn-act-all" onclick="activateAllParts()">✅ Ativar Todos</button>
             <button class="btn-preset" style="background:#8E44AD; border-color:#8E44AD;" onclick="saveCurrentCombinationAsFavorite()">⭐ Salvar nos Favoritos</button>
             <button class="btn-transmit" onclick="transmitPerformanceToHardware()">⚡ Transmitir JV-1010</button>
@@ -3453,10 +3454,14 @@
                     const lower = Math.max(0, Math.min(127, parseInt(pdata.lower || 0)));
                     const upper = Math.max(0, Math.min(127, parseInt(pdata.upper || 127)));
 
+                    const rev_send = parseInt(pdata.reverb !== undefined ? pdata.reverb : 25) & 0x7F;
+                    const cho_send = parseInt(pdata.chorus !== undefined ? pdata.chorus : 0) & 0x7F;
+                    const out_assign = parseInt(pdata.output_assign !== undefined ? pdata.output_assign : 0) & 0x07;
+
                     const payload = [
                         rx_sw, midi_ch, group_type, group_id,
                         p_hi, p_lo, level, pan, coarse,
-                        50, 0, 127, 0, 40, 1, 1, 1, lower, upper
+                        50, out_assign, 127, cho_send, rev_send, 1, 1, 1, lower, upper
                     ];
                     sendRawWebMidi(createRolandDT1(addr, payload));
                 });
@@ -5756,6 +5761,11 @@
             p.prog_num = selectedPatch.prog;
             p.active = true;
 
+            // Se o part não tinha reverb/chorus definidos ou estava vindo do zero, aplica o padrão: Reverb=25 e Chorus=0
+            if (p.reverb === undefined || p.is_from_zero) p.reverb = 25;
+            if (p.chorus === undefined || p.is_from_zero) p.chorus = 0;
+            p.is_from_zero = false;
+
             // Transmite imediatamente para a Temporary Performance
             sendMidiCommand({
                 type: "transmit_part",
@@ -5770,9 +5780,15 @@
                     coarse: p.coarse,
                     lower: p.lower,
                     upper: p.upper,
+                    reverb: p.reverb,
+                    chorus: p.chorus,
+                    output_assign: p.output_assign || 0,
                     midi_ch: 0
                 }
             });
+            // Garante o envio do Reverb Send (25) e Chorus Send (0) via SysEx
+            sendMidiCommand({ type: "part_param", part: partIdx, param: "reverb", value: p.reverb });
+            sendMidiCommand({ type: "part_param", part: partIdx, param: "chorus", value: p.chorus });
 
             renderParts();
 
@@ -5969,9 +5985,9 @@
                                 <div class="part-fx-box">
                                     <div class="part-fx-header">
                                         <span class="part-fx-label" style="color:#64748B;">REV</span>
-                                        <span class="part-fx-val" id="valPartRev${i}" style="color:#38BDF8;">${p.reverb !== undefined ? p.reverb : 40}</span>
+                                        <span class="part-fx-val" id="valPartRev${i}" style="color:#38BDF8;">${p.reverb !== undefined ? p.reverb : 25}</span>
                                     </div>
-                                    <input type="range" id="sldPartRev${i}" min="0" max="127" value="${p.reverb !== undefined ? p.reverb : 40}" class="synth-param-slider part-fx-slider" style="accent-color:#38BDF8;" oninput="updatePartVal(${i}, 'reverb', this.value)">
+                                    <input type="range" id="sldPartRev${i}" min="0" max="127" value="${p.reverb !== undefined ? p.reverb : 25}" class="synth-param-slider part-fx-slider" style="accent-color:#38BDF8;" oninput="updatePartVal(${i}, 'reverb', this.value)">
                                 </div>
                                 <div class="part-fx-box">
                                     <div class="part-fx-header">
@@ -6898,6 +6914,25 @@
             transmitPerformanceToHardware();
         }
 
+
+        function clearCombinationToZero() {
+            parts.forEach((p, idx) => {
+                p.active = false;
+                p.patch = "---";
+                p.level = 100;
+                p.pan = 64;
+                p.coarse = 0;
+                p.lower = 0;
+                p.upper = 127;
+                p.reverb = 25; // Reverb padrão para novas combinações: 25
+                p.chorus = 0;  // Chorus padrão para novas combinações: 0
+                p.output_assign = 0;
+                p.is_from_zero = true;
+            });
+            renderParts();
+            transmitPerformanceToHardware();
+        }
+
         function activateAllParts() {
             parts.forEach(p => p.active = true);
             renderParts();
@@ -6917,6 +6952,9 @@
                     coarse: p.coarse,
                     lower: p.lower,
                     upper: p.upper,
+                    reverb: p.reverb !== undefined ? p.reverb : 25,
+                    chorus: p.chorus !== undefined ? p.chorus : 0,
+                    output_assign: p.output_assign || 0,
                     midi_ch: 0
                 }))
             });
