@@ -2079,6 +2079,8 @@
             <button class="btn-preset p-dual" id="btnViewStudio" onclick="setSynthView('studio')">🎛️ Painel Completo (Studio)</button>
             <button class="btn-preset p-split" id="btnViewFaders" onclick="setSynthView('faders')">⚡ Faders Rápidos (4 Tones)</button>
             <button class="btn-preset" style="background:linear-gradient(135deg, #1A1A2E, #2A2035); border-color:#FFD700; color:#FFD700; font-weight:bold; box-shadow:0 0 8px rgba(255,215,0,0.25);" onclick="openEqModal()">🎚️ Equalizador & EFX...</button>
+            <button class="btn-preset" style="background:linear-gradient(135deg, #102A30, #164E63); border-color:#00E5FF; color:#00E5FF; font-weight:bold; box-shadow:0 0 8px rgba(0,229,255,0.25);" onclick="openEnvelopeModal()">📈 Gráficos de Envelope...</button>
+            <button class="btn-preset" style="background:linear-gradient(135deg, #2D1A10, #78350F); border-color:#F59E0B; color:#F59E0B; font-weight:bold; box-shadow:0 0 8px rgba(245,158,11,0.25);" onclick="openDrumKitModal()">🥁 Drum Kit Editor...</button>
             <button class="btn-preset" style="background: linear-gradient(135deg, #8E44AD, #9B59B6); border-color:#8E44AD; color:#FFF; font-weight:bold; box-shadow:0 0 10px rgba(142,68,173,0.35);" onclick="openSaveCustomPatchModal()">⭐ Salvar Patch Editado nos Favoritos</button>
             <span id="synthTargetModeText" style="margin-left: auto; font-size: 11px; font-weight: bold; color: #00E5FF; font-family: monospace;">Modo: Patch Ativo</span>
         </div>
@@ -3343,12 +3345,22 @@
                     "level": 0x65, "cutoff": 0x51, "reso": 0x53, "pan": 0x77,
                     "coarse": 0x3D, "fine": 0x3E, "filter_type": 0x50,
                     "tvf_attack": 0x5B, "tvf_decay": 0x5C, "tvf_release": 0x5E,
-                    "tva_attack": 0x6E, "tva_decay": 0x6F, "tva_release": 0x71,
+                    "tva_attack": 0x6E, "tva_decay": 0x6F, "tva_sustain": 0x70, "tva_release": 0x71,
                     "lfo1_rate": 0x2F, "lfo2_rate": 0x37
                 };
                 if (PARAM_MAP[param]) {
                     sendRawWebMidi(createRolandDT1([modePrefix, 0x00, toneSec, PARAM_MAP[param]], [val]));
                 }
+            }
+            else if (cmd === "drum_param") {
+                const note = parseInt(data.note || 36) & 0x7F;
+                const param = data.param;
+                const val = parseInt(data.value || 0);
+                const rhythmAddr = [0x02, 0x09, note];
+                if (param === "level") sendRawWebMidi(createRolandDT1([...rhythmAddr, 0x07], [val & 0x7F]));
+                else if (param === "pan") sendRawWebMidi(createRolandDT1([...rhythmAddr, 0x08], [val & 0x7F]));
+                else if (param === "pitch") sendRawWebMidi(createRolandDT1([...rhythmAddr, 0x05], [Math.max(0, Math.min(96, val + 48))]));
+                else if (param === "reverb") sendRawWebMidi(createRolandDT1([...rhythmAddr, 0x09], [val & 0x7F]));
             }
             else if (cmd === "tone_switch") {
                 const toneIdx = parseInt(data.tone || 0) & 0x03;
@@ -7646,10 +7658,355 @@
         }
 
         // ==========================================
-        // MASTER VOLUME & MUTE GERAL DA COMBINAÇÃO
+        // 4.1: GRÁFICOS INTERATIVOS DE ENVELOPE (TVA & TVF)
         // ==========================================
-        let combMasterMuted = false;
-        let lastCombMasterVol = 127;
+        let activeEnvToneIndex = 0;
+        let isEnvDragging = false;
+        let dragEnvNodeIdx = -1; // 0=T1(Attack), 1=T2(Decay), 2=L3(Sustain), 3=T4(Release)
+        let envCanvasListenersAttached = false;
+
+        function openEnvelopeModal() {
+            const modal = document.getElementById("modalEnvelopeGraph");
+            if (!modal) return;
+            modal.style.display = "flex";
+            activeEnvToneIndex = activeToneIndex || 0;
+            updateEnvToneButtons();
+            syncEnvelopeSlidersFromTone();
+            attachEnvCanvasListeners();
+            setTimeout(drawEnvelopeCurve, 50);
+        }
+
+        function closeEnvelopeModal(evt) {
+            if (evt && evt.target && evt.target.id !== "modalEnvelopeGraph" && !evt.target.classList.contains("btn-close-modal")) return;
+            const modal = document.getElementById("modalEnvelopeGraph");
+            if (modal) modal.style.display = "none";
+        }
+
+        function selectEnvTone(toneIdx) {
+            activeEnvToneIndex = toneIdx;
+            updateEnvToneButtons();
+            syncEnvelopeSlidersFromTone();
+            drawEnvelopeCurve();
+        }
+
+        function updateEnvToneButtons() {
+            for (let i = 0; i < 4; i++) {
+                const btn = document.getElementById(`btnEnvTone${i}`);
+                if (btn) {
+                    if (i === activeEnvToneIndex) {
+                        btn.classList.add("active");
+                        btn.style.background = "#00E5FF";
+                        btn.style.color = "#000";
+                    } else {
+                        btn.classList.remove("active");
+                        btn.style.background = "transparent";
+                        btn.style.color = "#8E8E9E";
+                    }
+                }
+            }
+        }
+
+        function syncEnvelopeSlidersFromTone() {
+            const t = tones[activeEnvToneIndex] || tones[0];
+            const a = t.tva_attack !== undefined ? t.tva_attack : 0;
+            const d = t.tva_decay !== undefined ? t.tva_decay : 0;
+            const s = t.tva_sustain !== undefined ? t.tva_sustain : 127;
+            const r = t.tva_release !== undefined ? t.tva_release : 0;
+
+            const s1 = document.getElementById("sldEnvT1"); if (s1) s1.value = a;
+            const s2 = document.getElementById("sldEnvT2"); if (s2) s2.value = d;
+            const s3 = document.getElementById("sldEnvL3"); if (s3) s3.value = s;
+            const s4 = document.getElementById("sldEnvT4"); if (s4) s4.value = r;
+
+            const v1 = document.getElementById("valEnvT1"); if (v1) v1.innerText = a;
+            const v2 = document.getElementById("valEnvT2"); if (v2) v2.innerText = d;
+            const v3 = document.getElementById("valEnvL3"); if (v3) v3.innerText = s;
+            const v4 = document.getElementById("valEnvT4"); if (v4) v4.innerText = r;
+        }
+
+        function onEnvNodeChange(param, val, labelId) {
+            const num = parseInt(val);
+            const el = document.getElementById(labelId);
+            if (el) el.innerText = num;
+
+            if (tones[activeEnvToneIndex]) {
+                tones[activeEnvToneIndex][param] = num;
+            }
+            if (userTouchedParams.tones[activeEnvToneIndex]) {
+                userTouchedParams.tones[activeEnvToneIndex][param] = num;
+            }
+
+            // Envia SysEx para o Tone no Roland JV-1010
+            sendMidiCommand({
+                type: "tone_param",
+                tone: activeEnvToneIndex,
+                param: param,
+                value: num
+            });
+
+            drawEnvelopeCurve();
+        }
+
+        function drawEnvelopeCurve() {
+            const canvas = document.getElementById("canvasEnvelopeCurve");
+            if (!canvas) return;
+            const ctx = canvas.getContext("2d");
+            const w = canvas.width;
+            const h = canvas.height;
+
+            ctx.clearRect(0, 0, w, h);
+            ctx.fillStyle = "#08080E";
+            ctx.fillRect(0, 0, w, h);
+
+            // Grade de Fundo
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.05)";
+            ctx.lineWidth = 1;
+            for (let x = 0; x < w; x += 50) {
+                ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+            }
+            for (let y = 0; y < h; y += 40) {
+                ctx.beginPath(); ctx.moveTo(y, 0); ctx.lineTo(w, y); ctx.stroke();
+            }
+
+            const t = tones[activeEnvToneIndex] || tones[0];
+            const a = t.tva_attack !== undefined ? t.tva_attack : 0;
+            const d = t.tva_decay !== undefined ? t.tva_decay : 0;
+            const s = t.tva_sustain !== undefined ? t.tva_sustain : 127;
+            const r = t.tva_release !== undefined ? t.tva_release : 0;
+
+            const padY = 25;
+            const usableH = h - (padY * 2);
+
+            // Coordenadas calculadas da curva
+            const p0 = { x: 30, y: h - padY }; // Início (0, 0)
+            const p1 = { x: 30 + (a / 127) * 160, y: padY }; // Pico do Attack
+            const p2 = { x: p1.x + 40 + (d / 127) * 160, y: (h - padY) - (s / 127) * usableH }; // Fim do Decay
+            const p3 = { x: p2.x + 120, y: p2.y }; // Fim da Sustentação (Note Off)
+            const p4 = { x: p3.x + (r / 127) * 180, y: h - padY }; // Final do Release
+
+            // Desenho do traço da curva
+            ctx.beginPath();
+            ctx.lineWidth = 3.5;
+            ctx.strokeStyle = "#00E5FF";
+            ctx.moveTo(p0.x, p0.y);
+            ctx.lineTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.lineTo(p3.x, p3.y);
+            ctx.lineTo(p4.x, p4.y);
+            ctx.stroke();
+
+            // Preenchimento com gradiente neon translúcido sob a curva
+            const grad = ctx.createLinearGradient(0, 0, 0, h);
+            grad.addColorStop(0, "rgba(0, 229, 255, 0.35)");
+            grad.addColorStop(1, "rgba(0, 229, 255, 0.0)");
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.moveTo(p0.x, p0.y);
+            ctx.lineTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.lineTo(p3.x, p3.y);
+            ctx.lineTo(p4.x, p4.y);
+            ctx.closePath();
+            ctx.fill();
+
+            // Desenha os 4 nós de controle interativos
+            const nodes = [
+                { pt: p1, color: "#00E5FF", label: "Attack" },
+                { pt: p2, color: "#2ECC71", label: "Decay" },
+                { pt: p3, color: "#FFD700", label: "Sustain" },
+                { pt: p4, color: "#FF4081", label: "Release" }
+            ];
+
+            nodes.forEach((nd, i) => {
+                ctx.beginPath();
+                ctx.arc(nd.pt.x, nd.pt.y, 8, 0, Math.PI * 2);
+                ctx.fillStyle = nd.color;
+                ctx.fill();
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = "#FFF";
+                ctx.stroke();
+
+                ctx.font = "bold 10px monospace";
+                ctx.fillStyle = "#FFF";
+                ctx.fillText(nd.label, nd.pt.x - 18, nd.pt.y - 14);
+            });
+        }
+
+        function attachEnvCanvasListeners() {
+            if (envCanvasListenersAttached) return;
+            const canvas = document.getElementById("canvasEnvelopeCurve");
+            if (!canvas) return;
+            envCanvasListenersAttached = true;
+
+            const handleStart = (evt) => {
+                isEnvDragging = true;
+                evt.preventDefault();
+            };
+
+            const handleMove = (evt) => {
+                if (!isEnvDragging) return;
+                evt.preventDefault();
+                const rect = canvas.getBoundingClientRect();
+                const clientX = evt.clientX || (evt.touches && evt.touches[0].clientX);
+                const clientY = evt.clientY || (evt.touches && evt.touches[0].clientY);
+                if (!clientX || !clientY) return;
+
+                const posX = clientX - rect.left;
+                const posY = clientY - rect.top;
+
+                // Se moveu perto do primeiro terço = Attack
+                if (posX < 220) {
+                    const normA = Math.max(0, Math.min(127, Math.round((posX / 220) * 127)));
+                    onEnvNodeChange('tva_attack', normA, 'valEnvT1');
+                    const s1 = document.getElementById("sldEnvT1"); if (s1) s1.value = normA;
+                } else if (posX >= 220 && posX < 420) {
+                    const normD = Math.max(0, Math.min(127, Math.round(((posX - 220) / 200) * 127)));
+                    const normS = Math.max(0, Math.min(127, Math.round((1 - (posY / canvas.height)) * 127)));
+                    onEnvNodeChange('tva_decay', normD, 'valEnvT2');
+                    onEnvNodeChange('tva_sustain', normS, 'valEnvL3');
+                    const s2 = document.getElementById("sldEnvT2"); if (s2) s2.value = normD;
+                    const s3 = document.getElementById("sldEnvL3"); if (s3) s3.value = normS;
+                } else {
+                    const normR = Math.max(0, Math.min(127, Math.round(((posX - 420) / 250) * 127)));
+                    onEnvNodeChange('tva_release', normR, 'valEnvT4');
+                    const s4 = document.getElementById("sldEnvT4"); if (s4) s4.value = normR;
+                }
+            };
+
+            const handleEnd = () => {
+                isEnvDragging = false;
+            };
+
+            canvas.addEventListener("mousedown", handleStart);
+            window.addEventListener("mousemove", handleMove);
+            window.addEventListener("mouseup", handleEnd);
+
+            canvas.addEventListener("touchstart", handleStart, { passive: false });
+            window.addEventListener("touchmove", handleMove, { passive: false });
+            window.addEventListener("touchend", handleEnd);
+            window.addEventListener("touchcancel", handleEnd);
+        }
+
+        // ==========================================
+        // 4.2: DRUM KIT EDITOR ROLAND JV (CANAL 10)
+        // ==========================================
+        const DRUM_PIECES = [
+            { note: 36, name: "Bumbo (Kick 1)", pitch: 0, level: 127, pan: 64, reverb: 30, icon: "🥁" },
+            { note: 38, name: "Caixa (Snare 1)", pitch: 0, level: 124, pan: 64, reverb: 55, icon: "🎯" },
+            { note: 40, name: "Caixa (Snare 2)", pitch: 0, level: 118, pan: 64, reverb: 60, icon: "🎯" },
+            { note: 42, name: "Chimbal Fechado (CHH)", pitch: 0, level: 110, pan: 52, reverb: 25, icon: "⚡" },
+            { note: 46, name: "Chimbal Aberto (OHH)", pitch: 0, level: 115, pan: 50, reverb: 35, icon: "✨" },
+            { note: 41, name: "Surdo (Low Tom 2)", pitch: 0, level: 116, pan: 40, reverb: 45, icon: "🪘" },
+            { note: 45, name: "Tom Baixo (Low Tom 1)", pitch: 0, level: 116, pan: 48, reverb: 45, icon: "🪘" },
+            { note: 48, name: "Tom Médio (Mid Tom)", pitch: 0, level: 118, pan: 76, reverb: 45, icon: "🪘" },
+            { note: 50, name: "Tom Alto (High Tom)", pitch: 0, level: 120, pan: 88, reverb: 45, icon: "🪘" },
+            { note: 49, name: "Prato Crash (Crash 1)", pitch: 0, level: 124, pan: 35, reverb: 70, icon: "💥" },
+            { note: 51, name: "Prato Ride (Ride 1)", pitch: 0, level: 115, pan: 90, reverb: 40, icon: "🔔" },
+            { note: 39, name: "Palma (Clap)", pitch: 0, level: 120, pan: 64, reverb: 65, icon: "👏" }
+        ];
+
+        let selectedDrumIndex = 0;
+
+        function openDrumKitModal() {
+            const modal = document.getElementById("modalDrumKitEditor");
+            if (!modal) return;
+            modal.style.display = "flex";
+            renderDrumPads();
+            selectDrumPiece(0);
+        }
+
+        function closeDrumKitModal(evt) {
+            if (evt && evt.target && evt.target.id !== "modalDrumKitEditor" && !evt.target.classList.contains("btn-close-modal")) return;
+            const modal = document.getElementById("modalDrumKitEditor");
+            if (modal) modal.style.display = "none";
+        }
+
+        function renderDrumPads() {
+            const container = document.getElementById("drumPadsGrid");
+            if (!container) return;
+            container.innerHTML = DRUM_PIECES.map((d, i) => {
+                const isSel = (i === selectedDrumIndex);
+                return `
+                    <div onclick="selectDrumPiece(${i})" style="background:${isSel ? '#2D1F0E' : '#14141E'}; border:1px solid ${isSel ? '#F59E0B' : '#2A2A38'}; border-radius:8px; padding:10px 8px; cursor:pointer; text-align:center; transition:all 0.15s ease; box-shadow:${isSel ? '0 0 10px rgba(245,158,11,0.35)' : 'none'};">
+                        <div style="font-size:20px; margin-bottom:4px;">${d.icon}</div>
+                        <div style="font-size:11px; font-weight:bold; color:${isSel ? '#F59E0B' : '#FFF'}; margin-bottom:2px;">${d.name}</div>
+                        <div style="font-size:9.5px; color:#8E8E9E;">Nota MIDI: ${d.note}</div>
+                    </div>
+                `;
+            }).join("");
+        }
+
+        function selectDrumPiece(idx) {
+            selectedDrumIndex = idx;
+            renderDrumPads();
+            const piece = DRUM_PIECES[idx];
+            if (!piece) return;
+
+            const nameEl = document.getElementById("drumSelectedPieceName");
+            if (nameEl) nameEl.innerText = `${piece.icon} ${piece.name} (Nota ${piece.note})`;
+
+            const sldPitch = document.getElementById("sldDrumPitch");
+            const valPitch = document.getElementById("valDrumPitch");
+            if (sldPitch) sldPitch.value = piece.pitch;
+            if (valPitch) valPitch.innerText = `${piece.pitch >= 0 ? '+' : ''}${piece.pitch} semitons`;
+
+            const sldLevel = document.getElementById("sldDrumLevel");
+            const valLevel = document.getElementById("valDrumLevel");
+            if (sldLevel) sldLevel.value = piece.level;
+            if (valLevel) valLevel.innerText = piece.level;
+
+            const sldPan = document.getElementById("sldDrumPan");
+            const valPan = document.getElementById("valDrumPan");
+            if (sldPan) sldPan.value = piece.pan;
+            if (valPan) valPan.innerText = piece.pan === 64 ? "Center" : (piece.pan < 64 ? `L${64 - piece.pan}` : `R${piece.pan - 64}`);
+
+            const sldRev = document.getElementById("sldDrumReverb");
+            const valRev = document.getElementById("valDrumReverb");
+            if (sldRev) sldRev.value = piece.reverb;
+            if (valRev) valRev.innerText = piece.reverb;
+
+            // Pré-escuta automática imediata
+            previewCurrentDrumPiece();
+        }
+
+        function onDrumParamChange(param, val) {
+            const piece = DRUM_PIECES[selectedDrumIndex];
+            if (!piece) return;
+            const num = parseInt(val);
+            piece[param] = num;
+
+            if (param === 'pitch') {
+                const el = document.getElementById("valDrumPitch");
+                if (el) el.innerText = `${num >= 0 ? '+' : ''}${num} semitons`;
+            } else if (param === 'level') {
+                const el = document.getElementById("valDrumLevel");
+                if (el) el.innerText = num;
+            } else if (param === 'pan') {
+                const el = document.getElementById("valDrumPan");
+                if (el) el.innerText = num === 64 ? "Center" : (num < 64 ? `L${64 - num}` : `R${num - 64}`);
+            } else if (param === 'reverb') {
+                const el = document.getElementById("valDrumReverb");
+                if (el) el.innerText = num;
+            }
+
+            // Envia comando SysEx de Rhythm Key para o hardware
+            sendMidiCommand({
+                type: "drum_param",
+                note: piece.note,
+                param: param,
+                value: num
+            });
+        }
+
+        function previewCurrentDrumPiece() {
+            const piece = DRUM_PIECES[selectedDrumIndex];
+            if (!piece) return;
+            const channel10 = 9; // 0-indexed para canal 10
+            sendRawWebMidi([0x90 | channel10, piece.note, piece.level || 120]);
+            setTimeout(() => {
+                sendRawWebMidi([0x80 | channel10, piece.note, 0]);
+            }, 250);
+        }
 
         function onCombMasterVolChange(val) {
             const num = parseInt(val);
@@ -8393,6 +8750,151 @@
             <!-- Botão de Fechar no rodapé -->
             <div style="display:flex; justify-content:flex-end; margin-top:8px;">
                 <button class="btn-close-modal" onclick="closeEqModal()" style="background:#242436; border:1px solid #444460; color:#FFF; font-size:12px; font-weight:bold; padding:6px 18px; border-radius:5px; cursor:pointer;">Concluir</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL 4.1: GRÁFICO INTERATIVO DE ENVELOPES -->
+    <!-- (TVA Volume & TVF Filtro 4 Estágios Touch) -->
+    <!-- ========================================== -->
+    <div class="modal-overlay" id="modalEnvelopeGraph" onclick="closeEnvelopeModal(event)">
+        <div class="modal-box" onclick="event.stopPropagation()" style="max-width:820px; width:95%; background:#101018; border:1px solid #00E5FF; border-radius:12px; padding:16px 18px; box-shadow:0 15px 40px rgba(0,229,255,0.25); max-height:92vh; overflow-y:auto;">
+            <!-- Topo do Modal -->
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #202035; padding-bottom:8px; margin-bottom:12px;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span style="font-weight:bold; color:#00E5FF; font-size:14px; display:flex; align-items:center; gap:6px;">
+                        📈 Editor Gráfico de Envelopes (TVA & TVF)
+                    </span>
+                    <!-- Seletor do Tone 1..4 -->
+                    <div style="display:inline-flex; background:#0B0B14; border:1px solid #202035; border-radius:6px; padding:2px;">
+                        <button class="btn-preset-eq active" id="btnEnvTone0" onclick="selectEnvTone(0)">T1</button>
+                        <button class="btn-preset-eq" id="btnEnvTone1" onclick="selectEnvTone(1)">T2</button>
+                        <button class="btn-preset-eq" id="btnEnvTone2" onclick="selectEnvTone(2)">T3</button>
+                        <button class="btn-preset-eq" id="btnEnvTone3" onclick="selectEnvTone(3)">T4</button>
+                    </div>
+                </div>
+                <button class="btn-close-modal" onclick="closeEnvelopeModal()" style="background:#242436; border:1px solid #444460; color:#FFF; font-size:14px; font-weight:bold; width:26px; height:26px; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center;">✕</button>
+            </div>
+
+            <!-- Gráfico Canvas Interativo -->
+            <div style="background:#08080E; border-radius:8px; border:1px solid #202035; padding:4px; position:relative; box-shadow:inset 0 0 20px rgba(0,0,0,0.85); margin-bottom:12px;">
+                <canvas id="canvasEnvelopeCurve" width="760" height="240" style="width:100%; height:240px; display:block; border-radius:6px; cursor:crosshair;"></canvas>
+            </div>
+
+            <!-- Controles dos 4 Nós do Envelope (Attack, Decay, Sustain, Release) -->
+            <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:8px; margin-bottom:12px;">
+                <div style="background:#131320; padding:6px 10px; border-radius:6px; border:1px solid #202035; border-left:3px solid #00E5FF;">
+                    <div style="font-size:10.5px; font-weight:bold; color:#00E5FF; margin-bottom:4px;">1. Attack (T1)</div>
+                    <input type="range" id="sldEnvT1" min="0" max="127" value="0" class="synth-param-slider" style="width:100%; height:15px; accent-color:#00E5FF;" oninput="onEnvNodeChange('tva_attack', this.value, 'valEnvT1')">
+                    <div style="display:flex; justify-content:space-between; font-size:9.5px; color:#8E8E9E; margin-top:2px;">
+                        <span>Tempo:</span><span id="valEnvT1" style="color:#00E5FF; font-family:monospace; font-weight:bold;">0</span>
+                    </div>
+                </div>
+                <div style="background:#131320; padding:6px 10px; border-radius:6px; border:1px solid #202035; border-left:3px solid #2ECC71;">
+                    <div style="font-size:10.5px; font-weight:bold; color:#2ECC71; margin-bottom:4px;">2. Decay (T2)</div>
+                    <input type="range" id="sldEnvT2" min="0" max="127" value="0" class="synth-param-slider" style="width:100%; height:15px; accent-color:#2ECC71;" oninput="onEnvNodeChange('tva_decay', this.value, 'valEnvT2')">
+                    <div style="display:flex; justify-content:space-between; font-size:9.5px; color:#8E8E9E; margin-top:2px;">
+                        <span>Tempo:</span><span id="valEnvT2" style="color:#2ECC71; font-family:monospace; font-weight:bold;">0</span>
+                    </div>
+                </div>
+                <div style="background:#131320; padding:6px 10px; border-radius:6px; border:1px solid #202035; border-left:3px solid #FFD700;">
+                    <div style="font-size:10.5px; font-weight:bold; color:#FFD700; margin-bottom:4px;">3. Sustain (L3)</div>
+                    <input type="range" id="sldEnvL3" min="0" max="127" value="127" class="synth-param-slider" style="width:100%; height:15px; accent-color:#FFD700;" oninput="onEnvNodeChange('tva_sustain', this.value, 'valEnvL3')">
+                    <div style="display:flex; justify-content:space-between; font-size:9.5px; color:#8E8E9E; margin-top:2px;">
+                        <span>Nível:</span><span id="valEnvL3" style="color:#FFD700; font-family:monospace; font-weight:bold;">127</span>
+                    </div>
+                </div>
+                <div style="background:#131320; padding:6px 10px; border-radius:6px; border:1px solid #202035; border-left:3px solid #FF4081;">
+                    <div style="font-size:10.5px; font-weight:bold; color:#FF4081; margin-bottom:4px;">4. Release (T4)</div>
+                    <input type="range" id="sldEnvT4" min="0" max="127" value="0" class="synth-param-slider" style="width:100%; height:15px; accent-color:#FF4081;" oninput="onEnvNodeChange('tva_release', this.value, 'valEnvT4')">
+                    <div style="display:flex; justify-content:space-between; font-size:9.5px; color:#8E8E9E; margin-top:2px;">
+                        <span>Tempo:</span><span id="valEnvT4" style="color:#FF4081; font-family:monospace; font-weight:bold;">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rodapé do Modal -->
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:10px; color:#8E8E9E; font-style:italic;">💡 Dica: Arraste os pontos do gráfico com o dedo ou mouse para ajustar a curva com resposta sonora em tempo real</span>
+                <button class="btn-close-modal" onclick="closeEnvelopeModal()" style="background:#242436; border:1px solid #444460; color:#FFF; font-size:12px; font-weight:bold; padding:6px 18px; border-radius:5px; cursor:pointer;">Concluir</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL 4.2: DRUM KIT EDITOR ROLAND JV       -->
+    <!-- (Afinação, Volume, Pan e Reverb por Peça)  -->
+    <!-- ========================================== -->
+    <div class="modal-overlay" id="modalDrumKitEditor" onclick="closeDrumKitModal(event)">
+        <div class="modal-box" onclick="event.stopPropagation()" style="max-width:860px; width:95%; background:#101018; border:1px solid #F59E0B; border-radius:12px; padding:16px 18px; box-shadow:0 15px 40px rgba(245,158,11,0.25); max-height:92vh; overflow-y:auto;">
+            <!-- Topo do Modal -->
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #202035; padding-bottom:8px; margin-bottom:12px;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span style="font-weight:bold; color:#F59E0B; font-size:14px; display:flex; align-items:center; gap:6px;">
+                        🥁 Drum Kit Editor (Roland JV-1010)
+                    </span>
+                    <span style="font-size:10px; color:#8E8E9E;">Canal 10 (Rhythm Set)</span>
+                </div>
+                <button class="btn-close-modal" onclick="closeDrumKitModal()" style="background:#242436; border:1px solid #444460; color:#FFF; font-size:14px; font-weight:bold; width:26px; height:26px; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center;">✕</button>
+            </div>
+
+            <!-- Grid com Pads Interativos de Bateria (Kick, Snare, HiHat, Toms, Crash, Ride) -->
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap:8px; margin-bottom:14px;" id="drumPadsGrid">
+                <!-- Injetado dinamicamente via renderDrumPads() -->
+            </div>
+
+            <!-- Painel de Edição da Peça Selecionada -->
+            <div style="background:#131320; border:1px solid #202035; border-radius:8px; padding:12px 14px; margin-bottom:12px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; border-bottom:1px solid #1E1E2C; padding-bottom:6px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span id="drumSelectedPieceName" style="font-size:13px; font-weight:bold; color:#F59E0B;">🥁 Bumbo (Kick 1 - Nota 36)</span>
+                        <button onclick="previewCurrentDrumPiece()" style="background:#F59E0B; border:none; color:#000; font-size:11px; font-weight:bold; padding:2px 8px; border-radius:4px; cursor:pointer;">▶ Tocar Som</button>
+                    </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:12px;">
+                    <!-- Afinação (Pitch Coarse) -->
+                    <div>
+                        <div style="display:flex; justify-content:space-between; font-size:10.5px; font-weight:bold; margin-bottom:3px;">
+                            <span style="color:#8E8E9E;">Afinação (Pitch):</span>
+                            <span id="valDrumPitch" style="color:#F59E0B; font-family:monospace;">0 semitons</span>
+                        </div>
+                        <input type="range" id="sldDrumPitch" min="-24" max="24" value="0" class="synth-param-slider" style="width:100%; height:16px; accent-color:#F59E0B;" oninput="onDrumParamChange('pitch', this.value)">
+                    </div>
+
+                    <!-- Volume / Level -->
+                    <div>
+                        <div style="display:flex; justify-content:space-between; font-size:10.5px; font-weight:bold; margin-bottom:3px;">
+                            <span style="color:#8E8E9E;">Volume (Level):</span>
+                            <span id="valDrumLevel" style="color:#2ECC71; font-family:monospace;">127</span>
+                        </div>
+                        <input type="range" id="sldDrumLevel" min="0" max="127" value="127" class="synth-param-slider" style="width:100%; height:16px; accent-color:#2ECC71;" oninput="onDrumParamChange('level', this.value)">
+                    </div>
+
+                    <!-- Pan Estéreo -->
+                    <div>
+                        <div style="display:flex; justify-content:space-between; font-size:10.5px; font-weight:bold; margin-bottom:3px;">
+                            <span style="color:#8E8E9E;">Panorâmico:</span>
+                            <span id="valDrumPan" style="color:#00E5FF; font-family:monospace;">Center</span>
+                        </div>
+                        <input type="range" id="sldDrumPan" min="0" max="127" value="64" class="synth-param-slider" style="width:100%; height:16px; accent-color:#00E5FF;" oninput="onDrumParamChange('pan', this.value)">
+                    </div>
+
+                    <!-- Reverb Send -->
+                    <div>
+                        <div style="display:flex; justify-content:space-between; font-size:10.5px; font-weight:bold; margin-bottom:3px;">
+                            <span style="color:#8E8E9E;">Reverb Send:</span>
+                            <span id="valDrumReverb" style="color:#A78BFA; font-family:monospace;">40</span>
+                        </div>
+                        <input type="range" id="sldDrumReverb" min="0" max="127" value="40" class="synth-param-slider" style="width:100%; height:16px; accent-color:#A78BFA;" oninput="onDrumParamChange('reverb', this.value)">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rodapé do Modal -->
+            <div style="display:flex; justify-content:flex-end;">
+                <button class="btn-close-modal" onclick="closeDrumKitModal()" style="background:#242436; border:1px solid #444460; color:#FFF; font-size:12px; font-weight:bold; padding:6px 18px; border-radius:5px; cursor:pointer;">Concluir</button>
             </div>
         </div>
     </div>
