@@ -1560,6 +1560,92 @@
             transition: all 0.15s ease;
         }
 
+        /* Continuous Pad (Drone Infinito para Transições ao Vivo) */
+        .continuous-pad-bar {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: #101018;
+            border: 1px solid #28283E;
+            border-radius: 6px;
+            padding: 4px 8px;
+            overflow-x: auto;
+            flex-wrap: nowrap;
+        }
+        .continuous-pad-tag {
+            font-size: 10px;
+            font-weight: 800;
+            color: #9B59B6;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-right: 4px;
+        }
+        .continuous-pad-key {
+            background: #181826;
+            border: 1px solid #32324A;
+            color: #B0B0C4;
+            border-radius: 4px;
+            padding: 3px 7px;
+            font-size: 10px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            white-space: nowrap;
+            user-select: none;
+        }
+        .continuous-pad-key:active {
+            transform: scale(0.95);
+        }
+        .continuous-pad-key.active {
+            background: #8E44AD !important;
+            border-color: #D2B4DE !important;
+            color: #FFF !important;
+            box-shadow: 0 0 10px rgba(155, 89, 182, 0.6);
+        }
+        .continuous-pad-stop {
+            background: #2D1A22;
+            border: 1px solid #E74C3C;
+            color: #E74C3C;
+            border-radius: 4px;
+            padding: 3px 8px;
+            font-size: 10px;
+            font-weight: 800;
+            cursor: pointer;
+            margin-left: 4px;
+            white-space: nowrap;
+        }
+
+        /* Botão Varinha Mágica (MIDI Learn Global) */
+        .magic-wand-btn {
+            background: linear-gradient(135deg, #1F1F35, #2F1E44);
+            border: 1px solid #AF7AC5;
+            color: #E8DAEF;
+            border-radius: 5px;
+            padding: 3px 8px;
+            font-size: 10.5px;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 0 8px rgba(175, 122, 197, 0.3);
+            transition: all 0.2s ease;
+        }
+        .magic-wand-btn.active {
+            background: linear-gradient(135deg, #8E44AD, #E91E63) !important;
+            border-color: #FFF !important;
+            color: #FFF !important;
+            box-shadow: 0 0 15px rgba(233, 30, 99, 0.8) !important;
+            animation: pulse-magic 1.2s infinite;
+        }
+        @keyframes pulse-magic {
+            0% { transform: scale(1); box-shadow: 0 0 8px rgba(233, 30, 99, 0.5); }
+            50% { transform: scale(1.04); box-shadow: 0 0 16px rgba(233, 30, 99, 0.9); }
+            100% { transform: scale(1); box-shadow: 0 0 8px rgba(233, 30, 99, 0.5); }
+        }
+
         /* ======================================================== */
         /* RESPONSIVIDADE ERGONÔMICA: TOUCH ACTIONS PARA SLIDERS    */
         /* ======================================================== */
@@ -1950,6 +2036,29 @@
                 <input type="range" id="sldCombMasterVol" min="0" max="127" value="127" class="synth-param-slider" style="flex:1; height:18px; accent-color:#00E5FF; margin:0;" oninput="onCombMasterVolChange(this.value)">
                 <span id="valCombMasterVol" style="font-size:11px; font-family:monospace; font-weight:bold; color:#00E5FF; min-width:24px; text-align:right;">127</span>
             </div>
+        </div>
+
+        <!-- Barra de Transição: Continuous Pad (Drone Infinito) & Varinha Mágica -->
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px; flex-shrink:0;">
+            <div class="continuous-pad-bar" style="flex:1;">
+                <span class="continuous-pad-tag">🌊 DRONE PAD (P16):</span>
+                <button class="continuous-pad-key" onclick="triggerContinuousPad('C')">C</button>
+                <button class="continuous-pad-key" onclick="triggerContinuousPad('C#')">C#</button>
+                <button class="continuous-pad-key" onclick="triggerContinuousPad('D')">D</button>
+                <button class="continuous-pad-key" onclick="triggerContinuousPad('Eb')">Eb</button>
+                <button class="continuous-pad-key" onclick="triggerContinuousPad('E')">E</button>
+                <button class="continuous-pad-key" onclick="triggerContinuousPad('F')">F</button>
+                <button class="continuous-pad-key" onclick="triggerContinuousPad('F#')">F#</button>
+                <button class="continuous-pad-key" onclick="triggerContinuousPad('G')">G</button>
+                <button class="continuous-pad-key" onclick="triggerContinuousPad('Ab')">Ab</button>
+                <button class="continuous-pad-key" onclick="triggerContinuousPad('A')">A</button>
+                <button class="continuous-pad-key" onclick="triggerContinuousPad('Bb')">Bb</button>
+                <button class="continuous-pad-key" onclick="triggerContinuousPad('B')">B</button>
+                <button class="continuous-pad-stop" onclick="stopContinuousPad()" title="Parar o drone de fundo imediatamente">⏹️ OFF</button>
+            </div>
+            <button class="magic-wand-btn" id="btnMagicWandGlobal" onclick="toggleMagicWandMode()" title="Ativar Modo Varinha Mágica: Toque em qualquer controle na tela e mexa um fader/knob do seu controlador físico para mapear instantaneamente sem menus!">
+                🪄 Varinha Mágica
+            </button>
         </div>
 
         <div class="strip-container" id="partsStripContainer" style="flex:1; min-height:0;"></div>
@@ -6436,6 +6545,128 @@
             }
         }
         let activeLearningParam = null;
+
+        // ==========================================
+        // MODO VARINHA MÁGICA GLOBAL (MAGIC WAND)
+        // ==========================================
+        let isMagicWandModeActive = false;
+        let lastTouchedInteractiveParam = null;
+
+        function toggleMagicWandMode() {
+            isMagicWandModeActive = !isMagicWandModeActive;
+            const btn = document.getElementById("btnMagicWandGlobal");
+            const badge = document.getElementById("midiLearnStatusBadge");
+
+            if (isMagicWandModeActive) {
+                if (btn) btn.classList.add("active");
+                if (badge) {
+                    badge.style.display = "inline-block";
+                    badge.innerText = "🪄 Toque em um controle na tela e mova seu botão MIDI...";
+                    badge.style.background = "#8E44AD";
+                }
+                attachMagicWandTouchInspectors();
+            } else {
+                if (btn) btn.classList.remove("active");
+                if (badge) badge.style.display = "none";
+                cancelMidiLearn();
+            }
+        }
+
+        function attachMagicWandTouchInspectors() {
+            // Monitora toques nos sliders de volume das Parts
+            for (let i = 0; i < 4; i++) {
+                const sld = document.getElementById(`sldPartFader${i}`);
+                if (sld && !sld.hasAttribute("data-magic-attached")) {
+                    sld.setAttribute("data-magic-attached", "true");
+                    sld.addEventListener("pointerdown", () => onMagicControlSelected(`part_vol_${i}`, `Volume Part ${i + 1}`));
+                }
+                const sldRev = document.getElementById(`sldPartRev${i}`);
+                if (sldRev && !sldRev.hasAttribute("data-magic-attached")) {
+                    sldRev.setAttribute("data-magic-attached", "true");
+                    sldRev.addEventListener("pointerdown", () => onMagicControlSelected(`part_rev_${i}`, `Reverb Part ${i + 1}`));
+                }
+                const sldCho = document.getElementById(`sldPartCho${i}`);
+                if (sldCho && !sldCho.hasAttribute("data-magic-attached")) {
+                    sldCho.setAttribute("data-magic-attached", "true");
+                    sldCho.addEventListener("pointerdown", () => onMagicControlSelected(`part_cho_${i}`, `Chorus Part ${i + 1}`));
+                }
+            }
+            const sldMaster = document.getElementById("sldCombMasterVol");
+            if (sldMaster && !sldMaster.hasAttribute("data-magic-attached")) {
+                sldMaster.setAttribute("data-magic-attached", "true");
+                sldMaster.addEventListener("pointerdown", () => onMagicControlSelected("master_level", "Volume Master"));
+            }
+        }
+
+        function onMagicControlSelected(paramKey, paramLabel) {
+            if (!isMagicWandModeActive) return;
+            activeLearningParam = paramKey;
+            const badge = document.getElementById("midiLearnStatusBadge");
+            if (badge) {
+                badge.style.display = "inline-block";
+                badge.innerText = `🪄 [${paramLabel}] Mova um knob no teclado físico agora...`;
+                badge.style.background = "#FF4081";
+            }
+        }
+
+        // ==========================================
+        // CONTINUOUS PAD (DRONE INFINITO PART 16)
+        // ==========================================
+        let activeContinuousPadNote = null;
+        const PAD_TONE_PITCH_MAP = {
+            'C': 48, 'C#': 49, 'D': 50, 'Eb': 51,
+            'E': 52, 'F': 53, 'F#': 54, 'G': 55,
+            'Ab': 56, 'A': 57, 'Bb': 58, 'B': 59
+        };
+
+        function triggerContinuousPad(noteName) {
+            const midiPitch = PAD_TONE_PITCH_MAP[noteName] || 48;
+            const channel16 = 15; // 0-indexed para Canal 16
+
+            // Se a mesma nota já estiver tocando, desliga ela (toggle)
+            if (activeContinuousPadNote === midiPitch) {
+                stopContinuousPad();
+                return;
+            }
+
+            // Para o pad anterior suavemente se houver
+            if (activeContinuousPadNote !== null) {
+                sendRawWebMidi([0x90 | channel16, activeContinuousPadNote, 0]); // Note Off
+                sendRawWebMidi([0x80 | channel16, activeContinuousPadNote, 0]);
+            }
+
+            // 1. Configura Part 16 para Volume Ideal e Patch Warm Pad no Roland JV-1010
+            sendRawWebMidi(createRolandDT1([0x01, 0x00, 0x10 + 15, 0x00], [0x01])); // Part 16 Rx Switch = ON
+            sendRawWebMidi(createRolandDT1([0x01, 0x00, 0x10 + 15, 0x01], [15]));   // MIDI Ch 16
+            sendRawWebMidi(createRolandDT1([0x01, 0x00, 0x10 + 15, 0x06], [95]));   // Level = 95
+            sendRawWebMidi(createRolandDT1([0x01, 0x00, 0x10 + 15, 0x0D], [85]));   // Reverb = 85
+
+            // 2. Dispara Note On infinito
+            activeContinuousPadNote = midiPitch;
+            sendRawWebMidi([0x90 | channel16, midiPitch, 90]);
+
+            // 3. Atualiza botões visuais
+            document.querySelectorAll(".continuous-pad-key").forEach(btn => {
+                if (btn.innerText.trim() === noteName) btn.classList.add("active");
+                else btn.classList.remove("active");
+            });
+
+            console.log(`[Continuous Pad] Drone ativado em ${noteName} (${midiPitch}) na Part 16.`);
+        }
+
+        function stopContinuousPad() {
+            const channel16 = 15;
+            if (activeContinuousPadNote !== null) {
+                sendRawWebMidi([0x90 | channel16, activeContinuousPadNote, 0]); // Note Off
+                sendRawWebMidi([0x80 | channel16, activeContinuousPadNote, 0]);
+                activeContinuousPadNote = null;
+            }
+            // Envia All Notes Off no canal 16 para corte total
+            sendRawWebMidi([0xB0 | channel16, 123, 0]);
+
+            document.querySelectorAll(".continuous-pad-key").forEach(btn => btn.classList.remove("active"));
+            console.log("[Continuous Pad] Drone desativado.");
+        }
 
         function toggleMidiLearn(param, btnEl) {
             if (activeLearningParam === param) {
