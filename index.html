@@ -1946,9 +1946,107 @@
                 height: 15px !important;
             }
         }
+
+        /* Indicador Visual de Trava e Swipe de Abas (Hold 500ms) */
+        #tabHoldIndicator {
+            position: fixed;
+            pointer-events: none;
+            z-index: 999999;
+            transform: translate(-50%, -50%);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.15s ease-out;
+        }
+        #tabHoldIndicator.active {
+            display: flex;
+            opacity: 1;
+        }
+        .tab-hold-ring {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: 2px solid rgba(0, 229, 255, 0.2);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(10, 15, 25, 0.7);
+            backdrop-filter: blur(4px);
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.15);
+        }
+        .tab-hold-circle-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 56px;
+            height: 56px;
+            transform: rotate(-90deg);
+        }
+        .tab-hold-circle-bg {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.1);
+            stroke-width: 3;
+        }
+        .tab-hold-circle-bar {
+            fill: none;
+            stroke: #00E5FF;
+            stroke-width: 3.5;
+            stroke-linecap: round;
+            stroke-dasharray: 157;
+            stroke-dashoffset: 157;
+            transition: stroke-dashoffset 0.5s linear, stroke 0.2s ease;
+        }
+        #tabHoldIndicator.unlocked .tab-hold-circle-bar {
+            stroke: #2ECC71;
+            filter: drop-shadow(0 0 6px #2ECC71);
+        }
+        .tab-hold-icon {
+            font-size: 16px;
+            color: #00E5FF;
+            transition: color 0.2s ease, transform 0.2s ease;
+        }
+        #tabHoldIndicator.unlocked .tab-hold-icon {
+            color: #2ECC71;
+            transform: scale(1.15);
+        }
+        .tab-hold-hint {
+            margin-top: 6px;
+            font-size: 10.5px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            color: #00E5FF;
+            background: rgba(10, 14, 23, 0.9);
+            padding: 3px 8px;
+            border-radius: 4px;
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            white-space: nowrap;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.6);
+            transition: all 0.2s ease;
+        }
+        #tabHoldIndicator.unlocked .tab-hold-hint {
+            color: #2ECC71;
+            border-color: #2ECC71;
+            box-shadow: 0 0 10px rgba(46, 204, 113, 0.4);
+        }
     </style>
 </head>
 <body>
+
+    <!-- Indicador Flutuante de Destravamento de Aba por Toque Contínuo (500ms) -->
+    <div id="tabHoldIndicator">
+        <div class="tab-hold-ring">
+            <svg class="tab-hold-circle-svg" viewBox="0 0 56 56">
+                <circle class="tab-hold-circle-bg" cx="28" cy="28" r="25"></circle>
+                <circle id="tabHoldCircleBar" class="tab-hold-circle-bar" cx="28" cy="28" r="25"></circle>
+            </svg>
+            <span id="tabHoldIcon" class="tab-hold-icon">🔒</span>
+        </div>
+        <div id="tabHoldHint" class="tab-hold-hint">Segure 0.5s...</div>
+    </div>
+
 <div id="appContainer">
 
     <!-- Header Principal -->
@@ -9065,6 +9163,169 @@
                     .catch((err) => console.warn('[PWA] Falha no registro do Service Worker:', err));
             });
         }
+
+        // ========================================================
+        // NAVEGAÇÃO ENTRE ABAS COM TRAVA POR PRESSÃO LONGA (500ms)
+        // (Permite arrastar para o lado apenas após segurar 500ms em ponto neutro)
+        // ========================================================
+        const TAB_ORDER = ["patches", "combination", "synth", "favorites", "live"];
+        let tabHoldTimer = null;
+        let tabHoldStartX = 0;
+        let tabHoldStartY = 0;
+        let isTabSwipeUnlocked = false;
+        let isTouchInInteractiveElement = false;
+
+        const tabHoldIndicator = document.getElementById("tabHoldIndicator");
+        const tabHoldCircleBar = document.getElementById("tabHoldCircleBar");
+        const tabHoldIcon = document.getElementById("tabHoldIcon");
+        const tabHoldHint = document.getElementById("tabHoldHint");
+
+        function isInteractiveElement(target) {
+            if (!target || target === document.body || target === document.documentElement) return false;
+            // Se o toque iniciou em botão, fader, input, seletor, linha de tabela selecionável, card móvel ou canvas
+            if (target.closest('button, input, select, textarea, .synth-param-slider, .part-fx-slider, .hardware-knob-container, .patches-table tr, .modal-backdrop, .modal-overlay, canvas, .column-card, .show-card, .song-card')) {
+                return true;
+            }
+            return false;
+        }
+
+        function cancelTabHoldGesture() {
+            if (tabHoldTimer) {
+                clearTimeout(tabHoldTimer);
+                tabHoldTimer = null;
+            }
+            isTabSwipeUnlocked = false;
+            isTouchInInteractiveElement = false;
+
+            if (tabHoldIndicator) {
+                tabHoldIndicator.classList.remove("active", "unlocked");
+            }
+            if (tabHoldCircleBar) {
+                tabHoldCircleBar.style.transition = "none";
+                tabHoldCircleBar.style.strokeDashoffset = "157";
+            }
+        }
+
+        window.addEventListener("touchstart", (e) => {
+            // Apenas toque único é avaliado para troca de abas
+            if (e.touches.length !== 1) {
+                cancelTabHoldGesture();
+                return;
+            }
+
+            const target = e.target;
+            // Se tocou dentro de elemento interativo (slider, botão, etc), não inicia a trava de abas
+            if (isInteractiveElement(target)) {
+                isTouchInInteractiveElement = true;
+                return;
+            }
+
+            isTouchInInteractiveElement = false;
+            isTabSwipeUnlocked = false;
+            const touch = e.touches[0];
+            tabHoldStartX = touch.clientX;
+            tabHoldStartY = touch.clientY;
+
+            // Posiciona o anel indicador onde o dedo pousou
+            if (tabHoldIndicator) {
+                tabHoldIndicator.style.left = `${tabHoldStartX}px`;
+                tabHoldIndicator.style.top = `${tabHoldStartY - 38}px`; // um pouco acima da ponta do dedo
+                tabHoldIndicator.classList.remove("unlocked");
+                tabHoldIndicator.classList.add("active");
+                if (tabHoldIcon) tabHoldIcon.innerText = "🔒";
+                if (tabHoldHint) tabHoldHint.innerText = "Segure 0.5s...";
+            }
+
+            if (tabHoldCircleBar) {
+                tabHoldCircleBar.style.transition = "none";
+                tabHoldCircleBar.style.strokeDashoffset = "157";
+                requestAnimationFrame(() => {
+                    tabHoldCircleBar.style.transition = "stroke-dashoffset 0.5s linear";
+                    tabHoldCircleBar.style.strokeDashoffset = "0";
+                });
+            }
+
+            // Inicia o cronômetro rigoroso de 500ms
+            tabHoldTimer = setTimeout(() => {
+                isTabSwipeUnlocked = true;
+                if (tabHoldIndicator) {
+                    tabHoldIndicator.classList.add("unlocked");
+                    if (tabHoldIcon) tabHoldIcon.innerText = "🔓";
+                    if (tabHoldHint) tabHoldHint.innerText = "← Deslize para mudar →";
+                }
+
+                // Feedback tátil com vibração haptic se suportado pelo navegador
+                if (navigator.vibrate) {
+                    try { navigator.vibrate(30); } catch(_) {}
+                }
+            }, 500);
+        }, { passive: true });
+
+        window.addEventListener("touchmove", (e) => {
+            if (isTouchInInteractiveElement || e.touches.length !== 1) return;
+
+            const touch = e.touches[0];
+            const deltaX = touch.clientX - tabHoldStartX;
+            const deltaY = touch.clientY - tabHoldStartY;
+
+            // Se o usuário moveu o dedo mais de 15px antes dos 500ms, cancela (estava apenas rolando a tela)
+            if (!isTabSwipeUnlocked) {
+                if (Math.hypot(deltaX, deltaY) > 16) {
+                    cancelTabHoldGesture();
+                }
+            } else {
+                // Já destravou! Atualiza a dica visual indicando qual aba vai entrar
+                if (tabHoldIndicator) {
+                    tabHoldIndicator.style.left = `${touch.clientX}px`;
+                    tabHoldIndicator.style.top = `${touch.clientY - 38}px`;
+                }
+
+                const currentIdx = TAB_ORDER.indexOf(currentTab);
+                if (deltaX < -30 && currentIdx < TAB_ORDER.length - 1) {
+                    const nextTab = TAB_ORDER[currentIdx + 1];
+                    const nextNames = { combination: "Comb", synth: "Síntese", favorites: "Favoritos", live: "Palco Live" };
+                    if (tabHoldHint) tabHoldHint.innerText = `Ir para: ${nextNames[nextTab] || nextTab} ➔`;
+                } else if (deltaX > 30 && currentIdx > 0) {
+                    const prevTab = TAB_ORDER[currentIdx - 1];
+                    const prevNames = { patches: "Lista", combination: "Comb", synth: "Síntese", favorites: "Favoritos" };
+                    if (tabHoldHint) tabHoldHint.innerText = `⬅️ Ir para: ${prevNames[prevTab] || prevTab}`;
+                } else {
+                    if (tabHoldHint) tabHoldHint.innerText = "← Deslize para mudar →";
+                }
+            }
+        }, { passive: true });
+
+        window.addEventListener("touchend", (e) => {
+            if (isTouchInInteractiveElement) {
+                cancelTabHoldGesture();
+                return;
+            }
+
+            if (isTabSwipeUnlocked) {
+                const touch = e.changedTouches[0];
+                const deltaX = touch.clientX - tabHoldStartX;
+                const deltaY = Math.abs(touch.clientY - tabHoldStartY);
+
+                // Gesto de Swipe horizontal com pelo menos 40px
+                if (Math.abs(deltaX) > 40 && deltaY < 80) {
+                    const currentIdx = TAB_ORDER.indexOf(currentTab);
+                    if (deltaX < 0 && currentIdx < TAB_ORDER.length - 1) {
+                        // Arrasta para a esquerda: avança aba
+                        switchTab(TAB_ORDER[currentIdx + 1]);
+                    } else if (deltaX > 0 && currentIdx > 0) {
+                        // Arrasta para a direita: volta aba
+                        switchTab(TAB_ORDER[currentIdx - 1]);
+                    }
+                }
+            }
+
+            cancelTabHoldGesture();
+        }, { passive: true });
+
+        window.addEventListener("touchcancel", () => {
+            cancelTabHoldGesture();
+        }, { passive: true });
+
     </script>
 
     <!-- Modal de Edição de Categoria para iPad -->
