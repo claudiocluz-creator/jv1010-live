@@ -1469,6 +1469,97 @@
             box-shadow: 0 0 6px rgba(0, 229, 255, 0.3);
         }
 
+        /* Controles de Efeitos por Part (Reverb Send, Chorus Send, Output Assign) */
+        .part-fx-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px;
+            width: 100%;
+            box-sizing: border-box;
+            background: #14141E;
+            padding: 4px 6px;
+            border-radius: 5px;
+            border: 1px solid #20202E;
+        }
+        .part-fx-box {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .part-fx-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 9.5px;
+            font-weight: bold;
+        }
+        .part-fx-label {
+            color: #8E8E9E;
+        }
+        .part-fx-val {
+            font-family: monospace;
+            font-size: 10px;
+        }
+        .part-fx-slider {
+            width: 100%;
+            height: 14px;
+            margin: 0;
+            cursor: pointer;
+        }
+        .part-out-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #14141E;
+            padding: 3px 6px;
+            border-radius: 5px;
+            border: 1px solid #20202E;
+            font-size: 9.5px;
+            font-weight: bold;
+        }
+        .part-out-btn {
+            background: #1E1E2C;
+            border: 1px solid #3A3A50;
+            color: #AAA;
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-size: 9.5px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .part-out-btn.mix {
+            color: #00E5FF;
+            border-color: #00E5FF55;
+        }
+        .part-out-btn.efx {
+            color: #FFB300;
+            border-color: #FFB30055;
+            background: rgba(255, 179, 0, 0.15);
+        }
+
+        /* Faixas de Split Coloridas no Mini Teclado Virtual */
+        .mini-keyboard-split-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+            display: flex;
+        }
+        .mini-keyboard-split-bar {
+            position: absolute;
+            height: 100%;
+            border-radius: 2px;
+            opacity: 0.28;
+            border-left: 2px solid;
+            border-right: 2px solid;
+            mix-blend-mode: screen;
+            transition: all 0.15s ease;
+        }
+
         /* ======================================================== */
         /* RESPONSIVIDADE ERGONÔMICA: TOUCH ACTIONS PARA SLIDERS    */
         /* ======================================================== */
@@ -3092,6 +3183,9 @@
                 else if (param === "coarse") sendRawWebMidi(createRolandDT1([...addrBase, 0x08], [Math.max(0, Math.min(96, val + 48))]));
                 else if (param === "lower") sendRawWebMidi(createRolandDT1([...addrBase, 0x11], [Math.max(0, Math.min(127, val))]));
                 else if (param === "upper") sendRawWebMidi(createRolandDT1([...addrBase, 0x12], [Math.max(0, Math.min(127, val))]));
+                else if (param === "reverb") sendRawWebMidi(createRolandDT1([...addrBase, 0x0D], [val & 0x7F]));
+                else if (param === "chorus") sendRawWebMidi(createRolandDT1([...addrBase, 0x0C], [val & 0x7F]));
+                else if (param === "output_assign") sendRawWebMidi(createRolandDT1([...addrBase, 0x0A], [val & 0x07]));
                 else if (param === "rx_hold") sendRawWebMidi(createRolandDT1([...addrBase, 0x10], [val ? 1 : 0]));
                 else if (param === "rx_bend") {
                     const bVal = val ? 1 : 0;
@@ -5438,10 +5532,10 @@
         // DADOS DOS 4 PARTS (COMBINATION MODE)
         // ==========================================
         const parts = [
-            { name: "Part 1", color: "#00E5FF", patch: "[004] Nice Piano", bank_msb: 81, bank_lsb: 0, prog_num: 4, active: true, level: 124, pan: 64, coarse: 0, lower: 0, upper: 127, rx_hold: true, rx_bend: true },
-            { name: "Part 2", color: "#2ECC71", patch: "[010] Piano Blend", bank_msb: 81, bank_lsb: 0, prog_num: 10, active: true, level: 100, pan: 64, coarse: 0, lower: 0, upper: 127, rx_hold: true, rx_bend: true },
-            { name: "Part 3", color: "#F39C12", patch: "[002] Upright Pno", bank_msb: 81, bank_lsb: 0, prog_num: 2, active: true, level: 106, pan: 64, coarse: 0, lower: 0, upper: 127, rx_hold: true, rx_bend: true },
-            { name: "Part 4", color: "#E74C3C", patch: "[006] Power Grand", bank_msb: 81, bank_lsb: 0, prog_num: 6, active: false, level: 55, pan: 64, coarse: 0, lower: 0, upper: 127, rx_hold: true, rx_bend: true }
+            { name: "Part 1", color: "#00E5FF", patch: "[004] Nice Piano", bank_msb: 81, bank_lsb: 0, prog_num: 4, active: true, level: 124, pan: 64, coarse: 0, lower: 0, upper: 127, rx_hold: true, rx_bend: true, reverb: 40, chorus: 0, output_assign: 0 },
+            { name: "Part 2", color: "#2ECC71", patch: "[010] Piano Blend", bank_msb: 81, bank_lsb: 0, prog_num: 10, active: true, level: 100, pan: 64, coarse: 0, lower: 0, upper: 127, rx_hold: true, rx_bend: true, reverb: 30, chorus: 15, output_assign: 0 },
+            { name: "Part 3", color: "#F39C12", patch: "[002] Upright Pno", bank_msb: 81, bank_lsb: 0, prog_num: 2, active: true, level: 106, pan: 64, coarse: 0, lower: 0, upper: 127, rx_hold: true, rx_bend: true, reverb: 25, chorus: 0, output_assign: 0 },
+            { name: "Part 4", color: "#E74C3C", patch: "[006] Power Grand", bank_msb: 81, bank_lsb: 0, prog_num: 6, active: false, level: 55, pan: 64, coarse: 0, lower: 0, upper: 127, rx_hold: true, rx_bend: true, reverb: 40, chorus: 20, output_assign: 0 }
         ];
 
         const DEFAULT_PART_COLORS = ["#00E5FF", "#2ECC71", "#F39C12", "#E74C3C"];
@@ -5518,6 +5612,32 @@
                                     </div>
                                     <div class="coarse-presets-list" id="coarseListPart${i}"></div>
                                 </div>
+                            </div>
+
+                            <!-- Efeitos Integrados da Part: Reverb Send & Chorus Send -->
+                            <div class="part-fx-grid">
+                                <div class="part-fx-box">
+                                    <div class="part-fx-header">
+                                        <span class="part-fx-label">REV</span>
+                                        <span class="part-fx-val" id="valPartRev${i}" style="color:#00E5FF;">${p.reverb !== undefined ? p.reverb : 40}</span>
+                                    </div>
+                                    <input type="range" id="sldPartRev${i}" min="0" max="127" value="${p.reverb !== undefined ? p.reverb : 40}" class="synth-param-slider part-fx-slider" style="accent-color:#00E5FF;" oninput="updatePartVal(${i}, 'reverb', this.value)">
+                                </div>
+                                <div class="part-fx-box">
+                                    <div class="part-fx-header">
+                                        <span class="part-fx-label">CHO</span>
+                                        <span class="part-fx-val" id="valPartCho${i}" style="color:#A78BFA;">${p.chorus !== undefined ? p.chorus : 0}</span>
+                                    </div>
+                                    <input type="range" id="sldPartCho${i}" min="0" max="127" value="${p.chorus !== undefined ? p.chorus : 0}" class="synth-param-slider part-fx-slider" style="accent-color:#A78BFA;" oninput="updatePartVal(${i}, 'chorus', this.value)">
+                                </div>
+                            </div>
+
+                            <!-- Output Assign (MIX / EFX) -->
+                            <div class="part-out-row">
+                                <span style="color:#8E8E9E;">OUTPUT:</span>
+                                <button class="part-out-btn ${p.output_assign === 1 ? 'efx' : 'mix'}" id="btnPartOut${i}" onclick="togglePartOutputAssign(${i})" title="Alternar Roteamento de Efeito (MIX = Direto / EFX = Inserção Multi-Efeito)">
+                                    ${p.output_assign === 1 ? '⚡ EFX' : '🎛️ MIX'}
+                                </button>
                             </div>
 
                             <!-- Faixa Teclas (Range) -->
@@ -5670,9 +5790,45 @@
                 if (el) el.innerText = num === 64 ? "Center" : (num < 64 ? `L${64 - num}` : `R${num - 64}`);
                 const sld = document.getElementById(`sldPartPan${i}`);
                 if (sld && sld.value != num) sld.value = num;
+            } else if (param === 'reverb') {
+                const el = document.getElementById(`valPartRev${i}`);
+                if (el) el.innerText = num;
+                const sld = document.getElementById(`sldPartRev${i}`);
+                if (sld && sld.value != num) sld.value = num;
+            } else if (param === 'chorus') {
+                const el = document.getElementById(`valPartCho${i}`);
+                if (el) el.innerText = num;
+                const sld = document.getElementById(`sldPartCho${i}`);
+                if (sld && sld.value != num) sld.value = num;
             }
             
             sendMidiCommand({ type: "part_param", part: i, param: param, value: num });
+        }
+
+        function togglePartOutputAssign(partIdx) {
+            if (!parts[partIdx]) return;
+            // 0 = MIX, 1 = EFX
+            const cur = parts[partIdx].output_assign || 0;
+            const next = cur === 0 ? 1 : 0;
+            parts[partIdx].output_assign = next;
+
+            const btn = document.getElementById(`btnPartOut${partIdx}`);
+            if (btn) {
+                if (next === 1) {
+                    btn.className = "part-out-btn efx";
+                    btn.innerHTML = "⚡ EFX";
+                } else {
+                    btn.className = "part-out-btn mix";
+                    btn.innerHTML = "🎛️ MIX";
+                }
+            }
+
+            sendMidiCommand({
+                type: "part_param",
+                part: partIdx,
+                param: "output_assign",
+                value: next
+            });
         }
 
         function stepCoarse(i, delta) {
@@ -5767,6 +5923,7 @@
 
             // Garante a construção e sincronização do mini teclado virtual
             renderMiniKeyboard();
+            updateKeyboardSplitOverlays();
         }
 
         // ==========================================
@@ -5825,9 +5982,28 @@
                         onpointercancel="onMiniKeyUp(event, ${note})"></div>`;
                 }
             });
-            blackHtml += `</div>`;
+            // 3. Camada de Faixas Coloridas de Split por Part
+            let splitHtml = `<div class="mini-keyboard-split-layer" id="miniKeyboardSplitLayer"></div>`;
 
-            kbContainer.innerHTML = whiteHtml + blackHtml;
+            kbContainer.innerHTML = whiteHtml + blackHtml + splitHtml;
+            updateKeyboardSplitOverlays();
+        }
+
+        function updateKeyboardSplitOverlays() {
+            const splitLayer = document.getElementById("miniKeyboardSplitLayer");
+            if (!splitLayer) return;
+
+            let html = "";
+            parts.forEach((p, i) => {
+                if (!p.active) return;
+                const color = p.color || DEFAULT_PART_COLORS[i] || "#00E5FF";
+                const leftPct = (Math.max(0, p.lower) / 127) * 100;
+                const rightPct = (Math.min(127, p.upper) / 127) * 100;
+                const widthPct = Math.max(0.5, rightPct - leftPct);
+
+                html += `<div class="mini-keyboard-split-bar" style="left:${leftPct}%; width:${widthPct}%; background:${color}; border-color:${color};" title="Faixa da ${p.name || 'Part ' + (i+1)}"></div>`;
+            });
+            splitLayer.innerHTML = html;
         }
 
         let isPointerDownOnKeyboard = false;
