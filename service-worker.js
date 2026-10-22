@@ -1,4 +1,4 @@
-const CACHE_NAME = 'jv1010-live-v20261022-full-tags-categorized';
+const CACHE_NAME = 'jv1010-live-v20261022-xpb-real-names';
 const STATIC_ASSETS = [
   './',
   './index.html',

@@ -12288,7 +12288,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 1,
-      "name": "XP-B 001",
+      "name": "Blues Perc",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12300,7 +12300,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 2,
-      "name": "XP-B 002",
+      "name": "A LittleHelp",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12312,7 +12312,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 3,
-      "name": "XP-B 003",
+      "name": "Big Pink B",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12324,7 +12324,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 4,
-      "name": "XP-B 004",
+      "name": "Hush B3",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12336,7 +12336,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 5,
-      "name": "XP-B 005",
+      "name": "Sly Family B",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12348,7 +12348,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 6,
-      "name": "XP-B 006",
+      "name": "3 Dog B3",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12360,7 +12360,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 7,
-      "name": "XP-B 007",
+      "name": "SanFrancisco",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12372,7 +12372,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 8,
-      "name": "XP-B 008",
+      "name": "Full Stops",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12384,7 +12384,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 9,
-      "name": "XP-B 009",
+      "name": "Head Up B3",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12396,7 +12396,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 10,
-      "name": "XP-B 010",
+      "name": "Full Clique",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12408,7 +12408,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 11,
-      "name": "XP-B 011",
+      "name": "So Very BS&T",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12420,7 +12420,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 12,
-      "name": "XP-B 012",
+      "name": "R&R B3 1",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12432,7 +12432,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 13,
-      "name": "XP-B 013",
+      "name": "Organ Banks",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12444,7 +12444,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 14,
-      "name": "XP-B 014",
+      "name": "Express Way",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12456,7 +12456,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 15,
-      "name": "XP-B 015",
+      "name": "85 8808 880",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12468,7 +12468,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 16,
-      "name": "XP-B 016",
+      "name": "R&R B3 2",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12480,7 +12480,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 17,
-      "name": "XP-B 017",
+      "name": "MelloDrama",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12492,7 +12492,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 18,
-      "name": "XP-B 018",
+      "name": "B3 Sermon",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12504,7 +12504,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 19,
-      "name": "XP-B 019",
+      "name": "British B3",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12516,7 +12516,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 20,
-      "name": "XP-B 020",
+      "name": "All Skate!",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12528,7 +12528,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 21,
-      "name": "XP-B 021",
+      "name": "Br.Ballad B3",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12540,7 +12540,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 22,
-      "name": "XP-B 022",
+      "name": "Pure Bars",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12552,7 +12552,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 23,
-      "name": "XP-B 023",
+      "name": "R&B B3",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12564,7 +12564,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 24,
-      "name": "XP-B 024",
+      "name": "Felix Ballad",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12576,7 +12576,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 25,
-      "name": "XP-B 025",
+      "name": "Fudge Ballad",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12588,7 +12588,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 26,
-      "name": "XP-B 026",
+      "name": "B3 Nice Feel",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12600,7 +12600,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 27,
-      "name": "XP-B 027",
+      "name": "85 5000 050",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12612,7 +12612,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 28,
-      "name": "XP-B 028",
+      "name": "Theatrix",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12624,7 +12624,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 29,
-      "name": "XP-B 029",
+      "name": "Barleycorn",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12636,7 +12636,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 30,
-      "name": "XP-B 030",
+      "name": "Magic Carpet",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12648,7 +12648,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 31,
-      "name": "XP-B 031",
+      "name": "All Star B3",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12660,7 +12660,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 32,
-      "name": "XP-B 032",
+      "name": "BT & MG's B3",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12672,7 +12672,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 33,
-      "name": "XP-B 033",
+      "name": "Bookin' B",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12684,7 +12684,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 34,
-      "name": "XP-B 034",
+      "name": "Rock Steady",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12696,7 +12696,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 35,
-      "name": "XP-B 035",
+      "name": "NICE L I00",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12708,7 +12708,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 36,
-      "name": "XP-B 036",
+      "name": "Tenderness",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12720,7 +12720,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 37,
-      "name": "XP-B 037",
+      "name": "Blue B",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12732,7 +12732,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 38,
-      "name": "XP-B 038",
+      "name": "HeavyTraffic",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12744,7 +12744,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 39,
-      "name": "XP-B 039",
+      "name": "Dyno Rotary",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12756,7 +12756,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 40,
-      "name": "XP-B 040",
+      "name": "Concert B3",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12768,7 +12768,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 41,
-      "name": "XP-B 041",
+      "name": "Salty Dog",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12780,7 +12780,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 42,
-      "name": "XP-B 042",
+      "name": "Stevie's B3",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12792,7 +12792,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 43,
-      "name": "XP-B 043",
+      "name": "Hang Twice",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12804,7 +12804,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 44,
-      "name": "XP-B 044",
+      "name": "Let It B",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12816,7 +12816,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 45,
-      "name": "XP-B 045",
+      "name": "LA Blues",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12828,7 +12828,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 46,
-      "name": "XP-B 046",
+      "name": "Mellow Blues",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12840,7 +12840,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 47,
-      "name": "XP-B 047",
+      "name": "PentaGospel",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12852,7 +12852,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 48,
-      "name": "XP-B 048",
+      "name": "Sweet&Mellow",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12864,7 +12864,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 49,
-      "name": "XP-B 049",
+      "name": "2B orNot2B3?",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12876,7 +12876,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 50,
-      "name": "XP-B 050",
+      "name": "Green Bee",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12888,7 +12888,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 51,
-      "name": "XP-B 051",
+      "name": "Whiter Shade",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12900,7 +12900,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 52,
-      "name": "XP-B 052",
+      "name": "Fire Perc",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12912,7 +12912,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 53,
-      "name": "XP-B 053",
+      "name": "Sunset Strip",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12924,7 +12924,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 54,
-      "name": "XP-B 054",
+      "name": "B3 JazzSplit",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12936,7 +12936,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 55,
-      "name": "XP-B 055",
+      "name": "Evil Ways",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12948,7 +12948,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 56,
-      "name": "XP-B 056",
+      "name": "Dyno Perc 63",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12960,7 +12960,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 57,
-      "name": "XP-B 057",
+      "name": "888+3rd",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12972,7 +12972,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 58,
-      "name": "XP-B 058",
+      "name": "8888+3rd",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12984,7 +12984,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 59,
-      "name": "XP-B 059",
+      "name": "House Organ",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -12996,7 +12996,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 60,
-      "name": "XP-B 060",
+      "name": "Easy to B",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13008,7 +13008,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 61,
-      "name": "XP-B 061",
+      "name": "Harum Scarem",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13020,7 +13020,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 62,
-      "name": "XP-B 062",
+      "name": "Green Eyed",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13032,7 +13032,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 63,
-      "name": "XP-B 063",
+      "name": "8888+3rd Vel",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13044,7 +13044,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 64,
-      "name": "XP-B 064",
+      "name": "Shine On B3",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13056,7 +13056,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 65,
-      "name": "XP-B 065",
+      "name": "Procol Perc",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13068,7 +13068,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 66,
-      "name": "XP-B 066",
+      "name": "Full Perc",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13080,7 +13080,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 67,
-      "name": "XP-B 067",
+      "name": "Mellow 4'",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13092,7 +13092,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 68,
-      "name": "XP-B 068",
+      "name": "ZomBee 3",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13104,7 +13104,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 69,
-      "name": "XP-B 069",
+      "name": "Hi Harmonix",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13116,7 +13116,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 70,
-      "name": "XP-B 070",
+      "name": "Rotary Banks",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13128,7 +13128,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 71,
-      "name": "XP-B 071",
+      "name": "Gimme Some",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13140,7 +13140,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 72,
-      "name": "XP-B 072",
+      "name": "Fuzzhead",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13152,7 +13152,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 73,
-      "name": "XP-B 073",
+      "name": "Traffiking",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13164,7 +13164,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 74,
-      "name": "XP-B 074",
+      "name": "B3powerOnOff",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13176,7 +13176,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 75,
-      "name": "XP-B 075",
+      "name": "ToneWheelPno",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13188,7 +13188,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 76,
-      "name": "XP-B 076",
+      "name": "Orgiano",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13200,7 +13200,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 77,
-      "name": "XP-B 077",
+      "name": "TVA FX ORG",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13212,7 +13212,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 78,
-      "name": "XP-B 078",
+      "name": "Animalistic",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13224,7 +13224,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 79,
-      "name": "XP-B 079",
+      "name": "Animal Mod",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13236,7 +13236,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 80,
-      "name": "XP-B 080",
+      "name": "Rising Sun",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13248,7 +13248,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 81,
-      "name": "XP-B 081",
+      "name": "Surf Monkeys",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13260,7 +13260,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 82,
-      "name": "XP-B 082",
+      "name": "Palisades",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13272,7 +13272,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 83,
-      "name": "XP-B 083",
+      "name": "Soul Kitchen",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13284,7 +13284,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 84,
-      "name": "XP-B 084",
+      "name": "BreakOnThru",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13296,7 +13296,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 85,
-      "name": "XP-B 085",
+      "name": "Calif.Sun",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13308,7 +13308,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 86,
-      "name": "XP-B 086",
+      "name": "Steppin'VX",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13320,7 +13320,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 87,
-      "name": "XP-B 087",
+      "name": "Costello+Mod",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13332,7 +13332,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 88,
-      "name": "XP-B 088",
+      "name": "VX Rotary",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13344,7 +13344,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 89,
-      "name": "XP-B 089",
+      "name": "Archie's Mod",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13356,7 +13356,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 90,
-      "name": "XP-B 090",
+      "name": "Telstar VX",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13368,7 +13368,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 91,
-      "name": "XP-B 091",
+      "name": "Cheeseball",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13380,7 +13380,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 92,
-      "name": "XP-B 092",
+      "name": "The Sham",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13392,7 +13392,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 93,
-      "name": "XP-B 093",
+      "name": "Cheese Pad",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13404,7 +13404,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 94,
-      "name": "XP-B 094",
+      "name": "Crummy Organ",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13416,7 +13416,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 95,
-      "name": "XP-B 095",
+      "name": "VX Religion",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13428,7 +13428,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 96,
-      "name": "XP-B 096",
+      "name": "Farfi Combo",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13440,7 +13440,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 97,
-      "name": "XP-B 097",
+      "name": "RotaryCheese",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13452,7 +13452,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 98,
-      "name": "XP-B 098",
+      "name": "Iron Farf",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13464,7 +13464,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 99,
-      "name": "XP-B 099",
+      "name": "DancingQueen",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13476,7 +13476,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 100,
-      "name": "XP-B 100",
+      "name": "PoorMan's B",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13488,7 +13488,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 101,
-      "name": "XP-B 101",
+      "name": "Reggae Organ",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13500,7 +13500,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 102,
-      "name": "XP-B 102",
+      "name": "Farf Lite",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13512,7 +13512,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 103,
-      "name": "XP-B 103",
+      "name": "Wooly Farfy",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13524,7 +13524,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 104,
-      "name": "XP-B 104",
+      "name": "Clark Farf",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13536,7 +13536,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 105,
-      "name": "XP-B 105",
+      "name": "Pacemaker",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13548,7 +13548,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 106,
-      "name": "XP-B 106",
+      "name": "Farf Celeste",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13560,7 +13560,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 107,
-      "name": "XP-B 107",
+      "name": "Ham & Cheese",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13572,7 +13572,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 108,
-      "name": "XP-B 108",
+      "name": "Rox Organ P",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13584,7 +13584,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 109,
-      "name": "XP-B 109",
+      "name": "Rox Organ Ph",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13596,7 +13596,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 110,
-      "name": "XP-B 110",
+      "name": "Rox Organ PH",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13608,7 +13608,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 111,
-      "name": "XP-B 111",
+      "name": "Rox Organ L",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13620,7 +13620,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 112,
-      "name": "XP-B 112",
+      "name": "Runaway",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13632,7 +13632,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 113,
-      "name": "XP-B 113",
+      "name": "Ditty Doo",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13644,7 +13644,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 114,
-      "name": "XP-B 114",
+      "name": "VX Wah Org",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13656,7 +13656,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 115,
-      "name": "XP-B 115",
+      "name": "Suitcase 88",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13668,7 +13668,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 116,
-      "name": "XP-B 116",
+      "name": "Rhodes mkV",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13680,7 +13680,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 117,
-      "name": "XP-B 117",
+      "name": "ChorusRhodes",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13692,7 +13692,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 118,
-      "name": "XP-B 118",
+      "name": "NY Rhodes",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13704,7 +13704,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 119,
-      "name": "XP-B 119",
+      "name": "Touch Rhodes",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13716,7 +13716,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 120,
-      "name": "XP-B 120",
+      "name": "Stage 73",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13728,7 +13728,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 121,
-      "name": "XP-B 121",
+      "name": "Joe's Rhodes",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13740,7 +13740,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 122,
-      "name": "XP-B 122",
+      "name": "Stiff Rhodes",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13752,7 +13752,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 123,
-      "name": "XP-B 123",
+      "name": "Dirty Rhodes",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13764,7 +13764,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 124,
-      "name": "XP-B 124",
+      "name": "Mr.Suitcase",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13776,7 +13776,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 125,
-      "name": "XP-B 125",
+      "name": "Jazz Rhodes",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13788,7 +13788,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 126,
-      "name": "XP-B 126",
+      "name": "HybridRhodes",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13800,7 +13800,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 127,
-      "name": "XP-B 127",
+      "name": "Dyno Rhodes l",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13812,7 +13812,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 128,
-      "name": "XP-B 128",
+      "name": "Dyno Rhodes 2",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 2,
@@ -13824,7 +13824,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 129,
-      "name": "XP-B 129",
+      "name": "Dyno Rhodes 3",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -13836,7 +13836,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 130,
-      "name": "XP-B 130",
+      "name": "Ring Rhodes",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -13848,7 +13848,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 131,
-      "name": "XP-B 131",
+      "name": "LoungeRhodes",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -13860,7 +13860,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 132,
-      "name": "XP-B 132",
+      "name": "TremSuitcase",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -13872,7 +13872,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 133,
-      "name": "XP-B 133",
+      "name": "Preacher",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -13884,7 +13884,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 134,
-      "name": "XP-B 134",
+      "name": "Hard Rhodes",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -13896,7 +13896,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 135,
-      "name": "XP-B 135",
+      "name": "BalladRhodes",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -13908,7 +13908,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 136,
-      "name": "XP-B 136",
+      "name": "Wide Rhodes",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -13920,7 +13920,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 137,
-      "name": "XP-B 137",
+      "name": "Soft Fusion",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -13932,7 +13932,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 138,
-      "name": "XP-B 138",
+      "name": "Phase Rhodes",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -13944,7 +13944,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 139,
-      "name": "XP-B 139",
+      "name": "SpaceyRhodes",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -13956,7 +13956,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 140,
-      "name": "XP-B 140",
+      "name": "I'mNotinLove",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -13968,7 +13968,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 141,
-      "name": "XP-B 141",
+      "name": "VinylRhodes",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -13980,7 +13980,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 142,
-      "name": "XP-B 142",
+      "name": "BreadRhodes",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -13992,7 +13992,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 143,
-      "name": "XP-B 143",
+      "name": "MutroRhodes",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14004,7 +14004,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 144,
-      "name": "XP-B 144",
+      "name": "Ray'sPno Bs",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14016,7 +14016,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 145,
-      "name": "XP-B 145",
+      "name": "SynRhodes Bs.",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14028,7 +14028,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 146,
-      "name": "XP-B 146",
+      "name": "Soft Wurly",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14040,7 +14040,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 147,
-      "name": "XP-B 147",
+      "name": "What'd I say",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14052,7 +14052,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 148,
-      "name": "XP-B 148",
+      "name": "Dry Wurly",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14064,7 +14064,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 149,
-      "name": "XP-B 149",
+      "name": "Chorus Wurly",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14076,7 +14076,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 150,
-      "name": "XP-B 150",
+      "name": "Acid Wurly",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14088,7 +14088,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 151,
-      "name": "XP-B 151",
+      "name": "Hard Wurly",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14100,7 +14100,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 152,
-      "name": "XP-B 152",
+      "name": "Tramp Wurly",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14112,7 +14112,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 153,
-      "name": "XP-B 153",
+      "name": "Tremo Wurly",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14124,7 +14124,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 154,
-      "name": "XP-B 154",
+      "name": "Smooth Wurly",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14136,7 +14136,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 155,
-      "name": "XP-B 155",
+      "name": "Grungy Wurly",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14148,7 +14148,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 156,
-      "name": "XP-B 156",
+      "name": "Breakin' Up",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14160,7 +14160,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 157,
-      "name": "XP-B 157",
+      "name": "Dist Wurly 1",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14172,7 +14172,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 158,
-      "name": "XP-B 158",
+      "name": "Dist Wurly 2",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14184,7 +14184,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 159,
-      "name": "XP-B 159",
+      "name": "Dist Wurly 3",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14196,7 +14196,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 160,
-      "name": "XP-B 160",
+      "name": "Dist Wurly 4",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14208,7 +14208,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 161,
-      "name": "XP-B 161",
+      "name": "Whirling",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14220,7 +14220,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 162,
-      "name": "XP-B 162",
+      "name": "RingMod Solo",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14232,7 +14232,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 163,
-      "name": "XP-B 163",
+      "name": "Rider/Storm",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14244,7 +14244,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 164,
-      "name": "XP-B 164",
+      "name": "Pnet Tee",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14256,7 +14256,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 165,
-      "name": "XP-B 165",
+      "name": "Stereo Pnet",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14268,7 +14268,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 166,
-      "name": "XP-B 166",
+      "name": "ShesNotThere",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14280,7 +14280,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 167,
-      "name": "XP-B 167",
+      "name": "R&B Pnet",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14292,7 +14292,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 168,
-      "name": "XP-B 168",
+      "name": "BrillantPnet",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14304,7 +14304,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 169,
-      "name": "XP-B 169",
+      "name": "Rox+Pnet",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14316,7 +14316,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 170,
-      "name": "XP-B 170",
+      "name": "Rox Piano 1",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14328,7 +14328,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 171,
-      "name": "XP-B 171",
+      "name": "Rox Vinyl",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14340,7 +14340,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 172,
-      "name": "XP-B 172",
+      "name": "Rox Piano 2",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14352,7 +14352,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 173,
-      "name": "XP-B 173",
+      "name": "Crummy Piano",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14364,7 +14364,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 174,
-      "name": "XP-B 174",
+      "name": "Rox Lute",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14376,7 +14376,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 175,
-      "name": "XP-B 175",
+      "name": "Rox Lute Ch.",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14388,7 +14388,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 176,
-      "name": "XP-B 176",
+      "name": "Rox Full+Acc",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14400,7 +14400,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 177,
-      "name": "XP-B 177",
+      "name": "Rox Pi/Ha",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14412,7 +14412,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 178,
-      "name": "XP-B 178",
+      "name": "Carpet Crawl",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14424,7 +14424,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 179,
-      "name": "XP-B 179",
+      "name": "Rox Jacuzzi",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14436,7 +14436,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 180,
-      "name": "XP-B 180",
+      "name": "TrickOf Tail",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14448,7 +14448,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 181,
-      "name": "XP-B 181",
+      "name": "Rho/Wurl/Rox",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14460,7 +14460,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 182,
-      "name": "XP-B 182",
+      "name": "Rox Chorus",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14472,7 +14472,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 183,
-      "name": "XP-B 183",
+      "name": "Rox Harpsi",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14484,7 +14484,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 184,
-      "name": "XP-B 184",
+      "name": "Farfi Harpsi",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14496,7 +14496,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 185,
-      "name": "XP-B 185",
+      "name": "Octa Harpsi",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14508,7 +14508,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 186,
-      "name": "XP-B 186",
+      "name": "VX Harpsi",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14520,7 +14520,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 187,
-      "name": "XP-B 187",
+      "name": "PowerHowers",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14532,7 +14532,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 188,
-      "name": "XP-B 188",
+      "name": "Rox Grinder",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14544,7 +14544,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 189,
-      "name": "XP-B 189",
+      "name": "Clav 1",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14556,7 +14556,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 190,
-      "name": "XP-B 190",
+      "name": "Clav 2",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14568,7 +14568,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 191,
-      "name": "XP-B 191",
+      "name": "Clav 3",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14580,7 +14580,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 192,
-      "name": "XP-B 192",
+      "name": "Clav 4",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14592,7 +14592,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 193,
-      "name": "XP-B 193",
+      "name": "Clav 5",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14604,7 +14604,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 194,
-      "name": "XP-B 194",
+      "name": "Clav 6",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14616,7 +14616,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 195,
-      "name": "XP-B 195",
+      "name": "Clav 7",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14628,7 +14628,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 196,
-      "name": "XP-B 196",
+      "name": "Phase Clav 1",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14640,7 +14640,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 197,
-      "name": "XP-B 197",
+      "name": "Rich Clav",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14652,7 +14652,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 198,
-      "name": "XP-B 198",
+      "name": "Vibraclav",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14664,7 +14664,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 199,
-      "name": "XP-B 199",
+      "name": "Mute Clav 1",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14676,7 +14676,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 200,
-      "name": "XP-B 200",
+      "name": "Mute Clav 2",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14688,7 +14688,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 201,
-      "name": "XP-B 201",
+      "name": "Flange Clav",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14700,7 +14700,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 202,
-      "name": "XP-B 202",
+      "name": "Comp Clav",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14712,7 +14712,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 203,
-      "name": "XP-B 203",
+      "name": "Space Clav",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14724,7 +14724,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 204,
-      "name": "XP-B 204",
+      "name": "Mute Clav 3",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14736,7 +14736,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 205,
-      "name": "XP-B 205",
+      "name": "Bass Clav",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14748,7 +14748,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 206,
-      "name": "XP-B 206",
+      "name": "Phase Clav 2",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14760,7 +14760,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 207,
-      "name": "XP-B 207",
+      "name": "Brite Clav",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14772,7 +14772,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 208,
-      "name": "XP-B 208",
+      "name": "WahWah Clavl",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14784,7 +14784,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 209,
-      "name": "XP-B 209",
+      "name": "WahWah Clav2",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14796,7 +14796,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 210,
-      "name": "XP-B 210",
+      "name": "Clv/Pnet Sp",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14808,7 +14808,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 211,
-      "name": "XP-B 211",
+      "name": "Clv/PnetDuol",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14820,7 +14820,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 212,
-      "name": "XP-B 212",
+      "name": "Clv/PnetDuo2",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14832,7 +14832,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 213,
-      "name": "XP-B 213",
+      "name": "TronStrg ENS",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14844,7 +14844,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 214,
-      "name": "XP-B 214",
+      "name": "Tron Str Dry",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14856,7 +14856,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 215,
-      "name": "XP-B 215",
+      "name": "Rotary Tron I",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14868,7 +14868,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 216,
-      "name": "XP-B 216",
+      "name": "Rotary Tron2",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14880,7 +14880,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 217,
-      "name": "XP-B 217",
+      "name": "St.Tron Dry",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14892,7 +14892,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 218,
-      "name": "XP-B 218",
+      "name": "TronOctStack",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14904,7 +14904,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 219,
-      "name": "XP-B 219",
+      "name": "Smooth Tron 1",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14916,7 +14916,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 220,
-      "name": "XP-B 220",
+      "name": "Smooth Tron 2",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14928,7 +14928,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 221,
-      "name": "XP-B 221",
+      "name": "Slow Tron",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14940,7 +14940,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 222,
-      "name": "XP-B 222",
+      "name": "SymphonicTrn",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14952,7 +14952,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 223,
-      "name": "XP-B 223",
+      "name": "Moody Tron",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14964,7 +14964,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 224,
-      "name": "XP-B 224",
+      "name": "Warm Tape",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14976,7 +14976,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 225,
-      "name": "XP-B 225",
+      "name": "Tron Vls Dry",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -14988,7 +14988,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 226,
-      "name": "XP-B 226",
+      "name": "Mello Vlns",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -15000,7 +15000,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 227,
-      "name": "XP-B 227",
+      "name": "Tron Cello",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -15012,7 +15012,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 228,
-      "name": "XP-B 228",
+      "name": "Mello Cello",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -15024,7 +15024,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 229,
-      "name": "XP-B 229",
+      "name": "Tron Quartet",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -15036,7 +15036,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 230,
-      "name": "XP-B 230",
+      "name": "Tron Orch",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -15048,7 +15048,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 231,
-      "name": "XP-B 231",
+      "name": "DrySt /Choir",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -15060,7 +15060,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 232,
-      "name": "XP-B 232",
+      "name": "Tron Vox",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -15072,7 +15072,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 233,
-      "name": "XP-B 233",
+      "name": "Wet & Wiggly",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -15084,7 +15084,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 234,
-      "name": "XP-B 234",
+      "name": "TronChoirDry",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -15096,7 +15096,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 235,
-      "name": "XP-B 235",
+      "name": "Tron Choir",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -15108,7 +15108,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 236,
-      "name": "XP-B 236",
+      "name": "Old Choir",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -15120,7 +15120,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 237,
-      "name": "XP-B 237",
+      "name": "FatTronChoir",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -15132,7 +15132,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 238,
-      "name": "XP-B 238",
+      "name": "Choir Blend",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -15144,7 +15144,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 239,
-      "name": "XP-B 239",
+      "name": "Slow Choir",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -15156,7 +15156,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 240,
-      "name": "XP-B 240",
+      "name": "Retroactive",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -15168,7 +15168,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 241,
-      "name": "XP-B 241",
+      "name": "LamenTron",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -15180,7 +15180,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 242,
-      "name": "XP-B 242",
+      "name": "Anthem",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -15192,7 +15192,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 243,
-      "name": "XP-B 243",
+      "name": "Space Tron",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -15204,7 +15204,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 244,
-      "name": "XP-B 244",
+      "name": "MelloMemries",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -15216,7 +15216,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 245,
-      "name": "XP-B 245",
+      "name": "5th Tron Str",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -15228,7 +15228,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 246,
-      "name": "XP-B 246",
+      "name": "Tron Vortex",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -15240,7 +15240,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 247,
-      "name": "XP-B 247",
+      "name": "PlanetClaire",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -15252,7 +15252,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 248,
-      "name": "XP-B 248",
+      "name": "Rox Strings",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -15264,7 +15264,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 249,
-      "name": "XP-B 249",
+      "name": "Harpsiphase",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -15276,7 +15276,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 250,
-      "name": "XP-B 250",
+      "name": "Cheep Phazer",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -15288,7 +15288,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 251,
-      "name": "XP-B 251",
+      "name": "Swimming Bee",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -15300,7 +15300,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 252,
-      "name": "XP-B 252",
+      "name": "Old Lead",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -15312,7 +15312,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 253,
-      "name": "XP-B 253",
+      "name": "Organ Lead",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -15324,7 +15324,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 254,
-      "name": "XP-B 254",
+      "name": "Tekno Cheese",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
@@ -15336,7 +15336,7 @@ window.JV1010_DATABASE = {
     {
       "bank": "XP-B",
       "prog": 255,
-      "name": "XP-B 255",
+      "name": "33 RPM",
       "voices": "2",
       "bank_msb": 84,
       "bank_lsb": 3,
