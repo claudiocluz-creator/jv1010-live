@@ -2170,12 +2170,11 @@
     <!-- ABA 2: COMB (4 PARTS LAYER & SPLIT) -->
     <!-- ========================================== -->
     <div class="tab-content" id="tabCombination" style="overflow-y:auto; overflow-x:hidden; padding:6px 8px; flex:1; min-height:0; display:flex; flex-direction:column; background:#111622;">
-        <div class="quick-bar" style="flex-shrink:0;">
+        <div class="quick-bar" style="flex-shrink:0; display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
             <span class="quick-label">Combinações Rápidas:</span>
-            <button class="btn-preset p-dual" onclick="applyPreset('dual')">🎹 Dual Layer</button>
-            <button class="btn-preset p-split" onclick="applyPreset('split')">✂️ Key Bass</button>
-            <button class="btn-preset p-trio" onclick="applyPreset('trio')">✨ Ballad Keys</button>
-            <button class="btn-preset p-quad" onclick="applyPreset('quad')">🎺 Brass</button>
+            <div id="quickPresetsContainer" style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;"></div>
+            
+            <button class="btn-preset" style="background:linear-gradient(180deg, #2D3748 0%, #1A202C 100%); border:1px solid #4A5568; color:#E2E8F0; font-size:11px; padding:5px 9px;" onclick="openQuickPresetsManagerModal()" title="Gerenciar, reordenar, exportar ou importar combinações rápidas">⚙️ Gerenciar</button>
             <button class="btn-act-all" onclick="activateAllParts()">✅ Ativar Todos</button>
             <button class="btn-preset" style="background:#8E44AD; border-color:#8E44AD;" onclick="saveCurrentCombinationAsFavorite()">⭐ Salvar nos Favoritos</button>
             <button class="btn-transmit" onclick="transmitPerformanceToHardware()">⚡ Transmitir JV-1010</button>
@@ -6536,6 +6535,333 @@
         // ==========================================
         // PRESETS RÁPIDOS (1-CLIQUE)
         // ==========================================
+
+        // ==========================================
+        // GERENCIADOR DE COMBINAÇÕES RÁPIDAS (QUICK PRESETS)
+        // (Edição Dinâmica, Importação, Exportação e Criação)
+        // ==========================================
+        const DEFAULT_QUICK_PRESETS = [
+            {
+                id: "preset_dual",
+                name: "🎹 Dual Layer",
+                color: "#16A085",
+                parts: [
+                    { active: true, patch: "[004] Nice Piano", bank_msb: 81, bank_lsb: 0, prog_num: 4, level: 115, pan: 64, coarse: 0, lower: 0, upper: 127 },
+                    { active: true, patch: "[005] ViennaStrgs3", bank_msb: 80, bank_lsb: 0, prog_num: 5, level: 88, pan: 64, coarse: 0, lower: 0, upper: 127 },
+                    { active: false, patch: "---", bank_msb: 80, bank_lsb: 0, prog_num: 1, level: 100, pan: 64, coarse: 0, lower: 0, upper: 127 },
+                    { active: false, patch: "---", bank_msb: 80, bank_lsb: 0, prog_num: 1, level: 100, pan: 64, coarse: 0, lower: 0, upper: 127 }
+                ]
+            },
+            {
+                id: "preset_split",
+                name: "✂️ Key Bass",
+                color: "#D35400",
+                parts: [
+                    { active: true, patch: "[004] Nice Piano", bank_msb: 81, bank_lsb: 0, prog_num: 4, level: 115, pan: 64, coarse: 0, lower: 60, upper: 127 },
+                    { active: false, patch: "[016] SA Rhodes 1", bank_msb: 81, bank_lsb: 0, prog_num: 16, level: 105, pan: 64, coarse: 0, lower: 60, upper: 127 },
+                    { active: false, patch: "[018] Organ 2", bank_msb: 81, bank_lsb: 3, prog_num: 18, level: 100, pan: 64, coarse: 0, lower: 60, upper: 127 },
+                    { active: true, patch: "[095] Big Jazz Bs", bank_msb: 84, bank_lsb: 0, prog_num: 95, level: 110, pan: 64, coarse: 0, lower: 0, upper: 59 }
+                ]
+            },
+            {
+                id: "preset_trio",
+                name: "✨ Ballad Keys",
+                color: "#2980B9",
+                parts: [
+                    { active: true, patch: "[030] JV Rhodes+", bank_msb: 81, bank_lsb: 0, prog_num: 30, level: 124, pan: 64, coarse: 0, lower: 0, upper: 127 },
+                    { active: true, patch: "[009] MIDIed Grand", bank_msb: 81, bank_lsb: 0, prog_num: 9, level: 116, pan: 64, coarse: 0, lower: 0, upper: 127 },
+                    { active: true, patch: "[010] Piano Blend", bank_msb: 81, bank_lsb: 0, prog_num: 10, level: 114, pan: 64, coarse: 0, lower: 0, upper: 127 },
+                    { active: true, patch: "[031] EP+Mod Pad", bank_msb: 81, bank_lsb: 0, prog_num: 31, level: 109, pan: 64, coarse: 0, lower: 0, upper: 59 }
+                ]
+            },
+            {
+                id: "preset_quad",
+                name: "🎺 Brass",
+                color: "#8E44AD",
+                parts: [
+                    { active: true, patch: "[040] Soft Saxes", bank_msb: 84, bank_lsb: 0, prog_num: 40, level: 105, pan: 64, coarse: 0, lower: 0, upper: 127 },
+                    { active: true, patch: "[125] Voluntare", bank_msb: 81, bank_lsb: 1, prog_num: 125, level: 116, pan: 64, coarse: -12, lower: 0, upper: 127 },
+                    { active: true, patch: "[057] Trumpet", bank_msb: 81, bank_lsb: 3, prog_num: 57, level: 117, pan: 64, coarse: 0, lower: 0, upper: 127 },
+                    { active: true, patch: "[004] Brass Sect", bank_msb: 81, bank_lsb: 2, prog_num: 4, level: 82, pan: 64, coarse: 0, lower: 0, upper: 127 }
+                ]
+            }
+        ];
+
+        let quickPresets = [];
+
+        function loadQuickPresets() {
+            try {
+                const saved = localStorage.getItem("jv1010_quick_presets_custom");
+                if (saved) {
+                    quickPresets = JSON.parse(saved);
+                } else {
+                    quickPresets = JSON.parse(JSON.stringify(DEFAULT_QUICK_PRESETS));
+                }
+            } catch(e) {
+                console.warn("[QuickPresets] Erro ao carregar presets:", e);
+                quickPresets = JSON.parse(JSON.stringify(DEFAULT_QUICK_PRESETS));
+            }
+            renderQuickPresetsBar();
+        }
+
+        function saveQuickPresets() {
+            try {
+                localStorage.setItem("jv1010_quick_presets_custom", JSON.stringify(quickPresets));
+            } catch(e) {
+                console.error("[QuickPresets] Erro ao salvar presets no localStorage:", e);
+            }
+            renderQuickPresetsBar();
+        }
+
+        function renderQuickPresetsBar() {
+            const container = document.getElementById("quickPresetsContainer");
+            if (!container) return;
+
+            container.innerHTML = "";
+            quickPresets.forEach((item, index) => {
+                const btn = document.createElement("button");
+                btn.className = "btn-preset";
+                btn.style.background = item.color || "#2C3E50";
+                btn.style.borderColor = item.color || "#34495E";
+                btn.style.color = "#FFFFFF";
+                btn.style.fontWeight = "bold";
+                btn.style.cursor = "pointer";
+                btn.style.transition = "transform 0.1s ease, filter 0.15s ease";
+                btn.innerText = item.name;
+                btn.title = `Carregar combinação rápida #${index + 1}: ${item.name}`;
+                btn.onclick = () => applyQuickPresetByIndex(index);
+                container.appendChild(btn);
+            });
+        }
+
+        function applyQuickPresetByIndex(index) {
+            const preset = quickPresets[index];
+            if (!preset || !preset.parts) return;
+
+            preset.parts.forEach((p, idx) => {
+                if (idx < parts.length) {
+                    parts[idx].active = !!p.active;
+                    if (p.patch !== undefined) parts[idx].patch = p.patch;
+                    if (p.bank_msb !== undefined) parts[idx].bank_msb = p.bank_msb;
+                    if (p.bank_lsb !== undefined) parts[idx].bank_lsb = p.bank_lsb;
+                    if (p.prog_num !== undefined) parts[idx].prog_num = p.prog_num;
+                    if (p.level !== undefined) parts[idx].level = p.level;
+                    if (p.pan !== undefined) parts[idx].pan = p.pan;
+                    if (p.coarse !== undefined) parts[idx].coarse = p.coarse;
+                    if (p.lower !== undefined) parts[idx].lower = p.lower;
+                    if (p.upper !== undefined) parts[idx].upper = p.upper;
+                    if (p.reverb !== undefined) parts[idx].reverb = p.reverb;
+                    if (p.chorus !== undefined) parts[idx].chorus = p.chorus;
+                    if (p.output_assign !== undefined) parts[idx].output_assign = p.output_assign;
+                }
+            });
+
+            renderParts();
+            transmitPerformanceToHardware();
+        }
+
+        function openQuickPresetsManagerModal() {
+            renderQuickPresetsTable();
+            const modal = document.getElementById("modalQuickPresetsManager");
+            if (modal) modal.style.display = "flex";
+        }
+
+        function closeQuickPresetsManagerModal() {
+            const modal = document.getElementById("modalQuickPresetsManager");
+            if (modal) modal.style.display = "none";
+        }
+
+        function renderQuickPresetsTable() {
+            const tbody = document.getElementById("quickPresetsTableBody");
+            if (!tbody) return;
+
+            if (quickPresets.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:18px; color:#64748B;">Nenhum botão de combinação configurado. Clique em "➕ Salvar Atual como Botão" ou "⭐ Adicionar de Favorito".</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = quickPresets.map((item, idx) => {
+                const activePartsSummary = item.parts
+                    ? item.parts.map((p, pIdx) => p.active ? `<span style="display:inline-block; margin-right:4px; padding:1px 5px; border-radius:3px; background:#1E293B; border:1px solid #334155; font-size:10px; color:#38BDF8;">P${pIdx+1}: ${p.patch || 'ON'}</span>` : '')
+                          .filter(s => s !== '').join(' ')
+                    : '<span style="color:#64748B;">Sem dados</span>';
+
+                return `
+                    <tr style="border-bottom:1px solid #1E293B; background:${idx % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.02)'};">
+                        <td style="padding:8px; text-align:center; font-weight:bold; color:#64748B;">${idx + 1}</td>
+                        <td style="padding:8px;">
+                            <input type="text" value="${item.name.replace(/"/g, '&quot;')}" onchange="updateQuickPresetName(${idx}, this.value)" style="width:100%; box-sizing:border-box; background:#0B0E17; border:1px solid #334155; color:#F8FAFC; font-weight:bold; font-size:12px; padding:4px 7px; border-radius:4px; outline:none;" />
+                        </td>
+                        <td style="padding:8px; font-size:11px; line-height:1.5;">
+                            ${activePartsSummary || '<span style="color:#EF4444;">Todos desligados</span>'}
+                        </td>
+                        <td style="padding:8px; text-align:center;">
+                            <input type="color" value="${item.color || '#16A085'}" onchange="updateQuickPresetColor(${idx}, this.value)" style="width:28px; height:24px; border:none; border-radius:4px; cursor:pointer; background:transparent;" title="Escolher cor do botão" />
+                        </td>
+                        <td style="padding:8px; text-align:center;">
+                            <div style="display:flex; justify-content:center; gap:4px;">
+                                <button onclick="overwriteQuickPresetWithCurrent(${idx})" style="background:#0F766E; border:1px solid #14B8A6; color:#FFF; font-size:10px; padding:3px 6px; border-radius:4px; cursor:pointer;" title="Sobrescrever este slot com a combinação que está tocando agora">🔄 Atualizar</button>
+                                <button onclick="deleteQuickPreset(${idx})" style="background:#7F1D1D; border:1px solid #DC2626; color:#FFF; font-size:10px; padding:3px 6px; border-radius:4px; cursor:pointer;" title="Remover este botão">🗑️</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join("");
+        }
+
+        function updateQuickPresetName(idx, newName) {
+            if (!quickPresets[idx] || !newName.trim()) return;
+            quickPresets[idx].name = newName.trim();
+            saveQuickPresets();
+        }
+
+        function updateQuickPresetColor(idx, newColor) {
+            if (!quickPresets[idx]) return;
+            quickPresets[idx].color = newColor;
+            saveQuickPresets();
+        }
+
+        function addCurrentCombToQuickPresets() {
+            const name = prompt("Digite o nome para o novo botão de Combinação Rápida:", `Comb ${quickPresets.length + 1}`);
+            if (!name) return;
+
+            const palette = ["#16A085", "#D35400", "#2980B9", "#8E44AD", "#C0392B", "#27AE60", "#F39C12", "#008080"];
+            const color = palette[quickPresets.length % palette.length];
+
+            const newPreset = {
+                id: "quick_" + Date.now(),
+                name: name.trim(),
+                color: color,
+                parts: JSON.parse(JSON.stringify(parts))
+            };
+
+            quickPresets.push(newPreset);
+            saveQuickPresets();
+            renderQuickPresetsTable();
+        }
+
+        function addFavToQuickPresetsPrompt() {
+            if (!favoriteCombinations || favoriteCombinations.length === 0) {
+                alert("Você ainda não tem combinações salvas nos Favoritos.\nSalve uma combinação clicando em '⭐ Salvar nos Favoritos' antes de importar.");
+                return;
+            }
+
+            let msg = "Escolha o número da Combinação Favorita que deseja adicionar como Botão Rápido:\n\n";
+            favoriteCombinations.forEach((fav, i) => {
+                msg += `${i + 1}: ${fav.name}\n`;
+            });
+
+            const choice = prompt(msg, "1");
+            if (!choice) return;
+
+            const idx = parseInt(choice, 10) - 1;
+            if (isNaN(idx) || idx < 0 || idx >= favoriteCombinations.length) {
+                alert("Número inválido.");
+                return;
+            }
+
+            const fav = favoriteCombinations[idx];
+            const palette = ["#16A085", "#D35400", "#2980B9", "#8E44AD", "#C0392B", "#27AE60", "#F39C12", "#008080"];
+            const color = palette[quickPresets.length % palette.length];
+
+            const newPreset = {
+                id: "quick_" + Date.now(),
+                name: fav.name || `Fav ${idx + 1}`,
+                color: color,
+                parts: JSON.parse(JSON.stringify(fav.parts || parts))
+            };
+
+            quickPresets.push(newPreset);
+            saveQuickPresets();
+            renderQuickPresetsTable();
+            alert(`✓ "${newPreset.name}" adicionado com sucesso à barra de botões rápidos!`);
+        }
+
+        function overwriteQuickPresetWithCurrent(idx) {
+            if (!quickPresets[idx]) return;
+            if (!confirm(`Deseja sobrescrever o botão "${quickPresets[idx].name}" com a combinação e volumes atualmente ajustados na tela?`)) return;
+
+            quickPresets[idx].parts = JSON.parse(JSON.stringify(parts));
+            saveQuickPresets();
+            renderQuickPresetsTable();
+            alert(`✓ Slot "${quickPresets[idx].name}" atualizado com sucesso!`);
+        }
+
+        function deleteQuickPreset(idx) {
+            if (!quickPresets[idx]) return;
+            if (!confirm(`Deseja realmente excluir o botão "${quickPresets[idx].name}"?`)) return;
+
+            quickPresets.splice(idx, 1);
+            saveQuickPresets();
+            renderQuickPresetsTable();
+        }
+
+        function resetQuickPresetsToFactory() {
+            if (!confirm("Tem certeza que deseja restaurar os botões rápidos para a configuração padrão de fábrica?")) return;
+            quickPresets = JSON.parse(JSON.stringify(DEFAULT_QUICK_PRESETS));
+            saveQuickPresets();
+            renderQuickPresetsTable();
+        }
+
+        function exportQuickPresetsJSON() {
+            const dataToExport = {
+                app: "JV-1010 Live Stage Editor",
+                type: "quick_presets",
+                version: "2026.10",
+                exported_at: new Date().toISOString(),
+                presets: quickPresets
+            };
+
+            const jsonStr = JSON.stringify(dataToExport, null, 2);
+            const blob = new Blob([jsonStr], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            const dateStr = new Date().toISOString().split("T")[0];
+            a.href = url;
+            a.download = `JV1010_CombinacoesRapidas_${dateStr}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function importQuickPresetsFile(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    let list = [];
+                    if (Array.isArray(data)) {
+                        list = data;
+                    } else if (data.presets && Array.isArray(data.presets)) {
+                        list = data.presets;
+                    } else {
+                        throw new Error("Arquivo não contém um array de presets válido.");
+                    }
+
+                    const mode = confirm("Deseja SUBSTITUIR todos os botões atuais? (OK para Substituir / Cancelar para Adicionar ao final)")
+                        ? "replace" : "append";
+
+                    if (mode === "replace") {
+                        quickPresets = list;
+                    } else {
+                        quickPresets = quickPresets.concat(list);
+                    }
+
+                    saveQuickPresets();
+                    renderQuickPresetsTable();
+                    alert(`✓ Sucesso! ${list.length} combinações rápidas importadas.`);
+                } catch(err) {
+                    alert("Erro ao importar arquivo JSON: " + err.message);
+                }
+                event.target.value = "";
+            };
+            reader.readAsText(file);
+        }
+
         function applyPreset(type) {
             if (type === "dual") {
                 parts[0].active = true; parts[0].patch = "[004] Nice Piano"; parts[0].bank_msb = 81; parts[0].bank_lsb = 0; parts[0].prog_num = 4; parts[0].level = 115; parts[0].lower = 0; parts[0].upper = 127;
@@ -8675,6 +9001,7 @@
 
         // Inicialização
         applyZoom(currentZoom);
+        loadQuickPresets();
         loadPatches();
         renderParts();
         renderTones();
@@ -9336,5 +9663,75 @@
             </div>
         </div>
     </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL: GERENCIADOR DE COMBINAÇÕES RÁPIDAS   -->
+    <!-- (Edição, Criação de Slots, Exportação e Importação) -->
+    <!-- ========================================== -->
+    <div id="modalQuickPresetsManager" class="modal-backdrop" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:99999; justify-content:center; align-items:center; backdrop-filter:blur(4px);">
+        <div style="background:#111622; border:1px solid #38BDF8; border-radius:12px; width:94%; max-width:760px; padding:18px 20px; box-shadow:0 0 35px rgba(56,189,248,0.25); color:#E2E8F0; max-height:92vh; overflow-y:auto; display:flex; flex-direction:column; gap:14px;">
+            <!-- Topo do Modal -->
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #202D42; padding-bottom:10px;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <span style="font-size:16px; font-weight:800; color:#38BDF8; display:flex; align-items:center; gap:6px;">
+                        <span>🎛️ Gerenciar Combinações Rápidas (Quick Presets)</span>
+                    </span>
+                </div>
+                <button onclick="closeQuickPresetsManagerModal()" style="background:transparent; border:none; color:#94A3B8; font-size:20px; cursor:pointer; font-weight:bold; line-height:1;">✕</button>
+            </div>
+
+            <!-- Descrição e Dica de Uso -->
+            <div style="background:#172033; border:1px solid #1E293B; border-radius:8px; padding:10px 14px; font-size:12px; color:#94A3B8; line-height:1.5;">
+                <strong style="color:#F8FAFC;">Personalize a barra de acesso rápido da aba Comb:</strong> adicione novas combinações a partir do que você estiver ouvindo agora ou traga uma das suas <strong style="color:#FBBF24;">Combinações Favoritas Salvas</strong>. Exporte em JSON para ter cópias externas no seu celular, tablet ou computador e importe quando quiser!
+            </div>
+
+            <!-- Barra de Ações Rápidas -->
+            <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+                <button onclick="addCurrentCombToQuickPresets()" style="background:#0284C7; border:1px solid #38BDF8; color:#FFF; font-weight:700; font-size:11px; padding:6px 12px; border-radius:6px; cursor:pointer; display:flex; align-items:center; gap:5px; box-shadow:0 0 10px rgba(56,189,248,0.3);">
+                    <span>➕ Salvar Atual como Botão</span>
+                </button>
+                <button onclick="addFavToQuickPresetsPrompt()" style="background:#7C3AED; border:1px solid #A78BFA; color:#FFF; font-weight:700; font-size:11px; padding:6px 12px; border-radius:6px; cursor:pointer; display:flex; align-items:center; gap:5px; box-shadow:0 0 10px rgba(167,139,250,0.3);">
+                    <span>⭐ Adicionar de Favorito...</span>
+                </button>
+                
+                <div style="margin-left:auto; display:flex; gap:8px; flex-wrap:wrap;">
+                    <button onclick="exportQuickPresetsJSON()" style="background:#0D9488; border:1px solid #2DD4BF; color:#FFF; font-size:11px; font-weight:700; padding:6px 12px; border-radius:6px; cursor:pointer; display:flex; align-items:center; gap:5px;">
+                        <span>📥 Exportar Backup (.json)</span>
+                    </button>
+                    <label style="background:#2563EB; border:1px solid #60A5FA; color:#FFF; font-size:11px; font-weight:700; padding:6px 12px; border-radius:6px; cursor:pointer; display:flex; align-items:center; gap:5px;">
+                        <span>📤 Importar (.json)</span>
+                        <input type="file" id="importQuickPresetsFileInput" accept=".json" style="display:none;" onchange="importQuickPresetsFile(event)">
+                    </label>
+                    <button onclick="resetQuickPresetsToFactory()" style="background:#334155; border:1px solid #64748B; color:#CBD5E1; font-size:11px; padding:6px 10px; border-radius:6px; cursor:pointer;" title="Restaurar os 4 botões padrão de fábrica">
+                        <span>🔄 Restaurar Padrões</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tabela de Gerenciamento das Combinações Rápidas -->
+            <div style="border:1px solid #1E293B; border-radius:8px; overflow:hidden; background:#0B0E17;">
+                <table style="width:100%; border-collapse:collapse; font-size:12px; text-align:left;">
+                    <thead>
+                        <tr style="background:#161E2E; color:#94A3B8; border-bottom:1px solid #1E293B;">
+                            <th style="padding:8px 10px; width:45px; text-align:center;">#</th>
+                            <th style="padding:8px 10px; width:190px;">Nome do Botão</th>
+                            <th style="padding:8px 10px;">Configuração dos 4 Parts</th>
+                            <th style="padding:8px 10px; width:65px; text-align:center;">Cor</th>
+                            <th style="padding:8px 10px; width:150px; text-align:center;">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="quickPresetsTableBody">
+                        <!-- Linhas geradas dinamicamente via JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Rodapé do Modal -->
+            <div style="display:flex; justify-content:flex-end; gap:10px; border-top:1px solid #202D42; padding-top:10px; margin-top:4px;">
+                <button onclick="closeQuickPresetsManagerModal()" style="background:#0284C7; border:1px solid #38BDF8; color:#FFF; font-weight:bold; font-size:12px; padding:7px 20px; border-radius:6px; cursor:pointer;">Concluído</button>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
