@@ -2123,15 +2123,50 @@
             <div class="filter-toolbar">
                 <div class="filter-group">
                     <span class="filter-label">Filtrar Categoria:</span>
-                    <select id="catFilter" class="select-filter" onchange="filterPatches()">
-                        <option value="ALL" selected>Todas as Categorias</option>
-                        <option value="PIANO">PIANO</option>
-                        <option value="KEY&ORGAN">KEY&ORGAN</option>
-                        <option value="GUITAR/BASS">GUITAR/BASS</option>
-                        <option value="ORCH/BRASS">ORCH/BRASS</option>
-                        <option value="SYNTH/PAD">SYNTH/PAD</option>
-                        <option value="ETHNIC">ETHNIC</option>
-                        <option value="RHYTHM&SFX">RHYTHM&SFX</option>
+                    <select id="catFilter" class="select-filter" style="min-width:185px; font-weight:800; color:#00E5FF; background:#0B0E14; border:1px solid #00E5FF; border-radius:5px; padding:4px 10px; cursor:pointer;" onchange="filterPatches()">
+                        <option value="ALL" selected>Todas as Categorias (Ver Todos)</option>
+                        <optgroup label="🎹 Teclados & Pianos">
+                            <option value="Acoustic Piano">Acoustic Piano (PNO)</option>
+                            <option value="Electric Piano">Electric Piano (EP)</option>
+                            <option value="Keyboard">Keyboard (KEY)</option>
+                            <option value="Organ">Organ (ORG)</option>
+                            <option value="Clavinet">Clavinet (CLAV)</option>
+                            <option value="Accordion">Accordion (ACD)</option>
+                            <option value="Harmonica">Harmonica (HRM)</option>
+                        </optgroup>
+                        <optgroup label="🎻 Cordas & Orquestra">
+                            <option value="Strings">Strings (STR)</option>
+                            <option value="Orchestra">Orchestra (ORC)</option>
+                            <option value="Brass">Brass (BRS)</option>
+                            <option value="Wind">Wind (WND)</option>
+                        </optgroup>
+                        <optgroup label="🎸 Cordas Dedilhadas & Baixos">
+                            <option value="Guitar">Guitar (GT)</option>
+                            <option value="Bass">Bass (BS)</option>
+                        </optgroup>
+                        <optgroup label="🌊 Sintetizadores & Ambiências">
+                            <option value="Synth">Synth (SYN)</option>
+                            <option value="Pad">Pad (PAD)</option>
+                            <option value="Bell">Bell (BEL)</option>
+                            <option value="Mallet">Mallet (MLT)</option>
+                            <option value="Voice">Voice (VOX)</option>
+                        </optgroup>
+                        <optgroup label="🥁 Ritmo, Percussão & Efeitos">
+                            <option value="Drums & Percussion">Drums & Percussion (DRM)</option>
+                            <option value="Beats/Loops">Beats/Loops (BPM)</option>
+                            <option value="Ethnic">Ethnic (ETH)</option>
+                            <option value="SFX">SFX (Efeitos Sonoros)</option>
+                            <option value="Others">Others (Outros)</option>
+                        </optgroup>
+                        <optgroup label="🎛️ Grupos do Dial Roland (Macro)">
+                            <option value="HW:PIANO">Grupo Hardware: PIANO</option>
+                            <option value="HW:KEY&ORGAN">Grupo Hardware: KEY&ORGAN</option>
+                            <option value="HW:GUITAR/BASS">Grupo Hardware: GUITAR/BASS</option>
+                            <option value="HW:ORCH/BRASS">Grupo Hardware: ORCH/BRASS</option>
+                            <option value="HW:SYNTH/PAD">Grupo Hardware: SYNTH/PAD</option>
+                            <option value="HW:ETHNIC">Grupo Hardware: ETHNIC</option>
+                            <option value="HW:RHYTHM&SFX">Grupo Hardware: RHYTHM&SFX</option>
+                        </optgroup>
                     </select>
                 </div>
 
@@ -5528,8 +5563,37 @@
             const search = document.getElementById("searchInput").value.toLowerCase().trim();
 
             currentFilteredPatches = allPatches.filter(p => {
-                if (cat !== "ALL" && p.hw_main_cat !== cat) return false;
+                // 1. Filtro Amplo de Categorias
+                if (cat !== "ALL") {
+                    if (cat.startsWith("HW:")) {
+                        // Filtro de macro-grupo de hardware do dial
+                        const hwGroup = cat.replace("HW:", "");
+                        if (p.hw_main_cat !== hwGroup) return false;
+                    } else {
+                        // Filtro fino por categoria ampla individual (ex: Electric Piano, Strings, Organ, etc.)
+                        const pCat = (p.studio_cat || p.hw_sub_cat || p.category || "").toLowerCase();
+                        const filterCat = cat.toLowerCase();
+                        // Casamento exato ou inclusivo (ex: "Piano" em "Acoustic Piano" vs "Electric Piano")
+                        if (filterCat === "others") {
+                            if (pCat !== "others" && pCat !== "expansion") return false;
+                        } else if (filterCat === "drums & percussion") {
+                            if (!pCat.includes("drum") && !pCat.includes("perc")) return false;
+                        } else if (filterCat === "beats/loops") {
+                            if (!pCat.includes("loop") && !pCat.includes("beat")) return false;
+                        } else if (filterCat === "acoustic piano") {
+                            if (pCat !== "acoustic piano" && !pCat.includes("ac.piano") && pCat !== "piano") return false;
+                        } else if (filterCat === "electric piano") {
+                            if (pCat !== "electric piano" && !pCat.includes("el.piano") && !pCat.includes("ep")) return false;
+                        } else {
+                            if (!pCat.includes(filterCat)) return false;
+                        }
+                    }
+                }
+
+                // 2. Filtro de Banco
                 if (bank !== "ALL" && p.bank !== bank) return false;
+
+                // 3. Busca Textual por Nome ou Número
                 if (search) {
                     const matchName = p.name.toLowerCase().includes(search);
                     const matchProg = String(p.prog).includes(search);
