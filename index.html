@@ -9229,25 +9229,26 @@
         }
 
         // ========================================================
-        // NAVEGAÇÃO ENTRE ABAS COM TRAVA POR PRESSÃO LONGA (500ms)
-        // (Permite arrastar para o lado apenas após segurar 500ms em ponto neutro)
+        // NAVEGAÇÃO ENTRE ABAS COM TRAVA POR PRESSÃO (500ms) E SWIPE NO CABEÇALHO
         // ========================================================
         const TAB_ORDER = ["patches", "combination", "synth", "favorites", "live"];
         let tabHoldTimer = null;
         let tabHoldStartX = 0;
         let tabHoldStartY = 0;
         let isTabSwipeUnlocked = false;
-        let isTouchInInteractiveElement = false;
+        let isDirectHeaderSwipe = false;
+        let isTouchInInteractiveControl = false;
 
         const tabHoldIndicator = document.getElementById("tabHoldIndicator");
         const tabHoldCircleBar = document.getElementById("tabHoldCircleBar");
         const tabHoldIcon = document.getElementById("tabHoldIcon");
         const tabHoldHint = document.getElementById("tabHoldHint");
 
-        function isInteractiveElement(target) {
-            if (!target || target === document.body || target === document.documentElement) return false;
-            // Se o toque iniciou em botão, fader, input, seletor, linha de tabela selecionável, card móvel ou canvas
-            if (target.closest('button, input, select, textarea, .synth-param-slider, .part-fx-slider, .hardware-knob-container, .patches-table tr, .modal-backdrop, .modal-overlay, canvas, .column-card, .show-card, .song-card')) {
+        // Apenas controles reais de manipulação de parâmetros (faders, botões de ação direta, inputs, canvas) bloqueiam
+        function isStrictInteractiveControl(target) {
+            if (!target) return false;
+            // Bloqueia se o toque começou diretamente em fader, botão de ação, campo de texto, canvas ou modal aberto
+            if (target.closest('button, input, select, textarea, .synth-param-slider, .part-fx-slider, .hardware-knob-container, canvas, .modal-backdrop, .modal-overlay, .btn-preset, .btn-act-all, .btn-transmit')) {
                 return true;
             }
             return false;
@@ -9259,7 +9260,8 @@
                 tabHoldTimer = null;
             }
             isTabSwipeUnlocked = false;
-            isTouchInInteractiveElement = false;
+            isDirectHeaderSwipe = false;
+            isTouchInInteractiveControl = false;
 
             if (tabHoldIndicator) {
                 tabHoldIndicator.classList.remove("active", "unlocked");
@@ -9271,29 +9273,39 @@
         }
 
         window.addEventListener("touchstart", (e) => {
-            // Apenas toque único é avaliado para troca de abas
             if (e.touches.length !== 1) {
                 cancelTabHoldGesture();
                 return;
             }
 
             const target = e.target;
-            // Se tocou dentro de elemento interativo (slider, botão, etc), não inicia a trava de abas
-            if (isInteractiveElement(target)) {
-                isTouchInInteractiveElement = true;
-                return;
-            }
-
-            isTouchInInteractiveElement = false;
-            isTabSwipeUnlocked = false;
             const touch = e.touches[0];
             tabHoldStartX = touch.clientX;
             tabHoldStartY = touch.clientY;
 
-            // Posiciona o anel indicador onde o dedo pousou
+            // 1. Caso o toque comece na barra superior de abas / cabeçalho:
+            // Permite arrastar IMEDIATAMENTE (sem precisar esperar 500ms)!
+            if (target.closest('.header, .tab-bar, .tab-btn')) {
+                isDirectHeaderSwipe = true;
+                isTabSwipeUnlocked = true;
+                isTouchInInteractiveControl = false;
+                return;
+            }
+
+            // 2. Se tocou em um fader, botão de ação, knob ou input, não dispara troca de abas
+            if (isStrictInteractiveControl(target)) {
+                isTouchInInteractiveControl = true;
+                return;
+            }
+
+            // 3. Toque em área neutra / fundo da tela: ARMA A TRAVA DE 500ms
+            isTouchInInteractiveControl = false;
+            isDirectHeaderSwipe = false;
+            isTabSwipeUnlocked = false;
+
             if (tabHoldIndicator) {
                 tabHoldIndicator.style.left = `${tabHoldStartX}px`;
-                tabHoldIndicator.style.top = `${tabHoldStartY - 38}px`; // um pouco acima da ponta do dedo
+                tabHoldIndicator.style.top = `${Math.max(45, tabHoldStartY - 45)}px`;
                 tabHoldIndicator.classList.remove("unlocked");
                 tabHoldIndicator.classList.add("active");
                 if (tabHoldIcon) tabHoldIcon.innerText = "🔒";
@@ -9309,7 +9321,7 @@
                 });
             }
 
-            // Inicia o cronômetro rigoroso de 500ms
+            // Dispara após 500ms
             tabHoldTimer = setTimeout(() => {
                 isTabSwipeUnlocked = true;
                 if (tabHoldIndicator) {
@@ -9318,66 +9330,69 @@
                     if (tabHoldHint) tabHoldHint.innerText = "← Deslize para mudar →";
                 }
 
-                // Feedback tátil com vibração haptic se suportado pelo navegador
+                // Vibração haptic tátil de destravamento
                 if (navigator.vibrate) {
-                    try { navigator.vibrate(30); } catch(_) {}
+                    try { navigator.vibrate(35); } catch(_) {}
                 }
             }, 500);
         }, { passive: true });
 
         window.addEventListener("touchmove", (e) => {
-            if (isTouchInInteractiveElement || e.touches.length !== 1) return;
+            if (isTouchInInteractiveControl || e.touches.length !== 1) return;
 
             const touch = e.touches[0];
             const deltaX = touch.clientX - tabHoldStartX;
             const deltaY = touch.clientY - tabHoldStartY;
 
-            // Se o usuário moveu o dedo mais de 15px antes dos 500ms, cancela (estava apenas rolando a tela)
-            if (!isTabSwipeUnlocked) {
-                if (Math.hypot(deltaX, deltaY) > 16) {
+            // Se for swipe de cabeçalho direto, já está destravado
+            if (!isDirectHeaderSwipe && !isTabSwipeUnlocked) {
+                // Tolerância aumentada para 28px para não cancelar por tremores naturais da mão
+                if (Math.hypot(deltaX, deltaY) > 28) {
                     cancelTabHoldGesture();
                 }
-            } else {
-                // Já destravou! Atualiza a dica visual indicando qual aba vai entrar
-                if (tabHoldIndicator) {
-                    tabHoldIndicator.style.left = `${touch.clientX}px`;
-                    tabHoldIndicator.style.top = `${touch.clientY - 38}px`;
-                }
+                return;
+            }
 
-                const currentIdx = TAB_ORDER.indexOf(currentTab);
-                if (deltaX < -30 && currentIdx < TAB_ORDER.length - 1) {
-                    const nextTab = TAB_ORDER[currentIdx + 1];
-                    const nextNames = { combination: "Comb", synth: "Síntese", favorites: "Favoritos", live: "Palco Live" };
-                    if (tabHoldHint) tabHoldHint.innerText = `Ir para: ${nextNames[nextTab] || nextTab} ➔`;
-                } else if (deltaX > 30 && currentIdx > 0) {
-                    const prevTab = TAB_ORDER[currentIdx - 1];
-                    const prevNames = { patches: "Lista", combination: "Comb", synth: "Síntese", favorites: "Favoritos" };
-                    if (tabHoldHint) tabHoldHint.innerText = `⬅️ Ir para: ${prevNames[prevTab] || prevTab}`;
-                } else {
-                    if (tabHoldHint) tabHoldHint.innerText = "← Deslize para mudar →";
-                }
+            // Estado destravado: exibe dica em tempo real para onde a aba vai mudar
+            if (tabHoldIndicator && !isDirectHeaderSwipe) {
+                tabHoldIndicator.style.left = `${touch.clientX}px`;
+                tabHoldIndicator.style.top = `${Math.max(45, touch.clientY - 45)}px`;
+            }
+
+            const currentIdx = TAB_ORDER.indexOf(currentTab);
+            const tabNames = { patches: "📑 Lista", combination: "🎹 Comb", synth: "🎛️ Síntese", favorites: "⭐ Favoritos", live: "🎤 Palco Live" };
+
+            if (deltaX < -35 && currentIdx < TAB_ORDER.length - 1) {
+                const nextTab = TAB_ORDER[currentIdx + 1];
+                if (tabHoldHint) tabHoldHint.innerText = `Ir para: ${tabNames[nextTab] || nextTab} ➔`;
+            } else if (deltaX > 35 && currentIdx > 0) {
+                const prevTab = TAB_ORDER[currentIdx - 1];
+                if (tabHoldHint) tabHoldHint.innerText = `⬅️ Ir para: ${tabNames[prevTab] || prevTab}`;
+            } else {
+                if (tabHoldHint) tabHoldHint.innerText = "← Deslize para mudar →";
             }
         }, { passive: true });
 
         window.addEventListener("touchend", (e) => {
-            if (isTouchInInteractiveElement) {
+            if (isTouchInInteractiveControl) {
                 cancelTabHoldGesture();
                 return;
             }
 
-            if (isTabSwipeUnlocked) {
+            if (isTabSwipeUnlocked || isDirectHeaderSwipe) {
                 const touch = e.changedTouches[0];
                 const deltaX = touch.clientX - tabHoldStartX;
                 const deltaY = Math.abs(touch.clientY - tabHoldStartY);
 
-                // Gesto de Swipe horizontal com pelo menos 40px
-                if (Math.abs(deltaX) > 40 && deltaY < 80) {
+                // Swipe horizontal detectado (mínimo 35px no cabeçalho ou 45px na tela)
+                const minThreshold = isDirectHeaderSwipe ? 30 : 40;
+                if (Math.abs(deltaX) > minThreshold && deltaY < 120) {
                     const currentIdx = TAB_ORDER.indexOf(currentTab);
                     if (deltaX < 0 && currentIdx < TAB_ORDER.length - 1) {
-                        // Arrasta para a esquerda: avança aba
+                        // Arrasta para a esquerda: avança para a próxima aba
                         switchTab(TAB_ORDER[currentIdx + 1]);
                     } else if (deltaX > 0 && currentIdx > 0) {
-                        // Arrasta para a direita: volta aba
+                        // Arrasta para a direita: volta para a aba anterior
                         switchTab(TAB_ORDER[currentIdx - 1]);
                     }
                 }
