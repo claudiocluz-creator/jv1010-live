@@ -2025,11 +2025,126 @@
             white-space: nowrap;
             box-shadow: 0 2px 8px rgba(0,0,0,0.6);
             transition: all 0.2s ease;
-        }
         #tabHoldIndicator.unlocked .tab-hold-hint {
             color: #2ECC71;
             border-color: #2ECC71;
             box-shadow: 0 0 10px rgba(46, 204, 113, 0.4);
+        }
+
+        /* DRUM KIT EDITOR: ALMOFADAS PRO AUDIO (ESTILO MPC / HARDWARE REALISTA) */
+        .drum-pads-rack {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            background: linear-gradient(180deg, #121824 0%, #0A0E17 100%);
+            border: 1px solid #202A3C;
+            border-radius: 12px;
+            padding: 12px;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.8), 0 4px 14px rgba(0,0,0,0.5);
+            margin-bottom: 14px;
+        }
+        @media (max-width: 600px) {
+            .drum-pads-rack {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+                padding: 8px;
+            }
+        }
+        .drum-pad-cushion {
+            background: linear-gradient(180deg, #242E40 0%, #171E2C 100%);
+            border: 1px solid #334155;
+            border-radius: 9px;
+            padding: 12px 6px 10px 6px;
+            min-height: 82px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.12), inset 0 -2px 0 rgba(0,0,0,0.5);
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            -webkit-tap-highlight-color: transparent;
+        }
+        .drum-pad-cushion:hover {
+            border-color: #475569;
+            background: linear-gradient(180deg, #2A364C 0%, #1C2536 100%);
+        }
+        .drum-pad-cushion:active {
+            transform: scale(0.97) translateY(2px);
+            box-shadow: inset 0 3px 6px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.4);
+        }
+        .drum-pad-cushion.active-pad {
+            background: linear-gradient(180deg, #1C2B3F 0%, #101B2B 100%);
+            border-color: #00E5FF;
+            box-shadow: 0 0 14px rgba(0, 229, 255, 0.35), inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.6);
+        }
+        .drum-pad-cushion.active-pad .drum-pad-led {
+            background: #00E5FF;
+            box-shadow: 0 0 8px #00E5FF, inset 0 0 2px #FFF;
+        }
+        .drum-pad-led {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #252D3E;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.9);
+            transition: all 0.2s ease;
+        }
+        .drum-pad-header {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 4px;
+        }
+        .drum-pad-note-tag {
+            font-family: monospace;
+            font-size: 9px;
+            font-weight: 800;
+            color: #64748B;
+            letter-spacing: 0.5px;
+        }
+        .drum-pad-cushion.active-pad .drum-pad-note-tag {
+            color: #38BDF8;
+        }
+        .drum-pad-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            margin: 4px 0;
+        }
+        .drum-pad-icon {
+            font-size: 22px;
+            line-height: 1;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
+        }
+        .drum-pad-title {
+            font-size: 11px;
+            font-weight: 800;
+            color: #E2E8F0;
+            letter-spacing: 0.4px;
+            text-align: center;
+            line-height: 1.2;
+            word-break: break-word;
+        }
+        .drum-pad-cushion.active-pad .drum-pad-title {
+            color: #00E5FF;
+            text-shadow: 0 0 6px rgba(0, 229, 255, 0.5);
+        }
+        .drum-pad-footer {
+            font-size: 9px;
+            font-family: monospace;
+            font-weight: 700;
+            color: #72829D;
+            text-transform: uppercase;
+        }
+        .drum-pad-cushion.active-pad .drum-pad-footer {
+            color: #94A3B8;
         }
     </style>
 </head>
@@ -8757,10 +8872,16 @@
             container.innerHTML = DRUM_PIECES.map((d, i) => {
                 const isSel = (i === selectedDrumIndex);
                 return `
-                    <div onclick="selectDrumPiece(${i})" style="background:${isSel ? '#2D1F0E' : '#14141E'}; border:1px solid ${isSel ? '#F59E0B' : '#2A2A38'}; border-radius:8px; padding:10px 8px; cursor:pointer; text-align:center; transition:all 0.15s ease; box-shadow:${isSel ? '0 0 10px rgba(245,158,11,0.35)' : 'none'};">
-                        <div style="font-size:20px; margin-bottom:4px;">${d.icon}</div>
-                        <div style="font-size:11px; font-weight:bold; color:${isSel ? '#F59E0B' : '#FFF'}; margin-bottom:2px;">${d.name}</div>
-                        <div style="font-size:9.5px; color:#8E8E9E;">Nota MIDI: ${d.note}</div>
+                    <div class="drum-pad-cushion ${isSel ? 'active-pad' : ''}" onclick="selectDrumPiece(${i})" id="drumPad_${i}" title="${d.name} (Nota ${d.note})">
+                        <div class="drum-pad-header">
+                            <span class="drum-pad-note-tag">N.${d.note}</span>
+                            <span class="drum-pad-led"></span>
+                        </div>
+                        <div class="drum-pad-center">
+                            <span class="drum-pad-icon">${d.icon}</span>
+                            <span class="drum-pad-title">${d.name}</span>
+                        </div>
+                        <div class="drum-pad-footer">PAD ${i + 1}</div>
                     </div>
                 `;
             }).join("");
@@ -9836,65 +9957,65 @@
     <!-- (Afinação, Volume, Pan e Reverb por Peça)  -->
     <!-- ========================================== -->
     <div class="modal-overlay" id="modalDrumKitEditor" onclick="closeDrumKitModal(event)">
-        <div class="modal-box" onclick="event.stopPropagation()" style="max-width:860px; width:95%; background:#101018; border:1px solid #F59E0B; border-radius:12px; padding:16px 18px; box-shadow:0 15px 40px rgba(245,158,11,0.25); max-height:92vh; overflow-y:auto;">
+        <div class="modal-box" onclick="event.stopPropagation()" style="max-width:860px; width:95%; background:linear-gradient(180deg, #131A26 0%, #0D121B 100%); border:1px solid #2B374E; border-radius:14px; padding:18px 20px; box-shadow:0 18px 50px rgba(0,0,0,0.8), 0 0 1px rgba(0,229,255,0.4); max-height:92vh; overflow-y:auto;">
             <!-- Topo do Modal -->
-            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #202035; padding-bottom:8px; margin-bottom:12px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #1E2838; padding-bottom:10px; margin-bottom:14px;">
                 <div style="display:flex; align-items:center; gap:10px;">
-                    <span style="font-weight:bold; color:#F59E0B; font-size:14px; display:flex; align-items:center; gap:6px;">
-                        🥁 Drum Kit Editor (Roland JV-1010)
+                    <span style="font-weight:900; color:#F8FAFC; font-size:14px; display:flex; align-items:center; gap:8px; letter-spacing:0.5px;">
+                        🥁 DRUM KIT EDITOR <span style="font-size:10px; color:#00E5FF; background:rgba(0,229,255,0.12); padding:2px 6px; border-radius:4px; border:1px solid rgba(0,229,255,0.3);">CANAL 10</span>
                     </span>
-                    <span style="font-size:10px; color:#8E8E9E;">Canal 10 (Rhythm Set)</span>
+                    <span style="font-size:11px; color:#72829D; font-family:monospace;">Roland JV-1010 Rhythm Set</span>
                 </div>
-                <button class="btn-close-modal" onclick="closeDrumKitModal()" style="background:#242436; border:1px solid #444460; color:#FFF; font-size:14px; font-weight:bold; width:26px; height:26px; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center;">✕</button>
+                <button class="btn-close-modal" onclick="closeDrumKitModal()" style="background:#172030; border:1px solid #2D3B52; color:#E2E8F0; font-size:13px; font-weight:bold; width:28px; height:28px; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.15s;">✕</button>
             </div>
 
-            <!-- Grid com Pads Interativos de Bateria (Kick, Snare, HiHat, Toms, Crash, Ride) -->
-            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap:8px; margin-bottom:14px;" id="drumPadsGrid">
+            <!-- Rack com Almofadas Interativas de Bateria (Estilo MPC / Hardware Realista) -->
+            <div class="drum-pads-rack" id="drumPadsGrid">
                 <!-- Injetado dinamicamente via renderDrumPads() -->
             </div>
 
             <!-- Painel de Edição da Peça Selecionada -->
-            <div style="background:#131320; border:1px solid #202035; border-radius:8px; padding:12px 14px; margin-bottom:12px;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; border-bottom:1px solid #1E1E2C; padding-bottom:6px;">
-                    <div style="display:flex; align-items:center; gap:8px;">
-                        <span id="drumSelectedPieceName" style="font-size:13px; font-weight:bold; color:#F59E0B;">🥁 Bumbo (Kick 1 - Nota 36)</span>
-                        <button onclick="previewCurrentDrumPiece()" style="background:#F59E0B; border:none; color:#000; font-size:11px; font-weight:bold; padding:2px 8px; border-radius:4px; cursor:pointer;">▶ Tocar Som</button>
+            <div style="background:linear-gradient(180deg, #161F2E 0%, #0F1521 100%); border:1px solid #243044; border-radius:10px; padding:14px 16px; margin-bottom:14px; box-shadow:inset 0 1px 0 rgba(255,255,255,0.06), 0 4px 12px rgba(0,0,0,0.5);">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid #1C2636; padding-bottom:8px;">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <span id="drumSelectedPieceName" style="font-size:13px; font-weight:800; color:#38BDF8; letter-spacing:0.4px;">🥁 Bumbo (Kick 1 - Nota 36)</span>
+                        <button onclick="previewCurrentDrumPiece()" style="background:linear-gradient(180deg, #1C2B3F 0%, #122030 100%); border:1px solid #38BDF8; color:#F0F9FF; font-size:11px; font-weight:800; padding:3px 10px; border-radius:5px; cursor:pointer; box-shadow:0 0 8px rgba(56,189,248,0.25);">▶ Testar Pad</button>
                     </div>
                 </div>
 
                 <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:12px;">
                     <!-- Afinação (Pitch Coarse) -->
-                    <div>
-                        <div style="display:flex; justify-content:space-between; font-size:10.5px; font-weight:bold; margin-bottom:3px;">
-                            <span style="color:#8E8E9E;">Afinação (Pitch):</span>
-                            <span id="valDrumPitch" style="color:#F59E0B; font-family:monospace;">0 semitons</span>
+                    <div style="background:#0D131C; border:1px solid #1E2838; border-radius:6px; padding:8px 10px;">
+                        <div style="display:flex; justify-content:space-between; font-size:10.5px; font-weight:800; margin-bottom:4px;">
+                            <span style="color:#72829D; text-transform:uppercase;">Afinação (Pitch):</span>
+                            <span id="valDrumPitch" style="color:#F59E0B; font-family:monospace; font-size:12px;">0 semitons</span>
                         </div>
                         <input type="range" id="sldDrumPitch" min="-24" max="24" value="0" class="synth-param-slider" style="width:100%; height:16px; accent-color:#F59E0B;" oninput="onDrumParamChange('pitch', this.value)">
                     </div>
 
                     <!-- Volume / Level -->
-                    <div>
-                        <div style="display:flex; justify-content:space-between; font-size:10.5px; font-weight:bold; margin-bottom:3px;">
-                            <span style="color:#8E8E9E;">Volume (Level):</span>
-                            <span id="valDrumLevel" style="color:#2ECC71; font-family:monospace;">127</span>
+                    <div style="background:#0D131C; border:1px solid #1E2838; border-radius:6px; padding:8px 10px;">
+                        <div style="display:flex; justify-content:space-between; font-size:10.5px; font-weight:800; margin-bottom:4px;">
+                            <span style="color:#72829D; text-transform:uppercase;">Volume (Level):</span>
+                            <span id="valDrumLevel" style="color:#10B981; font-family:monospace; font-size:12px;">127</span>
                         </div>
-                        <input type="range" id="sldDrumLevel" min="0" max="127" value="127" class="synth-param-slider" style="width:100%; height:16px; accent-color:#2ECC71;" oninput="onDrumParamChange('level', this.value)">
+                        <input type="range" id="sldDrumLevel" min="0" max="127" value="127" class="synth-param-slider" style="width:100%; height:16px; accent-color:#10B981;" oninput="onDrumParamChange('level', this.value)">
                     </div>
 
                     <!-- Pan Estéreo -->
-                    <div>
-                        <div style="display:flex; justify-content:space-between; font-size:10.5px; font-weight:bold; margin-bottom:3px;">
-                            <span style="color:#8E8E9E;">Panorâmico:</span>
-                            <span id="valDrumPan" style="color:#00E5FF; font-family:monospace;">Center</span>
+                    <div style="background:#0D131C; border:1px solid #1E2838; border-radius:6px; padding:8px 10px;">
+                        <div style="display:flex; justify-content:space-between; font-size:10.5px; font-weight:800; margin-bottom:4px;">
+                            <span style="color:#72829D; text-transform:uppercase;">Panorâmico:</span>
+                            <span id="valDrumPan" style="color:#00E5FF; font-family:monospace; font-size:12px;">Center</span>
                         </div>
                         <input type="range" id="sldDrumPan" min="0" max="127" value="64" class="synth-param-slider" style="width:100%; height:16px; accent-color:#00E5FF;" oninput="onDrumParamChange('pan', this.value)">
                     </div>
 
                     <!-- Reverb Send -->
-                    <div>
-                        <div style="display:flex; justify-content:space-between; font-size:10.5px; font-weight:bold; margin-bottom:3px;">
-                            <span style="color:#8E8E9E;">Reverb Send:</span>
-                            <span id="valDrumReverb" style="color:#A78BFA; font-family:monospace;">40</span>
+                    <div style="background:#0D131C; border:1px solid #1E2838; border-radius:6px; padding:8px 10px;">
+                        <div style="display:flex; justify-content:space-between; font-size:10.5px; font-weight:800; margin-bottom:4px;">
+                            <span style="color:#72829D; text-transform:uppercase;">Reverb Send:</span>
+                            <span id="valDrumReverb" style="color:#A78BFA; font-family:monospace; font-size:12px;">40</span>
                         </div>
                         <input type="range" id="sldDrumReverb" min="0" max="127" value="40" class="synth-param-slider" style="width:100%; height:16px; accent-color:#A78BFA;" oninput="onDrumParamChange('reverb', this.value)">
                     </div>
@@ -9903,7 +10024,7 @@
 
             <!-- Rodapé do Modal -->
             <div style="display:flex; justify-content:flex-end;">
-                <button class="btn-close-modal" onclick="closeDrumKitModal()" style="background:#242436; border:1px solid #444460; color:#FFF; font-size:12px; font-weight:bold; padding:6px 18px; border-radius:5px; cursor:pointer;">Concluir</button>
+                <button class="btn-close-modal" onclick="closeDrumKitModal()" style="background:linear-gradient(180deg, #1C2B3F 0%, #122030 100%); border:1px solid #38BDF8; color:#F0F9FF; font-size:12px; font-weight:800; padding:8px 22px; border-radius:6px; cursor:pointer; box-shadow:0 0 10px rgba(56,189,248,0.25); letter-spacing:0.4px;">Concluir</button>
             </div>
         </div>
     </div>

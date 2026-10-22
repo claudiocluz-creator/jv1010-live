@@ -1,4 +1,4 @@
-const CACHE_NAME = 'jv1010-live-v20261022-short-categories';
+const CACHE_NAME = 'jv1010-live-v20261022-drum-pads-pro-audio';
 const STATIC_ASSETS = [
   './',
   './index.html',
