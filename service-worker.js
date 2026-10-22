@@ -1,4 +1,4 @@
-const CACHE_NAME = 'jv1010-live-v20261022-drum-pads-grid-fixed';
+const CACHE_NAME = 'jv1010-live-v20261022-pro-audio-global-theme';
 const STATIC_ASSETS = [
   './',
   './index.html',
