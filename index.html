@@ -773,7 +773,7 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            height: 90%;
+            height: 100%;
             font-size: 7.5px;
             font-family: monospace;
             font-weight: 700;
@@ -782,6 +782,9 @@
             padding-right: 1px;
             text-align: right;
             line-height: 1;
+            box-sizing: border-box;
+            padding-top: 2px;
+            padding-bottom: 2px;
         }
 
         /* Barra de LED Simulada (VU-Meter Estilo Mesa Digital / Synth Module) */
@@ -790,7 +793,7 @@
             flex-direction: column;
             justify-content: space-between;
             width: 5px;
-            height: 88%;
+            height: 100%;
             background: #06090E;
             border: 1px solid #172030;
             border-radius: 2px;
@@ -823,6 +826,7 @@
             background: transparent;
             touch-action: pan-x !important;
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
+            box-sizing: border-box;
         }
 
         /* Estilização Realista de Cap Metálico nos Navegadores */

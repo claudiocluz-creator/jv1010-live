@@ -1,4 +1,4 @@
-const CACHE_NAME = 'jv1010-live-v20261024-fader-and-section-fix';
+const CACHE_NAME = 'jv1010-live-v20261024-fader-vu-align';
 const STATIC_ASSETS = [
   './',
   './index.html',
