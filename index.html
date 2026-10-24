@@ -2257,33 +2257,296 @@
             border-color: #60A5FA;
         }
 
-        /* --- TEMA 1: STUDIO HARDWARE PRO (GRAFITE METÁLICO & LEDS PONTUAIS) --- */
+        /* ========================================================
+           SISTEMA DE TEMAS VISUAIS DE ÁUDIO PRO (THEME SWITCHER TOTAL - 100% GUI)
+           Transforma 100% de absolutamente todos os elementos da interface:
+           1. default: Cores Originais Neon/Vibrantes
+           2. studio-pro: Studio Hardware Pro (Grafite Neutro & Acentos Azul Aço / Faders Aço / LEDs Ice Blue)
+           3. ableton-min: Ableton / Logic Minimal (Chassi Dark Carvão & Âmbar Dourado Suave)
+           4. roland-amber: Roland Titanium & Warm Amber Vintage (Preto Titânio & Monocromático Âmbar)
+           ======================================================== */
+        .theme-selector-dropdown {
+            background: #111827;
+            border: 1px solid #374151;
+            color: #F3F4F6;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.2s;
+            height: 26px;
+        }
+
+        /* -------------------------------------------------------------
+           TEMA 1: 🎚️ STUDIO HARDWARE PRO (GRAFITE METÁLICO & AZUL AÇO)
+           ------------------------------------------------------------- */
         body[data-theme="studio-pro"] {
-            background: #0B0E14 !important;
+            background: #0D1117 !important;
             color: #E2E8F0 !important;
         }
+        body[data-theme="studio-pro"] #appContainer {
+            background: #0D1117 !important;
+        }
         body[data-theme="studio-pro"] .header {
-            background: linear-gradient(180deg, #171E2B 0%, #0F141E 100%) !important;
-            border-bottom: 1px solid #28354A !important;
+            background: linear-gradient(180deg, #1A2230 0%, #121824 100%) !important;
+            border-bottom: 1px solid #2D3A4F !important;
+        }
+        body[data-theme="studio-pro"] .title {
+            color: #F1F5F9 !important;
+            text-shadow: none !important;
+        }
+        body[data-theme="studio-pro"] .tab-bar {
+            background: #0B0E14 !important;
+            border-color: #242E40 !important;
         }
         body[data-theme="studio-pro"] .tab-btn {
-            background: #1A2230 !important;
-            border: 1px solid #2B384E !important;
+            background: transparent !important;
+            border-color: transparent !important;
             color: #94A3B8 !important;
         }
         body[data-theme="studio-pro"] .tab-btn.active {
             background: linear-gradient(180deg, #2D3A50 0%, #1E2738 100%) !important;
-            border-color: #64748B !important;
+            border: 1px solid #475569 !important;
             color: #F8FAFC !important;
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.15), 0 2px 4px rgba(0,0,0,0.6) !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.5) !important;
         }
         body[data-theme="studio-pro"] #tabBtnLive {
-            background: #1A2230 !important;
-            border-color: #2B384E !important;
+            background: transparent !important;
+            border-color: transparent !important;
             color: #94A3B8 !important;
         }
         body[data-theme="studio-pro"] #tabBtnLive.active {
             background: linear-gradient(180deg, #2D3A50 0%, #1E2738 100%) !important;
+            border-color: #38BDF8 !important;
+            color: #38BDF8 !important;
+        }
+        body[data-theme="studio-pro"] .zoom-control {
+            background: #111722 !important;
+            border-color: #2D3A4F !important;
+            color: #CBD5E1 !important;
+        }
+        body[data-theme="studio-pro"] .zoom-btn {
+            background: #172030 !important;
+            border-color: #334155 !important;
+            color: #CBD5E1 !important;
+        }
+
+        /* Barra MIDI no Studio Pro */
+        body[data-theme="studio-pro"] #midiConnectionBar {
+            background: #111722 !important;
+            border: 1px solid #2D3A4F !important;
+            box-shadow: none !important;
+        }
+        body[data-theme="studio-pro"] #midiConnectionBar span,
+        body[data-theme="studio-pro"] #webMidiSelect {
+            color: #CBD5E1 !important;
+            border-color: #334155 !important;
+            background: #0B0E14 !important;
+        }
+        body[data-theme="studio-pro"] #midiConnectionBar button {
+            background: #1A2333 !important;
+            border: 1px solid #334155 !important;
+            color: #CBD5E1 !important;
+            box-shadow: none !important;
+        }
+        body[data-theme="studio-pro"] #midiConnectionBar button:hover {
+            background: #253145 !important;
+            border-color: #475569 !important;
+            color: #FFFFFF !important;
+        }
+        body[data-theme="studio-pro"] #connBadge {
+            border-color: #475569 !important;
+            color: #94A3B8 !important;
+            background: #0B0E14 !important;
+        }
+        body[data-theme="studio-pro"] #connBadgeText {
+            color: #94A3B8 !important;
+        }
+        body[data-theme="studio-pro"] .btn-thru {
+            background: #1A2333 !important;
+            border: 1px solid #334155 !important;
+            color: #94A3B8 !important;
+        }
+        body[data-theme="studio-pro"] .btn-thru.active {
+            background: #253347 !important;
+            border-color: #38BDF8 !important;
+            color: #38BDF8 !important;
+        }
+
+        /* Abas Principais */
+        body[data-theme="studio-pro"] #tabCombination,
+        body[data-theme="studio-pro"] #tabPatches,
+        body[data-theme="studio-pro"] #tabFavorites,
+        body[data-theme="studio-pro"] #tabSynth,
+        body[data-theme="studio-pro"] #tabLive {
+            background: #0D1117 !important;
+        }
+
+        /* Barra de Efeitos Globais & Sliders */
+        body[data-theme="studio-pro"] .comb-fx-bar {
+            background: #121824 !important;
+            border: 1px solid #242E40 !important;
+        }
+        body[data-theme="studio-pro"] .comb-fx-bar > div {
+            background: #161F2E !important;
+            border: 1px solid #2D3A4F !important;
+        }
+        body[data-theme="studio-pro"] .comb-fx-bar span {
+            color: #94A3B8 !important;
+        }
+        body[data-theme="studio-pro"] #selCombEfxType {
+            background: #0B0E14 !important;
+            border: 1px solid #334155 !important;
+            color: #E2E8F0 !important;
+        }
+        body[data-theme="studio-pro"] #btnCombBypassEfx {
+            background: #1E2738 !important;
+            border: 1px solid #38BDF8 !important;
+            color: #38BDF8 !important;
+        }
+        body[data-theme="studio-pro"] #btnOpenEqModalComb {
+            background: #1E2738 !important;
+            border: 1px solid #475569 !important;
+            color: #E2E8F0 !important;
+            box-shadow: none !important;
+        }
+        body[data-theme="studio-pro"] .synth-param-slider {
+            accent-color: #38BDF8 !important;
+        }
+        body[data-theme="studio-pro"] #valCombRev,
+        body[data-theme="studio-pro"] #valCombCho,
+        body[data-theme="studio-pro"] #valCombMasterVol {
+            color: #CBD5E1 !important;
+        }
+
+        /* Drone Pad & Ferramentas */
+        body[data-theme="studio-pro"] .continuous-pad-bar {
+            background: #101622 !important;
+            border: 1px solid #242E40 !important;
+        }
+        body[data-theme="studio-pro"] .continuous-pad-tag {
+            color: #64748B !important;
+        }
+        body[data-theme="studio-pro"] .continuous-pad-key {
+            background: #141A24 !important;
+            border: 1px solid #28354A !important;
+            color: #94A3B8 !important;
+        }
+        body[data-theme="studio-pro"] .continuous-pad-key.active-pad {
+            background: #1E293B !important;
+            border-color: #38BDF8 !important;
+            color: #38BDF8 !important;
+        }
+        body[data-theme="studio-pro"] .continuous-pad-stop {
+            background: #1E2738 !important;
+            border: 1px solid #475569 !important;
+            color: #94A3B8 !important;
+        }
+        body[data-theme="studio-pro"] .btn-act-all {
+            background: #1A2333 !important;
+            border: 1px solid #38BDF8 !important;
+            color: #93C5FD !important;
+            box-shadow: none !important;
+        }
+        body[data-theme="studio-pro"] .magic-wand-btn {
+            background: #1A2333 !important;
+            border: 1px solid #334155 !important;
+            color: #94A3B8 !important;
+            box-shadow: none !important;
+        }
+
+        /* Cards das 4 Parts (Canal Strips) */
+        body[data-theme="studio-pro"] .column-card {
+            background: linear-gradient(180deg, #171E2B 0%, #101622 100%) !important;
+            border: 1px solid #2B384E !important;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 4px 12px rgba(0,0,0,0.6) !important;
+        }
+        body[data-theme="studio-pro"] .column-card.active-part {
+            border-color: #4A5D7C !important;
+            box-shadow: 0 0 12px rgba(56, 189, 248, 0.15) !important;
+        }
+        body[data-theme="studio-pro"] .part-left-fader-panel {
+            background: #0F141F !important;
+            border: 1px solid #222C3E !important;
+        }
+        body[data-theme="studio-pro"] .part-fader-input-full::-webkit-slider-thumb,
+        body[data-theme="studio-pro"] .part-fader-input-full::-moz-range-thumb {
+            background: linear-gradient(180deg, #CBD5E1 0%, #94A3B8 30%, #475569 70%, #1E293B 100%) !important;
+            border-color: #0F172A !important;
+        }
+        body[data-theme="studio-pro"] .part-fader-numeric {
+            background: #090D14 !important;
+            border-color: #1E2838 !important;
+            color: #E2E8F0 !important;
+        }
+        body[data-theme="studio-pro"] .patch-box {
+            background: #0A0E16 !important;
+            border: 1px solid #243044 !important;
+            color: #E2E8F0 !important;
+        }
+        body[data-theme="studio-pro"] .btn-toggle {
+            background: linear-gradient(180deg, #1E2738 0%, #131A26 100%) !important;
+            border: 1px solid #2F3D55 !important;
+            color: #94A3B8 !important;
+        }
+        body[data-theme="studio-pro"] .btn-toggle.active {
+            background: linear-gradient(180deg, #2D3A50 0%, #1B2433 100%) !important;
+            border-color: #38BDF8 !important;
+            color: #F8FAFC !important;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.4) !important;
+        }
+        body[data-theme="studio-pro"] .hardware-knob-container,
+        body[data-theme="studio-pro"] .stepper-row,
+        body[data-theme="studio-pro"] .part-fx-grid,
+        body[data-theme="studio-pro"] .part-out-row,
+        body[data-theme="studio-pro"] .range-row {
+            background: #0E131C !important;
+            border: 1px solid #1E2838 !important;
+        }
+        body[data-theme="studio-pro"] .knob-cap-rotary {
+            background: radial-gradient(circle at 40% 35%, #94A3B8 0%, #475569 50%, #1E293B 100%) !important;
+            border: 2px solid #0F172A !important;
+        }
+        body[data-theme="studio-pro"] .stepper-btn {
+            background: #172030 !important;
+            border: 1px solid #2D3B52 !important;
+            color: #CBD5E1 !important;
+        }
+        body[data-theme="studio-pro"] .stepper-val {
+            color: #E2E8F0 !important;
+        }
+        body[data-theme="studio-pro"] .part-fx-val {
+            color: #38BDF8 !important;
+        }
+        body[data-theme="studio-pro"] .part-fx-slider {
+            accent-color: #38BDF8 !important;
+        }
+        body[data-theme="studio-pro"] .part-out-btn {
+            background: #172030 !important;
+            border: 1px solid #2D3B52 !important;
+            color: #CBD5E1 !important;
+        }
+        body[data-theme="studio-pro"] .part-out-btn.efx {
+            border-color: #38BDF8 !important;
+            color: #38BDF8 !important;
+        }
+        body[data-theme="studio-pro"] .range-span-val {
+            color: #94A3B8 !important;
+        }
+        body[data-theme="studio-pro"] .range-select {
+            background: #0B0E14 !important;
+            border: 1px solid #2D3A4F !important;
+            color: #CBD5E1 !important;
+        }
+        body[data-theme="studio-pro"] .part-pedal-btn {
+            background: #141A24 !important;
+            border: 1px solid #28354A !important;
+            color: #64748B !important;
+        }
+        body[data-theme="studio-pro"] .part-pedal-btn.active {
+            background: #1E293B !important;
             border-color: #38BDF8 !important;
             color: #38BDF8 !important;
         }
@@ -2293,81 +2556,302 @@
         body[data-theme="studio-pro"] .btn-part-dest,
         body[data-theme="studio-pro"] .btn-preset-eq,
         body[data-theme="studio-pro"] .setlist-nav-btn {
-            background: linear-gradient(180deg, #242D3D 0%, #18202C 100%) !important;
+            background: linear-gradient(180deg, #202938 0%, #161D28 100%) !important;
             border: 1px solid #334155 !important;
             color: #CBD5E1 !important;
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 1px 3px rgba(0,0,0,0.5) !important;
-        }
-        body[data-theme="studio-pro"] .btn-preset:hover,
-        body[data-theme="studio-pro"] .synth-btn:hover {
-            background: #2D3748 !important;
-            color: #FFFFFF !important;
-            border-color: #4A5568 !important;
+            box-shadow: none !important;
         }
         body[data-theme="studio-pro"] .btn-transmit {
-            background: linear-gradient(180deg, #374151 0%, #1F2937 100%) !important;
-            border: 1px solid #4B5563 !important;
-            color: #F9FAFB !important;
+            background: linear-gradient(180deg, #334155 0%, #1E293B 100%) !important;
+            border: 1px solid #475569 !important;
+            color: #F8FAFC !important;
             box-shadow: 0 0 8px rgba(0,0,0,0.4) !important;
         }
-        body[data-theme="studio-pro"] .btn-act-all {
-            background: linear-gradient(180deg, #242D3D 0%, #18202C 100%) !important;
-            border: 1px solid #475569 !important;
-            color: #38BDF8 !important;
-            box-shadow: none !important;
-        }
-        body[data-theme="studio-pro"] .magic-wand-btn {
-            background: linear-gradient(180deg, #242D3D 0%, #18202C 100%) !important;
-            border: 1px solid #475569 !important;
-            color: #CBD5E1 !important;
-            box-shadow: none !important;
-        }
         body[data-theme="studio-pro"] .btn-panic {
-            background: linear-gradient(180deg, #3F2326 0%, #2A1719 100%) !important;
+            background: linear-gradient(180deg, #371D22 0%, #221215 100%) !important;
             border: 1px solid #7F1D1D !important;
             color: #FCA5A5 !important;
             box-shadow: 0 2px 6px rgba(0,0,0,0.5) !important;
         }
-        body[data-theme="studio-pro"] .continuous-pad-key {
-            background: #141A24 !important;
-            border-color: #28354A !important;
+        body[data-theme="studio-pro"] .badge {
+            background: #0F141F !important;
+            border-color: #2B384E !important;
             color: #94A3B8 !important;
         }
-        body[data-theme="studio-pro"] .continuous-pad-key.active-pad {
-            background: #1E293B !important;
-            border-color: #38BDF8 !important;
-            color: #38BDF8 !important;
+        body[data-theme="studio-pro"] .quick-label {
+            color: #94A3B8 !important;
         }
 
-        /* --- TEMA 2: ABLETON / LOGIC MINIMALISTA (TRANSLÚCIDO E FOCO ÚNICO) --- */
+        /* -------------------------------------------------------------
+           TEMA 2: 🎛️ ABLETON / LOGIC MINIMAL (CARVÃO PROFUNDO & ÂMBAR SUAVE)
+           ------------------------------------------------------------- */
         body[data-theme="ableton-min"] {
-            background: #18181A !important;
+            background: #121214 !important;
             color: #D4D4D8 !important;
         }
+        body[data-theme="ableton-min"] #appContainer {
+            background: #121214 !important;
+        }
         body[data-theme="ableton-min"] .header {
-            background: #1F1F23 !important;
+            background: #18181B !important;
             border-bottom: 1px solid #27272A !important;
+        }
+        body[data-theme="ableton-min"] .title {
+            color: #F4F4F5 !important;
+            text-shadow: none !important;
+        }
+        body[data-theme="ableton-min"] .tab-bar {
+            background: #09090B !important;
+            border-color: #27272A !important;
         }
         body[data-theme="ableton-min"] .tab-btn {
             background: transparent !important;
-            border: 1px solid transparent !important;
-            color: #A1A1AA !important;
-            box-shadow: none !important;
+            border-color: transparent !important;
+            color: #71717A !important;
         }
         body[data-theme="ableton-min"] .tab-btn.active {
             background: #27272A !important;
-            color: #FAFAFA !important;
             border: 1px solid #3F3F46 !important;
+            color: #FAFAFA !important;
+            box-shadow: none !important;
         }
         body[data-theme="ableton-min"] #tabBtnLive {
             background: transparent !important;
             border-color: transparent !important;
-            color: #A1A1AA !important;
+            color: #71717A !important;
         }
         body[data-theme="ableton-min"] #tabBtnLive.active {
             background: #27272A !important;
-            color: #34D399 !important;
-            border: 1px solid #059669 !important;
+            border-color: #D97706 !important;
+            color: #FBBF24 !important;
+        }
+        body[data-theme="ableton-min"] .zoom-control {
+            background: #18181B !important;
+            border-color: #27272A !important;
+            color: #A1A1AA !important;
+        }
+        body[data-theme="ableton-min"] .zoom-btn {
+            background: #202024 !important;
+            border-color: #2E2E33 !important;
+            color: #A1A1AA !important;
+        }
+
+        /* Barra MIDI no Ableton Minimal */
+        body[data-theme="ableton-min"] #midiConnectionBar {
+            background: #18181B !important;
+            border: 1px solid #27272A !important;
+            box-shadow: none !important;
+        }
+        body[data-theme="ableton-min"] #midiConnectionBar span,
+        body[data-theme="ableton-min"] #webMidiSelect {
+            color: #A1A1AA !important;
+            border-color: #3F3F46 !important;
+            background: #09090B !important;
+        }
+        body[data-theme="ableton-min"] #midiConnectionBar button {
+            background: #202024 !important;
+            border: 1px solid #36363E !important;
+            color: #D4D4D8 !important;
+            box-shadow: none !important;
+        }
+        body[data-theme="ableton-min"] #midiConnectionBar button:hover {
+            background: #2C2C33 !important;
+            border-color: #4B4B55 !important;
+            color: #FFFFFF !important;
+        }
+        body[data-theme="ableton-min"] #connBadge {
+            border-color: #3F3F46 !important;
+            color: #71717A !important;
+            background: #09090B !important;
+        }
+        body[data-theme="ableton-min"] #connBadgeText {
+            color: #71717A !important;
+        }
+        body[data-theme="ableton-min"] .btn-thru {
+            background: #202024 !important;
+            border: 1px solid #36363E !important;
+            color: #71717A !important;
+        }
+        body[data-theme="ableton-min"] .btn-thru.active {
+            background: #2E2E36 !important;
+            border-color: #D97706 !important;
+            color: #FBBF24 !important;
+        }
+
+        /* Abas Principais */
+        body[data-theme="ableton-min"] #tabCombination,
+        body[data-theme="ableton-min"] #tabPatches,
+        body[data-theme="ableton-min"] #tabFavorites,
+        body[data-theme="ableton-min"] #tabSynth,
+        body[data-theme="ableton-min"] #tabLive {
+            background: #121214 !important;
+        }
+
+        /* Barra de Efeitos Globais & Sliders */
+        body[data-theme="ableton-min"] .comb-fx-bar {
+            background: #18181B !important;
+            border: 1px solid #27272A !important;
+        }
+        body[data-theme="ableton-min"] .comb-fx-bar > div {
+            background: #202024 !important;
+            border: 1px solid #2E2E33 !important;
+        }
+        body[data-theme="ableton-min"] .comb-fx-bar span {
+            color: #A1A1AA !important;
+        }
+        body[data-theme="ableton-min"] #selCombEfxType {
+            background: #09090B !important;
+            border: 1px solid #3F3F46 !important;
+            color: #E4E4E7 !important;
+        }
+        body[data-theme="ableton-min"] #btnCombBypassEfx {
+            background: #27272A !important;
+            border: 1px solid #D97706 !important;
+            color: #FBBF24 !important;
+        }
+        body[data-theme="ableton-min"] #btnOpenEqModalComb {
+            background: #222226 !important;
+            border: 1px solid #3F3F46 !important;
+            color: #D4D4D8 !important;
+            box-shadow: none !important;
+        }
+        body[data-theme="ableton-min"] .synth-param-slider {
+            accent-color: #D97706 !important;
+        }
+        body[data-theme="ableton-min"] #valCombRev,
+        body[data-theme="ableton-min"] #valCombCho,
+        body[data-theme="ableton-min"] #valCombMasterVol {
+            color: #D4D4D8 !important;
+        }
+
+        /* Drone Pad & Ferramentas */
+        body[data-theme="ableton-min"] .continuous-pad-bar {
+            background: #141416 !important;
+            border: 1px solid #242427 !important;
+        }
+        body[data-theme="ableton-min"] .continuous-pad-tag {
+            color: #71717A !important;
+        }
+        body[data-theme="ableton-min"] .continuous-pad-key {
+            background: #1A1A1E !important;
+            border: 1px solid #27272A !important;
+            color: #A1A1AA !important;
+        }
+        body[data-theme="ableton-min"] .continuous-pad-key.active-pad {
+            background: #D97706 !important;
+            border-color: #F59E0B !important;
+            color: #000000 !important;
+            font-weight: 900 !important;
+        }
+        body[data-theme="ableton-min"] .continuous-pad-stop {
+            background: #202024 !important;
+            border: 1px solid #2E2E33 !important;
+            color: #71717A !important;
+        }
+        body[data-theme="ableton-min"] .btn-act-all {
+            background: rgba(255,255,255,0.05) !important;
+            border: 1px solid rgba(255,255,255,0.12) !important;
+            color: #E4E4E7 !important;
+            box-shadow: none !important;
+        }
+        body[data-theme="ableton-min"] .magic-wand-btn {
+            background: rgba(255,255,255,0.03) !important;
+            border: 1px solid rgba(255,255,255,0.08) !important;
+            color: #71717A !important;
+            box-shadow: none !important;
+        }
+
+        /* Cards das 4 Parts (Canal Strips) */
+        body[data-theme="ableton-min"] .column-card {
+            background: #19191C !important;
+            border: 1px solid #27272A !important;
+            box-shadow: none !important;
+        }
+        body[data-theme="ableton-min"] .column-card.active-part {
+            border-color: #3F3F46 !important;
+        }
+        body[data-theme="ableton-min"] .part-left-fader-panel {
+            background: #141416 !important;
+            border: 1px solid #242427 !important;
+        }
+        body[data-theme="ableton-min"] .part-fader-input-full::-webkit-slider-thumb,
+        body[data-theme="ableton-min"] .part-fader-input-full::-moz-range-thumb {
+            background: #E4E4E7 !important;
+            border: 1px solid #18181B !important;
+        }
+        body[data-theme="ableton-min"] .part-fader-numeric {
+            background: #09090B !important;
+            border-color: #27272A !important;
+            color: #FAFAFA !important;
+        }
+        body[data-theme="ableton-min"] .patch-box {
+            background: #0F0F11 !important;
+            border: 1px solid #27272A !important;
+            color: #FAFAFA !important;
+        }
+        body[data-theme="ableton-min"] .btn-toggle {
+            background: #202024 !important;
+            border: 1px solid #2E2E33 !important;
+            color: #71717A !important;
+        }
+        body[data-theme="ableton-min"] .btn-toggle.active {
+            background: #27272A !important;
+            border-color: #D97706 !important;
+            color: #FBBF24 !important;
+            box-shadow: none !important;
+        }
+        body[data-theme="ableton-min"] .hardware-knob-container,
+        body[data-theme="ableton-min"] .stepper-row,
+        body[data-theme="ableton-min"] .part-fx-grid,
+        body[data-theme="ableton-min"] .part-out-row,
+        body[data-theme="ableton-min"] .range-row {
+            background: #141416 !important;
+            border: 1px solid #242427 !important;
+        }
+        body[data-theme="ableton-min"] .knob-cap-rotary {
+            background: #27272A !important;
+            border: 2px solid #141416 !important;
+        }
+        body[data-theme="ableton-min"] .stepper-btn {
+            background: #202024 !important;
+            border: 1px solid #2E2E33 !important;
+            color: #D4D4D8 !important;
+        }
+        body[data-theme="ableton-min"] .stepper-val {
+            color: #FAFAFA !important;
+        }
+        body[data-theme="ableton-min"] .part-fx-val {
+            color: #D97706 !important;
+        }
+        body[data-theme="ableton-min"] .part-fx-slider {
+            accent-color: #D97706 !important;
+        }
+        body[data-theme="ableton-min"] .part-out-btn {
+            background: #202024 !important;
+            border: 1px solid #2E2E33 !important;
+            color: #A1A1AA !important;
+        }
+        body[data-theme="ableton-min"] .part-out-btn.efx {
+            border-color: #D97706 !important;
+            color: #FBBF24 !important;
+        }
+        body[data-theme="ableton-min"] .range-span-val {
+            color: #71717A !important;
+        }
+        body[data-theme="ableton-min"] .range-select {
+            background: #09090B !important;
+            border: 1px solid #2E2E33 !important;
+            color: #D4D4D8 !important;
+        }
+        body[data-theme="ableton-min"] .part-pedal-btn {
+            background: #18181B !important;
+            border: 1px solid #27272A !important;
+            color: #71717A !important;
+        }
+        body[data-theme="ableton-min"] .part-pedal-btn.active {
+            background: #27272A !important;
+            border-color: #D97706 !important;
+            color: #FBBF24 !important;
         }
         body[data-theme="ableton-min"] .btn-preset,
         body[data-theme="ableton-min"] .synth-btn,
@@ -2376,14 +2860,9 @@
         body[data-theme="ableton-min"] .btn-preset-eq,
         body[data-theme="ableton-min"] .setlist-nav-btn {
             background: rgba(255,255,255,0.04) !important;
-            border: 1px solid rgba(255,255,255,0.1) !important;
+            border: 1px solid rgba(255,255,255,0.08) !important;
             color: #D4D4D8 !important;
             box-shadow: none !important;
-        }
-        body[data-theme="ableton-min"] .btn-preset:hover,
-        body[data-theme="ableton-min"] .synth-btn:hover {
-            background: rgba(255,255,255,0.08) !important;
-            color: #FFFFFF !important;
         }
         body[data-theme="ableton-min"] .btn-transmit {
             background: #D97706 !important;
@@ -2392,65 +2871,291 @@
             font-weight: 900 !important;
             box-shadow: 0 0 10px rgba(245, 158, 11, 0.3) !important;
         }
-        body[data-theme="ableton-min"] .btn-act-all {
-            background: rgba(255,255,255,0.06) !important;
-            border: 1px solid rgba(255,255,255,0.15) !important;
-            color: #E4E4E7 !important;
-            box-shadow: none !important;
-        }
-        body[data-theme="ableton-min"] .magic-wand-btn {
-            background: rgba(255,255,255,0.04) !important;
-            border: 1px solid rgba(255,255,255,0.1) !important;
-            color: #A1A1AA !important;
-            box-shadow: none !important;
-        }
         body[data-theme="ableton-min"] .btn-panic {
-            background: #3F1D24 !important;
-            border: 1px solid #712938 !important;
+            background: #2D1418 !important;
+            border: 1px solid #541F27 !important;
             color: #F87171 !important;
             box-shadow: none !important;
         }
-        body[data-theme="ableton-min"] .continuous-pad-key {
-            background: #202024 !important;
-            border-color: #2E2E34 !important;
+        body[data-theme="ableton-min"] .badge {
+            background: #18181B !important;
+            border-color: #27272A !important;
             color: #A1A1AA !important;
         }
-        body[data-theme="ableton-min"] .continuous-pad-key.active-pad {
-            background: #F59E0B !important;
-            border-color: #F59E0B !important;
-            color: #000000 !important;
-            font-weight: 900 !important;
+        body[data-theme="ableton-min"] .quick-label {
+            color: #71717A !important;
         }
 
-        /* --- TEMA 3: ROLAND TITANIUM & WARM AMBER VINTAGE --- */
+        /* -------------------------------------------------------------
+           TEMA 3: 📻 ROLAND TITANIUM & WARM AMBER VINTAGE (MONOCROMÁTICO ÂMBAR)
+           ------------------------------------------------------------- */
         body[data-theme="roland-amber"] {
-            background: #0E0D0C !important;
-            color: #E6E1DC !important;
+            background: #0C0A09 !important;
+            color: #E7E5E4 !important;
+        }
+        body[data-theme="roland-amber"] #appContainer {
+            background: #0C0A09 !important;
         }
         body[data-theme="roland-amber"] .header {
             background: linear-gradient(180deg, #1C1917 0%, #12100E 100%) !important;
             border-bottom: 1px solid #332B25 !important;
         }
+        body[data-theme="roland-amber"] .title {
+            color: #FBBF24 !important;
+            text-shadow: 0 0 8px rgba(245, 158, 11, 0.3) !important;
+        }
+        body[data-theme="roland-amber"] .tab-bar {
+            background: #080706 !important;
+            border-color: #29231E !important;
+        }
         body[data-theme="roland-amber"] .tab-btn {
-            background: #171412 !important;
-            border: 1px solid #2B241E !important;
+            background: transparent !important;
+            border-color: transparent !important;
             color: #A8A29E !important;
         }
         body[data-theme="roland-amber"] .tab-btn.active {
             background: linear-gradient(180deg, #382D22 0%, #241D16 100%) !important;
-            border-color: #F59E0B !important;
+            border: 1px solid #B45309 !important;
             color: #FBBF24 !important;
             box-shadow: 0 0 8px rgba(245, 158, 11, 0.25) !important;
         }
         body[data-theme="roland-amber"] #tabBtnLive {
-            background: #171412 !important;
-            border-color: #2B241E !important;
+            background: transparent !important;
+            border-color: transparent !important;
             color: #A8A29E !important;
         }
         body[data-theme="roland-amber"] #tabBtnLive.active {
             background: linear-gradient(180deg, #382D22 0%, #241D16 100%) !important;
-            border-color: #D97706 !important;
+            border-color: #F59E0B !important;
+            color: #FDE68A !important;
+        }
+        body[data-theme="roland-amber"] .zoom-control {
+            background: #14110F !important;
+            border-color: #382D22 !important;
+            color: #FBBF24 !important;
+        }
+        body[data-theme="roland-amber"] .zoom-btn {
+            background: #1F1914 !important;
+            border-color: #4A3A2C !important;
+            color: #FBBF24 !important;
+        }
+
+        /* Barra MIDI no Roland Amber */
+        body[data-theme="roland-amber"] #midiConnectionBar {
+            background: #14110F !important;
+            border: 1px solid #382D22 !important;
+            box-shadow: 0 0 8px rgba(245, 158, 11, 0.15) !important;
+        }
+        body[data-theme="roland-amber"] #midiConnectionBar span,
+        body[data-theme="roland-amber"] #webMidiSelect {
+            color: #FBBF24 !important;
+            border-color: #78350F !important;
+            background: #080706 !important;
+        }
+        body[data-theme="roland-amber"] #midiConnectionBar button {
+            background: #1E1712 !important;
+            border: 1px solid #5C3214 !important;
+            color: #FBBF24 !important;
+            box-shadow: none !important;
+        }
+        body[data-theme="roland-amber"] #midiConnectionBar button:hover {
+            background: #2D2119 !important;
+            border-color: #B45309 !important;
+            color: #FFF !important;
+        }
+        body[data-theme="roland-amber"] #connBadge {
+            border-color: #78350F !important;
             color: #F59E0B !important;
+            background: #080706 !important;
+        }
+        body[data-theme="roland-amber"] #connBadgeText {
+            color: #F59E0B !important;
+        }
+        body[data-theme="roland-amber"] .btn-thru {
+            background: #1E1712 !important;
+            border: 1px solid #5C3214 !important;
+            color: #B45309 !important;
+        }
+        body[data-theme="roland-amber"] .btn-thru.active {
+            background: #382D22 !important;
+            border-color: #F59E0B !important;
+            color: #FDE68A !important;
+        }
+
+        /* Abas Principais */
+        body[data-theme="roland-amber"] #tabCombination,
+        body[data-theme="roland-amber"] #tabPatches,
+        body[data-theme="roland-amber"] #tabFavorites,
+        body[data-theme="roland-amber"] #tabSynth,
+        body[data-theme="roland-amber"] #tabLive {
+            background: #0C0A09 !important;
+        }
+
+        /* Barra de Efeitos Globais & Sliders */
+        body[data-theme="roland-amber"] .comb-fx-bar {
+            background: #14110F !important;
+            border: 1px solid #2D241E !important;
+        }
+        body[data-theme="roland-amber"] .comb-fx-bar > div {
+            background: #1C1713 !important;
+            border: 1px solid #3D322B !important;
+        }
+        body[data-theme="roland-amber"] .comb-fx-bar span {
+            color: #D6D3D1 !important;
+        }
+        body[data-theme="roland-amber"] #selCombEfxType {
+            background: #0A0807 !important;
+            border: 1px solid #5C3214 !important;
+            color: #FDE68A !important;
+        }
+        body[data-theme="roland-amber"] #btnCombBypassEfx {
+            background: #382D22 !important;
+            border: 1px solid #F59E0B !important;
+            color: #FBBF24 !important;
+        }
+        body[data-theme="roland-amber"] #btnOpenEqModalComb {
+            background: #251D17 !important;
+            border: 1px solid #78350F !important;
+            color: #FBBF24 !important;
+            box-shadow: none !important;
+        }
+        body[data-theme="roland-amber"] .synth-param-slider {
+            accent-color: #F59E0B !important;
+        }
+        body[data-theme="roland-amber"] #valCombRev,
+        body[data-theme="roland-amber"] #valCombCho,
+        body[data-theme="roland-amber"] #valCombMasterVol {
+            color: #FBBF24 !important;
+        }
+
+        /* Drone Pad & Ferramentas */
+        body[data-theme="roland-amber"] .continuous-pad-bar {
+            background: #110E0C !important;
+            border: 1px solid #29211A !important;
+        }
+        body[data-theme="roland-amber"] .continuous-pad-tag {
+            color: #B45309 !important;
+        }
+        body[data-theme="roland-amber"] .continuous-pad-key {
+            background: #1A1511 !important;
+            border: 1px solid #332820 !important;
+            color: #A8A29E !important;
+        }
+        body[data-theme="roland-amber"] .continuous-pad-key.active-pad {
+            background: #2D2318 !important;
+            border-color: #F59E0B !important;
+            color: #FBBF24 !important;
+        }
+        body[data-theme="roland-amber"] .continuous-pad-stop {
+            background: #1F1712 !important;
+            border: 1px solid #3D322B !important;
+            color: #A8A29E !important;
+        }
+        body[data-theme="roland-amber"] .btn-act-all {
+            background: linear-gradient(180deg, #241E1A 0%, #171310 100%) !important;
+            border: 1px solid #92400E !important;
+            color: #FBBF24 !important;
+            box-shadow: none !important;
+        }
+        body[data-theme="roland-amber"] .magic-wand-btn {
+            background: linear-gradient(180deg, #241E1A 0%, #171310 100%) !important;
+            border: 1px solid #3D322B !important;
+            color: #D6D3D1 !important;
+            box-shadow: none !important;
+        }
+
+        /* Cards das 4 Parts (Canal Strips) */
+        body[data-theme="roland-amber"] .column-card {
+            background: linear-gradient(180deg, #1A1512 0%, #120E0C 100%) !important;
+            border: 1px solid #2F2620 !important;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), 0 4px 12px rgba(0,0,0,0.7) !important;
+        }
+        body[data-theme="roland-amber"] .column-card.active-part {
+            border-color: #78350F !important;
+            box-shadow: 0 0 12px rgba(245, 158, 11, 0.2) !important;
+        }
+        body[data-theme="roland-amber"] .part-left-fader-panel {
+            background: #110E0C !important;
+            border: 1px solid #261E19 !important;
+        }
+        body[data-theme="roland-amber"] .part-fader-input-full::-webkit-slider-thumb,
+        body[data-theme="roland-amber"] .part-fader-input-full::-moz-range-thumb {
+            background: linear-gradient(180deg, #FDE68A 0%, #F59E0B 35%, #B45309 70%, #451A03 100%) !important;
+            border-color: #1C1917 !important;
+        }
+        body[data-theme="roland-amber"] .part-fader-numeric {
+            background: #080706 !important;
+            border-color: #382D22 !important;
+            color: #FBBF24 !important;
+        }
+        body[data-theme="roland-amber"] .patch-box {
+            background: #0A0807 !important;
+            border: 1px solid #332820 !important;
+            color: #FDE68A !important;
+        }
+        body[data-theme="roland-amber"] .btn-toggle {
+            background: linear-gradient(180deg, #241D18 0%, #17120F 100%) !important;
+            border: 1px solid #382D24 !important;
+            color: #A8A29E !important;
+        }
+        body[data-theme="roland-amber"] .btn-toggle.active {
+            background: linear-gradient(180deg, #3D2D1E 0%, #261C13 100%) !important;
+            border-color: #F59E0B !important;
+            color: #FEF3C7 !important;
+            box-shadow: 0 0 8px rgba(245, 158, 11, 0.3) !important;
+        }
+        body[data-theme="roland-amber"] .hardware-knob-container,
+        body[data-theme="roland-amber"] .stepper-row,
+        body[data-theme="roland-amber"] .part-fx-grid,
+        body[data-theme="roland-amber"] .part-out-row,
+        body[data-theme="roland-amber"] .range-row {
+            background: #100D0B !important;
+            border: 1px solid #241C16 !important;
+        }
+        body[data-theme="roland-amber"] .knob-cap-rotary {
+            background: radial-gradient(circle at 40% 35%, #B45309 0%, #78350F 50%, #1C130D 100%) !important;
+            border: 2px solid #0C0A09 !important;
+        }
+        body[data-theme="roland-amber"] .stepper-btn {
+            background: #1C1510 !important;
+            border: 1px solid #4A3525 !important;
+            color: #FBBF24 !important;
+        }
+        body[data-theme="roland-amber"] .stepper-val {
+            color: #FDE68A !important;
+        }
+        body[data-theme="roland-amber"] .part-fx-val {
+            color: #F59E0B !important;
+        }
+        body[data-theme="roland-amber"] .part-fx-slider {
+            accent-color: #F59E0B !important;
+        }
+        body[data-theme="roland-amber"] .part-out-btn {
+            background: #1C1510 !important;
+            border: 1px solid #4A3525 !important;
+            color: #D6D3D1 !important;
+        }
+        body[data-theme="roland-amber"] .part-out-btn.efx {
+            border-color: #F59E0B !important;
+            color: #FBBF24 !important;
+        }
+        body[data-theme="roland-amber"] .range-span-val {
+            color: #D6D3D1 !important;
+        }
+        body[data-theme="roland-amber"] .range-select {
+            background: #080706 !important;
+            border: 1px solid #4A3525 !important;
+            color: #FBBF24 !important;
+        }
+        body[data-theme="roland-amber"] .part-pedal-btn {
+            background: #171310 !important;
+            border: 1px solid #2E251E !important;
+            color: #A8A29E !important;
+        }
+        body[data-theme="roland-amber"] .part-pedal-btn.active {
+            background: #2D2319 !important;
+            border-color: #F59E0B !important;
+            color: #FBBF24 !important;
         }
         body[data-theme="roland-amber"] .btn-preset,
         body[data-theme="roland-amber"] .synth-btn,
@@ -2461,12 +3166,7 @@
             background: linear-gradient(180deg, #241E1A 0%, #171310 100%) !important;
             border: 1px solid #3D322B !important;
             color: #D6D3D1 !important;
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.05) !important;
-        }
-        body[data-theme="roland-amber"] .btn-preset:hover,
-        body[data-theme="roland-amber"] .synth-btn:hover {
-            border-color: #F59E0B !important;
-            color: #FBBF24 !important;
+            box-shadow: none !important;
         }
         body[data-theme="roland-amber"] .btn-transmit {
             background: linear-gradient(180deg, #B45309 0%, #78350F 100%) !important;
@@ -2474,33 +3174,19 @@
             color: #FFFBEB !important;
             box-shadow: 0 0 10px rgba(245, 158, 11, 0.4) !important;
         }
-        body[data-theme="roland-amber"] .btn-act-all {
-            background: linear-gradient(180deg, #241E1A 0%, #171310 100%) !important;
-            border: 1px solid #78350F !important;
-            color: #F59E0B !important;
-            box-shadow: none !important;
-        }
-        body[data-theme="roland-amber"] .magic-wand-btn {
-            background: linear-gradient(180deg, #241E1A 0%, #171310 100%) !important;
-            border: 1px solid #3D322B !important;
-            color: #D6D3D1 !important;
-            box-shadow: none !important;
-        }
         body[data-theme="roland-amber"] .btn-panic {
-            background: linear-gradient(180deg, #421D1D 0%, #291212 100%) !important;
+            background: linear-gradient(180deg, #451717 0%, #290F0F 100%) !important;
             border: 1px solid #991B1B !important;
-            color: #FECACA !important;
+            color: #FCA5A5 !important;
             box-shadow: 0 2px 6px rgba(0,0,0,0.6) !important;
         }
-        body[data-theme="roland-amber"] .continuous-pad-key {
-            background: #1A1613 !important;
-            border-color: #332B25 !important;
-            color: #A8A29E !important;
+        body[data-theme="roland-amber"] .badge {
+            background: #14110F !important;
+            border-color: #78350F !important;
+            color: #F59E0B !important;
         }
-        body[data-theme="roland-amber"] .continuous-pad-key.active-pad {
-            background: #2D2318 !important;
-            border-color: #F59E0B !important;
-            color: #FBBF24 !important;
+        body[data-theme="roland-amber"] .quick-label {
+            color: #B45309 !important;
         }
     </style>
 </head>
@@ -2570,7 +3256,7 @@
     </div>
 
     <!-- BARRA DEDICADA DE CONEXÃO MIDI E TESTE COMPACTA (LINHA ÚNICA) -->
-    <div style="background:#10141D; border:1px solid #00E5FF; padding:4px 10px; border-radius:6px; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center; flex-wrap:nowrap; gap:6px; box-shadow:0 0 8px rgba(0,229,255,0.2); overflow-x:auto;">
+    <div id="midiConnectionBar" style="background:#10141D; border:1px solid #00E5FF; padding:4px 10px; border-radius:6px; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center; flex-wrap:nowrap; gap:6px; box-shadow:0 0 8px rgba(0,229,255,0.2); overflow-x:auto;">
         <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
             <span style="font-size:14px;">🎹</span>
             <span style="font-weight:bold; font-size:11.5px; color:#00E5FF; white-space:nowrap;">MIDI:</span>
@@ -3547,6 +4233,8 @@
             localStorage.setItem("jv1010_visual_theme", chosen);
             const sel = document.getElementById("selThemeVisual");
             if (sel && sel.value !== chosen) sel.value = chosen;
+            if (typeof renderQuickPresetsBar === "function") renderQuickPresetsBar();
+            if (typeof renderParts === "function") renderParts();
         }
 
         // Carrega o tema salvo do usuário (ou inicia com Studio Pro mais limpo se não houver preferência)
@@ -7337,13 +8025,31 @@
             const container = document.getElementById("quickPresetsContainer");
             if (!container) return;
 
+            const theme = document.body.getAttribute("data-theme") || "default";
+
             container.innerHTML = "";
             quickPresets.forEach((item, index) => {
                 const btn = document.createElement("button");
                 btn.className = "btn-preset";
-                btn.style.background = item.color || "#2C3E50";
-                btn.style.borderColor = item.color || "#34495E";
-                btn.style.color = "#FFFFFF";
+                
+                if (theme === "default") {
+                    btn.style.background = item.color || "#2C3E50";
+                    btn.style.borderColor = item.color || "#34495E";
+                    btn.style.color = "#FFFFFF";
+                } else if (theme === "studio-pro") {
+                    btn.style.background = "linear-gradient(180deg, #253142 0%, #161F2E 100%)";
+                    btn.style.borderColor = "#3E4F68";
+                    btn.style.color = "#E2E8F0";
+                } else if (theme === "ableton-min") {
+                    btn.style.background = "#222226";
+                    btn.style.borderColor = "#36363E";
+                    btn.style.color = "#D4D4D8";
+                } else if (theme === "roland-amber") {
+                    btn.style.background = "linear-gradient(180deg, #291F16 0%, #17120D 100%)";
+                    btn.style.borderColor = "#78350F";
+                    btn.style.color = "#FBBF24";
+                }
+
                 btn.style.fontWeight = "bold";
                 btn.style.cursor = "pointer";
                 btn.style.transition = "transform 0.1s ease, filter 0.15s ease";
