@@ -1,4 +1,4 @@
-const CACHE_NAME = 'jv1010-live-v20261022-pro-audio-global-theme';
+const CACHE_NAME = 'jv1010-live-v20261024-combi-compact-ui';
 const STATIC_ASSETS = [
   './',
   './index.html',

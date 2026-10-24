@@ -2501,14 +2501,13 @@
     <!-- ========================================== -->
     <div class="tab-content" id="tabCombination" style="overflow-y:auto; overflow-x:hidden; padding:6px 8px; flex:1; min-height:0; display:flex; flex-direction:column; background:#111622;">
         <div class="quick-bar" style="flex-shrink:0; display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-            <span class="quick-label">Combinações Rápidas:</span>
+            <span class="quick-label">Comb. Rápidas:</span>
             <div id="quickPresetsContainer" style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;"></div>
             
             <button class="btn-preset" style="background:linear-gradient(180deg, #2D3748 0%, #1A202C 100%); border:1px solid #4A5568; color:#E2E8F0; font-size:11px; padding:5px 9px;" onclick="openQuickPresetsManagerModal()" title="Gerenciar, reordenar, exportar ou importar combinações rápidas">⚙️ Gerenciar</button>
             <button class="btn-preset" style="background:linear-gradient(180deg, #374151 0%, #1F2937 100%); border:1px solid #6B7280; color:#F3F4F6; font-size:11px; padding:5px 9px;" onclick="clearCombinationToZero()" title="Começar combinação do zero (todos desligados, Reverb=25 e Chorus=0)">🧹 Do Zero</button>
-            <button class="btn-act-all" onclick="activateAllParts()">✅ Ativar Todos</button>
-            <button class="btn-preset" style="background:#8E44AD; border-color:#8E44AD;" onclick="saveCurrentCombinationAsFavorite()">⭐ Salvar nos Favoritos</button>
-            <button class="btn-transmit" onclick="transmitPerformanceToHardware()">⚡ Transmitir JV-1010</button>
+            <button class="btn-preset" style="background:#8E44AD; border-color:#8E44AD;" onclick="saveCurrentCombinationAsFavorite()" title="Salvar configuração atual nos Favoritos">⭐ Favoritos</button>
+            <button class="btn-transmit" onclick="transmitPerformanceToHardware()" title="Transmitir performance para o Roland JV-1010">⚡ Transmitir</button>
         </div>
 
         <!-- Barra Compacta de Efeitos Globais da Combinação -->
@@ -2531,7 +2530,7 @@
                     <option value="16">17: Stereo-Delay</option>
                     <option value="23">24: Reverb</option>
                 </select>
-                <button id="btnOpenEqModalComb" onclick="openEqModal()" style="background:linear-gradient(135deg, #1A1A2E, #2A2035); border:1px solid #FFD700; color:#FFD700; font-size:10.5px; font-weight:bold; padding:2px 8px; height:22px; border-radius:4px; cursor:pointer; display:flex; align-items:center; gap:4px; box-shadow:0 0 8px rgba(255,215,0,0.25);" title="Abrir painel pop-up com o Equalizador Gráfico 4-Bandas e controles de EFX">🎚️ Equalizador & EFX...</button>
+                <button id="btnOpenEqModalComb" onclick="openEqModal()" style="background:linear-gradient(135deg, #1A1A2E, #2A2035); border:1px solid #FFD700; color:#FFD700; font-size:10.5px; font-weight:bold; padding:2px 8px; height:22px; border-radius:4px; cursor:pointer; display:flex; align-items:center; gap:4px; box-shadow:0 0 8px rgba(255,215,0,0.25);" title="Abrir painel pop-up com o Equalizador Gráfico 4-Bandas e controles de EFX">🎚️ EQ & EFX</button>
             </div>
 
             <!-- Slider 1: Reverb Geral -->
@@ -2558,26 +2557,29 @@
             </div>
         </div>
 
-        <!-- Barra de Transição: Continuous Pad (Drone Infinito) & Varinha Mágica -->
-        <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px; flex-shrink:0;">
-            <div class="continuous-pad-bar" style="flex:1;">
-                <span class="continuous-pad-tag">🌊 DRONE PAD (P16):</span>
-                <button class="continuous-pad-key" onclick="triggerContinuousPad('C')">C</button>
-                <button class="continuous-pad-key" onclick="triggerContinuousPad('C#')">C#</button>
-                <button class="continuous-pad-key" onclick="triggerContinuousPad('D')">D</button>
-                <button class="continuous-pad-key" onclick="triggerContinuousPad('Eb')">Eb</button>
-                <button class="continuous-pad-key" onclick="triggerContinuousPad('E')">E</button>
-                <button class="continuous-pad-key" onclick="triggerContinuousPad('F')">F</button>
-                <button class="continuous-pad-key" onclick="triggerContinuousPad('F#')">F#</button>
-                <button class="continuous-pad-key" onclick="triggerContinuousPad('G')">G</button>
-                <button class="continuous-pad-key" onclick="triggerContinuousPad('Ab')">Ab</button>
-                <button class="continuous-pad-key" onclick="triggerContinuousPad('A')">A</button>
-                <button class="continuous-pad-key" onclick="triggerContinuousPad('Bb')">Bb</button>
-                <button class="continuous-pad-key" onclick="triggerContinuousPad('B')">B</button>
-                <button class="continuous-pad-stop" onclick="stopContinuousPad()" title="Parar o drone de fundo imediatamente">⏹️ OFF</button>
+        <!-- Barra de Transição: Continuous Pad (Drone Infinito), Ativar Todos & Varinha Mágica -->
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px; flex-shrink:0; flex-wrap:wrap;">
+            <div style="display:flex; align-items:center; gap:8px; flex:1; min-width:280px;">
+                <div class="continuous-pad-bar" style="flex:1;">
+                    <span class="continuous-pad-tag">🌊 DRONE PAD (P16):</span>
+                    <button class="continuous-pad-key" onclick="triggerContinuousPad('C')">C</button>
+                    <button class="continuous-pad-key" onclick="triggerContinuousPad('C#')">C#</button>
+                    <button class="continuous-pad-key" onclick="triggerContinuousPad('D')">D</button>
+                    <button class="continuous-pad-key" onclick="triggerContinuousPad('Eb')">Eb</button>
+                    <button class="continuous-pad-key" onclick="triggerContinuousPad('E')">E</button>
+                    <button class="continuous-pad-key" onclick="triggerContinuousPad('F')">F</button>
+                    <button class="continuous-pad-key" onclick="triggerContinuousPad('F#')">F#</button>
+                    <button class="continuous-pad-key" onclick="triggerContinuousPad('G')">G</button>
+                    <button class="continuous-pad-key" onclick="triggerContinuousPad('Ab')">Ab</button>
+                    <button class="continuous-pad-key" onclick="triggerContinuousPad('A')">A</button>
+                    <button class="continuous-pad-key" onclick="triggerContinuousPad('Bb')">Bb</button>
+                    <button class="continuous-pad-key" onclick="triggerContinuousPad('B')">B</button>
+                    <button class="continuous-pad-stop" onclick="stopContinuousPad()" title="Parar o drone de fundo imediatamente">⏹️ OFF</button>
+                </div>
+                <button class="btn-act-all" onclick="activateAllParts()" style="padding:4px 10px; font-size:11px;" title="Ativar todas as 4 Parts da combinação">✅ Ativar Todos</button>
             </div>
             <button class="magic-wand-btn" id="btnMagicWandGlobal" onclick="toggleMagicWandMode()" title="Ativar Modo Varinha Mágica: Toque em qualquer controle na tela e mexa um fader/knob do seu controlador físico para mapear instantaneamente sem menus!">
-                🪄 Varinha Mágica
+                🪄 Varinha
             </button>
         </div>
 
