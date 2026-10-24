@@ -673,8 +673,6 @@
         .fader-input { 
             -webkit-appearance: slider-vertical; 
             appearance: slider-vertical;
-            writing-mode: bt-lr;
-            -webkit-writing-mode: vertical-lr;
             width: 28px; 
             flex: 1; 
             cursor: pointer; 
@@ -815,8 +813,6 @@
         .part-fader-input-full {
             -webkit-appearance: slider-vertical;
             appearance: slider-vertical;
-            writing-mode: bt-lr;
-            -webkit-writing-mode: vertical-lr;
             width: 32px;
             flex: 1;
             height: 100%;
@@ -3257,6 +3253,7 @@
 
         let ws = null;
         let currentTab = "patches";
+        let lastSoundSourceMode = "patch"; // 'comb' | 'patch'
         let allPatches = [];
         let selectedPatch = null;
         let targetPartIndex = 0; // Para quando o usuário clica na caixa de patch na aba 2
@@ -4080,6 +4077,7 @@
             const modeBadge = document.getElementById("modeBadge");
 
             if (tab === "patches") {
+                lastSoundSourceMode = "patch";
                 document.getElementById("tabBtnPatches").classList.add("active");
                 document.getElementById("tabPatches").classList.add("active");
                 modeBadge.innerText = "Modo: Lista";
@@ -4094,6 +4092,7 @@
                 renderFavoritesTable();
                 renderFavCombinationsTable();
             } else if (tab === "combination") {
+                lastSoundSourceMode = "comb";
                 document.getElementById("tabBtnComb").classList.add("active");
                 document.getElementById("tabCombination").classList.add("active");
                 modeBadge.innerText = "Modo: Performance";
@@ -4103,6 +4102,7 @@
                 sendMidiCommand({ type: "set_mode", mode: "performance" });
                 updatePartsBadge();
             } else if (tab === "synth") {
+                lastSoundSourceMode = "patch";
                 document.getElementById("tabBtnSynth").classList.add("active");
                 document.getElementById("tabSynth").classList.add("active");
                 modeBadge.innerText = "Modo: Síntese";
@@ -4544,6 +4544,9 @@
                     <div class="live-song-sections-list">
                         ${sectionsHtml}
                     </div>
+                    <div style="padding:6px 8px; border-top:1px solid #1A1A26; background:#0B0B12; display:flex; justify-content:flex-end;">
+                        <button class="synth-btn" style="background:#8E44AD; border-color:#9B59B6; color:#FFF; font-weight:bold; font-size:10.5px; padding:3px 10px; width:100%;" onclick="addCurrentSetupToSong('${song.id}', event)">+ Salvar Som Atual Aqui</button>
+                    </div>
                 `;
 
                 viewport.appendChild(panel);
@@ -4932,7 +4935,8 @@
                 openNewSongModal();
                 return;
             }
-            openAddSectionModal(activeLiveSongId);
+            const targetId = activeLiveSongId || (showSongs[0] && showSongs[0].id) || null;
+            openAddSectionModal(targetId);
         }
 
         function addCurrentSetupToSong(songId, evt) {
@@ -4940,12 +4944,30 @@
             openAddSectionModal(songId);
         }
 
+        function isCurrentSoundCombination() {
+            // Se o usuário está ou veio da aba Combinação ou se há selectedComb ativo
+            if (lastSoundSourceMode === "comb" || currentTab === "combination" || selectedComb) {
+                return true;
+            }
+            // Se há partes customizadas ativas nas 4 parts da performance
+            if (Array.isArray(parts) && parts.some(p => p && p.active && p.patch)) {
+                return true;
+            }
+            return false;
+        }
+
         function openAddSectionModal(targetSongId = null) {
             const selectEl = document.getElementById("modalAddSectionSongSelect");
             if (!selectEl) return;
             const showSongs = getSongsForCurrentShow();
+            if (!showSongs || showSongs.length === 0) {
+                openNewSongModal();
+                return;
+            }
+
+            const chosenId = targetSongId || activeLiveSongId || showSongs[0].id;
             selectEl.innerHTML = showSongs.map(s => `
-                <option value="${s.id}" ${s.id === (targetSongId || activeLiveSongId) ? 'selected' : ''}>
+                <option value="${s.id}" ${s.id === chosenId ? 'selected' : ''}>
                     ${escapeHtml(s.title)}
                 </option>
             `).join("");
@@ -4954,14 +4976,19 @@
             const prevEl = document.getElementById("modalSectionCurrentPreview");
             let previewText = "";
             let defaultName = "";
-            if (activeMode === "comb" || currentActiveTab === "comb" || selectedComb) {
-                const combName = selectedComb ? selectedComb.name : "Combinação Atual";
-                previewText = `<b>Tipo:</b> Combinação de Parts<br><b>Nome:</b> ${escapeHtml(combName)}`;
+
+            if (isCurrentSoundCombination()) {
+                const combName = (selectedComb && selectedComb.name) ? selectedComb.name : "Combinação Atual";
+                const activePartsSummary = (parts || [])
+                    .filter(p => p.active && p.patch)
+                    .map((p, idx) => `P${idx+1}: ${p.patch.name || 'Patch'}`)
+                    .join(" | ");
+                previewText = `<b>Tipo:</b> 🎛️ Combinação (Performance 4-Parts)<br><b>Nome:</b> ${escapeHtml(combName)}${activePartsSummary ? `<br><small style="color:#2ECC71;">${escapeHtml(activePartsSummary)}</small>` : ''}`;
                 defaultName = combName;
             } else {
-                const patchName = selectedPatch ? selectedPatch.name : "Patch Atual";
+                const patchName = selectedPatch ? selectedPatch.name : (parts[0]?.patch?.name || "Patch Solo");
                 const bankRef = selectedPatch ? `[${selectedPatch.bank}:${selectedPatch.prog}]` : "";
-                previewText = `<b>Tipo:</b> Patch Solo<br><b>Nome:</b> ${escapeHtml(patchName)} ${bankRef}`;
+                previewText = `<b>Tipo:</b> 🎹 Patch Solo<br><b>Nome:</b> ${escapeHtml(patchName)} ${bankRef}`;
                 defaultName = patchName;
             }
             if (prevEl) prevEl.innerHTML = previewText;
@@ -4993,27 +5020,41 @@
             const newSecId = "sec_" + Date.now();
 
             let newSection = null;
-            if (activeMode === "comb" || currentActiveTab === "comb" || selectedComb) {
+            if (isCurrentSoundCombination()) {
+                const activePartsList = (parts || []).filter(p => p.active && p.patch).map(p => p.patch.name).join(" + ");
+                const combPayload = selectedComb ? JSON.parse(JSON.stringify(selectedComb)) : {
+                    id: "comb_custom_" + Date.now(),
+                    name: name,
+                    desc: activePartsList || "Combinação 4-Parts Personalizada",
+                    type: "CUSTOM",
+                    key_mode: "LAYER",
+                    parts: JSON.parse(JSON.stringify(parts))
+                };
+                if (!combPayload.parts) {
+                    combPayload.parts = JSON.parse(JSON.stringify(parts));
+                }
+
                 newSection = {
                     id: newSecId,
                     name: name,
                     badge: badge,
                     type: "comb",
-                    desc: selectedComb ? (selectedComb.desc || selectedComb.name) : "Combinação Personalizada",
-                    comb_data: JSON.parse(JSON.stringify(selectedComb || currentCombSetup || {}))
+                    desc: activePartsList || combPayload.name || "Combinação Live",
+                    comb_data: combPayload
                 };
             } else {
+                const curPatch = selectedPatch || (parts[0] && parts[0].patch) || null;
                 newSection = {
                     id: newSecId,
                     name: name,
                     badge: badge,
                     type: "patch",
-                    patch_name: selectedPatch ? selectedPatch.name : "Patch Solo",
-                    bank: selectedPatch ? selectedPatch.bank : "USER",
-                    prog: selectedPatch ? selectedPatch.prog : 1,
-                    desc: selectedPatch ? `Categoria: ${selectedPatch.studio_cat || selectedPatch.category || 'Patch'}` : "Patch Solo",
-                    patch_data: selectedPatch ? JSON.parse(JSON.stringify(selectedPatch)) : null,
-                    custom_data: (selectedPatch && selectedPatch.is_custom) ? JSON.parse(JSON.stringify(selectedPatch)) : null
+                    patch_name: curPatch ? curPatch.name : "Patch Solo",
+                    bank: curPatch ? curPatch.bank : "USER",
+                    prog: curPatch ? curPatch.prog : 1,
+                    desc: curPatch ? `Categoria: ${curPatch.studio_cat || curPatch.category || 'Patch'}` : "Patch Solo",
+                    patch_data: curPatch ? JSON.parse(JSON.stringify(curPatch)) : null,
+                    custom_data: (curPatch && curPatch.is_custom) ? JSON.parse(JSON.stringify(curPatch)) : null
                 };
             }
 
@@ -6448,41 +6489,41 @@
 
         function attachDirectionalFaderLock() {
             const faders = document.querySelectorAll('.part-fader-input-full');
-            faders.forEach(fader => {
-                let startX = 0;
+            faders.forEach((fader, idx) => {
+                let isDragging = false;
                 let startY = 0;
-                let gestureLocked = false;
-                let gestureAllowed = false;
+                let startVal = 100;
 
-                fader.onpointerdown = (e) => {
-                    startX = e.clientX;
+                fader.addEventListener('pointerdown', (e) => {
+                    isDragging = true;
                     startY = e.clientY;
-                    gestureLocked = false;
-                    gestureAllowed = false;
-                };
+                    startVal = parseInt(fader.value) || 0;
+                    try { fader.setPointerCapture(e.pointerId); } catch (_) {}
+                }, { passive: true });
 
-                fader.onpointermove = (e) => {
-                    if (gestureLocked) return;
-                    const deltaX = Math.abs(e.clientX - startX);
-                    const deltaY = Math.abs(e.clientY - startY);
+                fader.addEventListener('pointermove', (e) => {
+                    if (!isDragging) return;
+                    const rect = fader.getBoundingClientRect();
+                    const height = rect.height || 180;
+                    // Arrastar para CIMA diminui e.clientY -> deltaY positivo (aumenta o volume)
+                    const deltaY = startY - e.clientY;
+                    const stepPerPixel = 127 / height;
+                    const calculatedVal = Math.round(startVal + (deltaY * stepPerPixel));
+                    const nextVal = Math.max(0, Math.min(127, calculatedVal));
+                    if (nextVal !== parseInt(fader.value)) {
+                        fader.value = nextVal;
+                        updatePartVal(idx, 'level', nextVal);
+                    }
+                }, { passive: true });
 
-                    // Requer pelo menos 4px de movimento para detectar intenção de vetor
-                    if (!gestureAllowed && (deltaX > 4 || deltaY > 4)) {
-                        // Se o arraste foi predominantemente horizontal (esbarrão lateral)
-                        if (deltaX > deltaY + 2) {
-                            gestureLocked = true;
-                            fader.blur();
-                            return;
-                        } else {
-                            gestureAllowed = true;
-                        }
+                const stopDrag = (e) => {
+                    if (isDragging) {
+                        isDragging = false;
+                        try { fader.releasePointerCapture(e.pointerId); } catch (_) {}
                     }
                 };
-
-                fader.onpointerup = () => {
-                    gestureLocked = false;
-                    gestureAllowed = false;
-                };
+                fader.addEventListener('pointerup', stopDrag, { passive: true });
+                fader.addEventListener('pointercancel', stopDrag, { passive: true });
             });
         }
 
