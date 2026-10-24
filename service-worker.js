@@ -1,4 +1,4 @@
-const CACHE_NAME = 'jv1010-live-v20261024-full-theme-overhaul';
+const CACHE_NAME = 'jv1010-live-v20261024-synth-buttons-list-layout';
 const STATIC_ASSETS = [
   './',
   './index.html',

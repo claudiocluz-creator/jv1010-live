@@ -3357,12 +3357,12 @@
                 <table class="patches-table">
                     <thead>
                         <tr>
-                            <th style="width: 38px; text-align: center;">⭐</th>
-                            <th style="width: 110px;">Nº / Ref</th>
-                            <th>Nome do Timbre</th>
-                            <th style="width: 130px;">Categoria</th>
-                            <th style="width: 105px;">Banco Origem</th>
-                            <th style="width: 85px; text-align: center;">Vozes</th>
+                            <th style="width: 44px; text-align: center;">⭐</th>
+                            <th style="width: 140px;">Nº / Ref</th>
+                            <th style="width: 38%;">Nome do Timbre</th>
+                            <th style="width: 22%;">Categoria</th>
+                            <th style="width: 16%;">Banco Origem</th>
+                            <th style="width: 80px; text-align: center;">Vozes</th>
                         </tr>
                     </thead>
                     <tbody id="patchesTableBody">
@@ -3565,13 +3565,13 @@
     <div class="tab-content" id="tabSynth">
         <!-- Barra de Controle do Modo de Síntese -->
         <div class="quick-bar" style="margin-bottom: 6px;">
-            <span class="quick-label">Visualização:</span>
-            <button class="btn-preset p-dual" id="btnViewStudio" onclick="setSynthView('studio')">🎛️ Painel Completo (Studio)</button>
-            <button class="btn-preset p-split" id="btnViewFaders" onclick="setSynthView('faders')">⚡ Faders Rápidos (4 Tones)</button>
-            <button class="btn-preset" style="background:linear-gradient(135deg, #1A1A2E, #2A2035); border-color:#FFD700; color:#FFD700; font-weight:bold; box-shadow:0 0 8px rgba(255,215,0,0.25);" onclick="openEqModal()">🎚️ Equalizador & EFX...</button>
-            <button class="btn-preset" style="background:linear-gradient(135deg, #102A30, #164E63); border-color:#00E5FF; color:#00E5FF; font-weight:bold; box-shadow:0 0 8px rgba(0,229,255,0.25);" onclick="openEnvelopeModal()">📈 Gráficos de Envelope...</button>
-            <button class="btn-preset" style="background:linear-gradient(135deg, #2D1A10, #78350F); border-color:#F59E0B; color:#F59E0B; font-weight:bold; box-shadow:0 0 8px rgba(245,158,11,0.25);" onclick="openDrumKitModal()">🥁 Drum Kit Editor...</button>
-            <button class="btn-preset" style="background: linear-gradient(135deg, #8E44AD, #9B59B6); border-color:#8E44AD; color:#FFF; font-weight:bold; box-shadow:0 0 10px rgba(142,68,173,0.35);" onclick="openSaveCustomPatchModal()">⭐ Salvar Patch Editado nos Favoritos</button>
+            <span class="quick-label">Modo:</span>
+            <button class="btn-preset p-dual" id="btnViewStudio" onclick="setSynthView('studio')" title="Painel Completo de Síntese (Studio)">🎛️ Studio</button>
+            <button class="btn-preset p-split" id="btnViewFaders" onclick="setSynthView('faders')" title="Faders Rápidos dos 4 Tones">⚡ 4 Faders</button>
+            <button class="btn-preset" style="background:linear-gradient(135deg, #1A1A2E, #2A2035); border-color:#FFD700; color:#FFD700; font-weight:bold; box-shadow:0 0 8px rgba(255,215,0,0.25);" onclick="openEqModal()" title="Equalizador Gráfico de 4 Bandas e EFX">🎚️ EQ & EFX</button>
+            <button class="btn-preset" style="background:linear-gradient(135deg, #102A30, #164E63); border-color:#00E5FF; color:#00E5FF; font-weight:bold; box-shadow:0 0 8px rgba(0,229,255,0.25);" onclick="openEnvelopeModal()" title="Gráficos de Envelopes TVF, TVA e Pitch">📈 Envelopes</button>
+            <button class="btn-preset" style="background:linear-gradient(135deg, #2D1A10, #78350F); border-color:#F59E0B; color:#F59E0B; font-weight:bold; box-shadow:0 0 8px rgba(245,158,11,0.25);" onclick="openDrumKitModal()" title="Editor de Drum Kits e Mapeamento de Teclas">🥁 Drum Kits</button>
+            <button class="btn-preset" style="background: linear-gradient(135deg, #8E44AD, #9B59B6); border-color:#8E44AD; color:#FFF; font-weight:bold; box-shadow:0 0 10px rgba(142,68,173,0.35);" onclick="openSaveCustomPatchModal()" title="Salvar Patch Editado nos Favoritos">⭐ Salvar nos Favoritos</button>
             <span id="synthTargetModeText" style="margin-left: auto; font-size: 11px; font-weight: bold; color: #00E5FF; font-family: monospace;">Modo: Patch Ativo</span>
         </div>
 
@@ -3613,8 +3613,8 @@
                         <span>⚡ Controle Global (4 Tones)</span>
                         <div style="display:flex; align-items:center; gap:6px;">
                             <span id="midiLearnStatusBadge" style="display:none; font-size:10px; background:#FF4081; color:#FFF; padding:1px 6px; border-radius:4px; font-weight:bold; animation:pulse 1s infinite;">Aguardando Knob...</span>
-                            <button class="synth-btn" style="padding:2px 8px; font-size:11px; height:auto; background:rgba(231,76,60,0.15); border-color:#E74C3C; color:#FF8A80; font-weight:bold;" onclick="clearAllMidiLearned()" title="Desvincula e reseta todos os MIDI Learns">🧹 Reset Todos Learns</button>
-                            <button class="synth-btn" style="padding:2px 8px; font-size:11px; height:auto; background:rgba(255,255,255,0.08); border-color:#555; color:#CCC;" onclick="resetMidiLearnDefaults()" title="Restaura os CCs padrão da Roland: Cutoff=74, Reso=71, Attack=73, Release=72">↺ Padrão Roland GS</button>
+                            <button class="synth-btn" style="padding:2px 8px; font-size:11px; height:auto; background:rgba(231,76,60,0.15); border-color:#E74C3C; color:#FF8A80; font-weight:bold;" onclick="clearAllMidiLearned()" title="Desvincula e reseta todos os MIDI Learns">🧹 Reset Learns</button>
+                            <button class="synth-btn" style="padding:2px 8px; font-size:11px; height:auto; background:rgba(255,255,255,0.08); border-color:#555; color:#CCC;" onclick="resetMidiLearnDefaults()" title="Restaura os CCs padrão da Roland: Cutoff=74, Reso=71, Attack=73, Release=72">↺ Padrão GS</button>
                             <span style="font-size:10px; color:#FFD700;">Simultâneo</span>
                         </div>
                     </div>
@@ -3622,13 +3622,13 @@
                     <!-- Barra de Perfis de Mapeamento MIDI Salvos em Arquivo -->
                     <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:10px; padding:6px 10px; background:rgba(0,0,0,0.25); border-radius:6px; border:1px solid rgba(255,255,255,0.06);">
                         <div style="display:flex; align-items:center; gap:6px;">
-                            <span style="font-size:11px; font-weight:bold; color:#00E5FF;">💾 Perfil de Mapeamento:</span>
-                            <select id="selMidiMapProfile" class="synth-select" style="min-width:140px; font-size:11px; padding:2px 6px;" onchange="onSelectMidiMapProfile(this.value)">
-                                <option value="">(Selecione um perfil...)</option>
+                            <span style="font-size:11px; font-weight:bold; color:#00E5FF;">💾 Perfil:</span>
+                            <select id="selMidiMapProfile" class="synth-select" style="min-width:130px; font-size:11px; padding:2px 6px;" onchange="onSelectMidiMapProfile(this.value)">
+                                <option value="">(Selecione perfil...)</option>
                             </select>
                         </div>
                         <div style="display:flex; align-items:center; gap:6px;">
-                            <button class="synth-btn" style="padding:3px 8px; font-size:11px; height:auto; background:rgba(0,229,255,0.15); border-color:#00E5FF; color:#00E5FF;" onclick="promptSaveMidiMap()" title="Salvar os MIDI CCs atuais em um arquivo nomeado">💾 Salvar Perfil...</button>
+                            <button class="synth-btn" style="padding:3px 8px; font-size:11px; height:auto; background:rgba(0,229,255,0.15); border-color:#00E5FF; color:#00E5FF;" onclick="promptSaveMidiMap()" title="Salvar os MIDI CCs atuais em um arquivo nomeado">💾 Salvar</button>
                             <button class="synth-btn" style="padding:3px 8px; font-size:11px; height:auto; background:rgba(231,76,60,0.1); border-color:#E74C3C; color:#E74C3C;" onclick="deleteCurrentMidiMap()" title="Excluir o perfil selecionado">🗑️ Excluir</button>
                         </div>
                     </div>
@@ -3673,10 +3673,10 @@
 
                 <!-- Sub-abas -->
                 <div class="synth-tabs-bar" style="margin-bottom:4px; padding-bottom:2px;">
-                    <button class="synth-subtab-btn active" id="btnSubTabEffects" onclick="switchSynthSubTab('effects')">1. Efeitos (Reverb/Chorus/MFX)</button>
-                    <button class="synth-subtab-btn" id="btnSubTabPitch" onclick="switchSynthSubTab('pitch')">2. Pitch & LFOs</button>
-                    <button class="synth-subtab-btn" id="btnSubTabEnv" onclick="switchSynthSubTab('env')">3. Envelopes (TVF/TVA/Pitch)</button>
-                    <button class="synth-subtab-btn" id="btnSubTabFxm" onclick="switchSynthSubTab('fxm')">4. FXM & Estrutura</button>
+                    <button class="synth-subtab-btn active" id="btnSubTabEffects" onclick="switchSynthSubTab('effects')" title="Efeitos (Reverb, Chorus e MFX)">1. Efeitos</button>
+                    <button class="synth-subtab-btn" id="btnSubTabPitch" onclick="switchSynthSubTab('pitch')" title="Pitch & LFOs">2. Pitch & LFO</button>
+                    <button class="synth-subtab-btn" id="btnSubTabEnv" onclick="switchSynthSubTab('env')" title="Envelopes (TVF, TVA e Pitch)">3. Envelopes</button>
+                    <button class="synth-subtab-btn" id="btnSubTabFxm" onclick="switchSynthSubTab('fxm')" title="FXM & Estrutura">4. FXM</button>
                 </div>
 
                 <!-- Sub-aba 2: Pitch & LFOs -->
