@@ -33,11 +33,39 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
+  const req = event.request;
+  const isHtml = req.mode === 'navigate' || req.headers.get('accept')?.includes('text/html');
+
+  if (isHtml) {
+    // Para navegação/HTML: SEMPRE busca da rede primeiro para pegar a versão atualizada imediatamente
+    event.respondWith(
+      fetch(req)
+        .then((networkResponse) => {
+          if (networkResponse && networkResponse.status === 200) {
+            const clone = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(req, clone));
+          }
+          return networkResponse;
+        })
+        .catch(() => {
+          return caches.match(req).then((cached) => cached || caches.match('./index.html'));
+        })
+    );
+    return;
+  }
+
+  // Para assets estáticos: tenta rede com fallback pro cache
   event.respondWith(
-    caches.match(event.request).then((response) => {
-      return response || fetch(event.request);
-    }).catch(() => {
-      return caches.match('./index.html');
-    })
+    fetch(req)
+      .then((networkResponse) => {
+        if (networkResponse && networkResponse.status === 200) {
+          const clone = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(req, clone));
+        }
+        return networkResponse;
+      })
+      .catch(() => {
+        return caches.match(req);
+      })
   );
 });

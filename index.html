@@ -9475,8 +9475,11 @@
         // Registro do ServiceWorker PWA para permitir Modo Offline e Instalação na Tela de Início
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('service-worker.js?v=20261018c')
-                    .then((reg) => console.log('[PWA] Service Worker registrado com sucesso:', reg.scope))
+                navigator.serviceWorker.register('service-worker.js?v=20261024_force_v1')
+                    .then((reg) => {
+                        console.log('[PWA] Service Worker registrado com sucesso:', reg.scope);
+                        reg.update(); // Força o navegador a buscar a versão mais nova no servidor imediatamente
+                    })
                     .catch((err) => console.warn('[PWA] Falha no registro do Service Worker:', err));
             });
         }
