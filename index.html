@@ -2232,6 +2232,276 @@
         .drum-pad-cushion.active-pad .drum-pad-footer {
             color: #94A3B8;
         }
+
+        /* ========================================================
+           SISTEMA DE TEMAS VISUAIS DE ÁUDIO PRO (THEME SWITCHER)
+           1. default: Cores Originais Vibrantes
+           2. studio-pro: Studio Hardware Pro (Grafite Neutro + LEDs Pontuais)
+           3. ableton-min: Ableton / Logic Minimalista (Fundo translúcido + Foco Único)
+           4. roland-amber: Roland Titanium & Warm Amber Vintage
+           ======================================================== */
+        .theme-selector-dropdown {
+            background: #111827;
+            border: 1px solid #374151;
+            color: #F3F4F6;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 3px 6px;
+            border-radius: 6px;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.2s;
+            height: 26px;
+        }
+        .theme-selector-dropdown:hover {
+            border-color: #60A5FA;
+        }
+
+        /* --- TEMA 1: STUDIO HARDWARE PRO (GRAFITE METÁLICO & LEDS PONTUAIS) --- */
+        body[data-theme="studio-pro"] {
+            background: #0B0E14 !important;
+            color: #E2E8F0 !important;
+        }
+        body[data-theme="studio-pro"] .header {
+            background: linear-gradient(180deg, #171E2B 0%, #0F141E 100%) !important;
+            border-bottom: 1px solid #28354A !important;
+        }
+        body[data-theme="studio-pro"] .tab-btn {
+            background: #1A2230 !important;
+            border: 1px solid #2B384E !important;
+            color: #94A3B8 !important;
+        }
+        body[data-theme="studio-pro"] .tab-btn.active {
+            background: linear-gradient(180deg, #2D3A50 0%, #1E2738 100%) !important;
+            border-color: #64748B !important;
+            color: #F8FAFC !important;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.15), 0 2px 4px rgba(0,0,0,0.6) !important;
+        }
+        body[data-theme="studio-pro"] #tabBtnLive {
+            background: #1A2230 !important;
+            border-color: #2B384E !important;
+            color: #94A3B8 !important;
+        }
+        body[data-theme="studio-pro"] #tabBtnLive.active {
+            background: linear-gradient(180deg, #2D3A50 0%, #1E2738 100%) !important;
+            border-color: #38BDF8 !important;
+            color: #38BDF8 !important;
+        }
+        body[data-theme="studio-pro"] .btn-preset,
+        body[data-theme="studio-pro"] .synth-btn,
+        body[data-theme="studio-pro"] .btn-play-solo,
+        body[data-theme="studio-pro"] .btn-part-dest,
+        body[data-theme="studio-pro"] .btn-preset-eq,
+        body[data-theme="studio-pro"] .setlist-nav-btn {
+            background: linear-gradient(180deg, #242D3D 0%, #18202C 100%) !important;
+            border: 1px solid #334155 !important;
+            color: #CBD5E1 !important;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 1px 3px rgba(0,0,0,0.5) !important;
+        }
+        body[data-theme="studio-pro"] .btn-preset:hover,
+        body[data-theme="studio-pro"] .synth-btn:hover {
+            background: #2D3748 !important;
+            color: #FFFFFF !important;
+            border-color: #4A5568 !important;
+        }
+        body[data-theme="studio-pro"] .btn-transmit {
+            background: linear-gradient(180deg, #374151 0%, #1F2937 100%) !important;
+            border: 1px solid #4B5563 !important;
+            color: #F9FAFB !important;
+            box-shadow: 0 0 8px rgba(0,0,0,0.4) !important;
+        }
+        body[data-theme="studio-pro"] .btn-act-all {
+            background: linear-gradient(180deg, #242D3D 0%, #18202C 100%) !important;
+            border: 1px solid #475569 !important;
+            color: #38BDF8 !important;
+            box-shadow: none !important;
+        }
+        body[data-theme="studio-pro"] .magic-wand-btn {
+            background: linear-gradient(180deg, #242D3D 0%, #18202C 100%) !important;
+            border: 1px solid #475569 !important;
+            color: #CBD5E1 !important;
+            box-shadow: none !important;
+        }
+        body[data-theme="studio-pro"] .btn-panic {
+            background: linear-gradient(180deg, #3F2326 0%, #2A1719 100%) !important;
+            border: 1px solid #7F1D1D !important;
+            color: #FCA5A5 !important;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.5) !important;
+        }
+        body[data-theme="studio-pro"] .continuous-pad-key {
+            background: #141A24 !important;
+            border-color: #28354A !important;
+            color: #94A3B8 !important;
+        }
+        body[data-theme="studio-pro"] .continuous-pad-key.active-pad {
+            background: #1E293B !important;
+            border-color: #38BDF8 !important;
+            color: #38BDF8 !important;
+        }
+
+        /* --- TEMA 2: ABLETON / LOGIC MINIMALISTA (TRANSLÚCIDO E FOCO ÚNICO) --- */
+        body[data-theme="ableton-min"] {
+            background: #18181A !important;
+            color: #D4D4D8 !important;
+        }
+        body[data-theme="ableton-min"] .header {
+            background: #1F1F23 !important;
+            border-bottom: 1px solid #27272A !important;
+        }
+        body[data-theme="ableton-min"] .tab-btn {
+            background: transparent !important;
+            border: 1px solid transparent !important;
+            color: #A1A1AA !important;
+            box-shadow: none !important;
+        }
+        body[data-theme="ableton-min"] .tab-btn.active {
+            background: #27272A !important;
+            color: #FAFAFA !important;
+            border: 1px solid #3F3F46 !important;
+        }
+        body[data-theme="ableton-min"] #tabBtnLive {
+            background: transparent !important;
+            border-color: transparent !important;
+            color: #A1A1AA !important;
+        }
+        body[data-theme="ableton-min"] #tabBtnLive.active {
+            background: #27272A !important;
+            color: #34D399 !important;
+            border: 1px solid #059669 !important;
+        }
+        body[data-theme="ableton-min"] .btn-preset,
+        body[data-theme="ableton-min"] .synth-btn,
+        body[data-theme="ableton-min"] .btn-play-solo,
+        body[data-theme="ableton-min"] .btn-part-dest,
+        body[data-theme="ableton-min"] .btn-preset-eq,
+        body[data-theme="ableton-min"] .setlist-nav-btn {
+            background: rgba(255,255,255,0.04) !important;
+            border: 1px solid rgba(255,255,255,0.1) !important;
+            color: #D4D4D8 !important;
+            box-shadow: none !important;
+        }
+        body[data-theme="ableton-min"] .btn-preset:hover,
+        body[data-theme="ableton-min"] .synth-btn:hover {
+            background: rgba(255,255,255,0.08) !important;
+            color: #FFFFFF !important;
+        }
+        body[data-theme="ableton-min"] .btn-transmit {
+            background: #D97706 !important;
+            border: 1px solid #F59E0B !important;
+            color: #000000 !important;
+            font-weight: 900 !important;
+            box-shadow: 0 0 10px rgba(245, 158, 11, 0.3) !important;
+        }
+        body[data-theme="ableton-min"] .btn-act-all {
+            background: rgba(255,255,255,0.06) !important;
+            border: 1px solid rgba(255,255,255,0.15) !important;
+            color: #E4E4E7 !important;
+            box-shadow: none !important;
+        }
+        body[data-theme="ableton-min"] .magic-wand-btn {
+            background: rgba(255,255,255,0.04) !important;
+            border: 1px solid rgba(255,255,255,0.1) !important;
+            color: #A1A1AA !important;
+            box-shadow: none !important;
+        }
+        body[data-theme="ableton-min"] .btn-panic {
+            background: #3F1D24 !important;
+            border: 1px solid #712938 !important;
+            color: #F87171 !important;
+            box-shadow: none !important;
+        }
+        body[data-theme="ableton-min"] .continuous-pad-key {
+            background: #202024 !important;
+            border-color: #2E2E34 !important;
+            color: #A1A1AA !important;
+        }
+        body[data-theme="ableton-min"] .continuous-pad-key.active-pad {
+            background: #F59E0B !important;
+            border-color: #F59E0B !important;
+            color: #000000 !important;
+            font-weight: 900 !important;
+        }
+
+        /* --- TEMA 3: ROLAND TITANIUM & WARM AMBER VINTAGE --- */
+        body[data-theme="roland-amber"] {
+            background: #0E0D0C !important;
+            color: #E6E1DC !important;
+        }
+        body[data-theme="roland-amber"] .header {
+            background: linear-gradient(180deg, #1C1917 0%, #12100E 100%) !important;
+            border-bottom: 1px solid #332B25 !important;
+        }
+        body[data-theme="roland-amber"] .tab-btn {
+            background: #171412 !important;
+            border: 1px solid #2B241E !important;
+            color: #A8A29E !important;
+        }
+        body[data-theme="roland-amber"] .tab-btn.active {
+            background: linear-gradient(180deg, #382D22 0%, #241D16 100%) !important;
+            border-color: #F59E0B !important;
+            color: #FBBF24 !important;
+            box-shadow: 0 0 8px rgba(245, 158, 11, 0.25) !important;
+        }
+        body[data-theme="roland-amber"] #tabBtnLive {
+            background: #171412 !important;
+            border-color: #2B241E !important;
+            color: #A8A29E !important;
+        }
+        body[data-theme="roland-amber"] #tabBtnLive.active {
+            background: linear-gradient(180deg, #382D22 0%, #241D16 100%) !important;
+            border-color: #D97706 !important;
+            color: #F59E0B !important;
+        }
+        body[data-theme="roland-amber"] .btn-preset,
+        body[data-theme="roland-amber"] .synth-btn,
+        body[data-theme="roland-amber"] .btn-play-solo,
+        body[data-theme="roland-amber"] .btn-part-dest,
+        body[data-theme="roland-amber"] .btn-preset-eq,
+        body[data-theme="roland-amber"] .setlist-nav-btn {
+            background: linear-gradient(180deg, #241E1A 0%, #171310 100%) !important;
+            border: 1px solid #3D322B !important;
+            color: #D6D3D1 !important;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.05) !important;
+        }
+        body[data-theme="roland-amber"] .btn-preset:hover,
+        body[data-theme="roland-amber"] .synth-btn:hover {
+            border-color: #F59E0B !important;
+            color: #FBBF24 !important;
+        }
+        body[data-theme="roland-amber"] .btn-transmit {
+            background: linear-gradient(180deg, #B45309 0%, #78350F 100%) !important;
+            border: 1px solid #F59E0B !important;
+            color: #FFFBEB !important;
+            box-shadow: 0 0 10px rgba(245, 158, 11, 0.4) !important;
+        }
+        body[data-theme="roland-amber"] .btn-act-all {
+            background: linear-gradient(180deg, #241E1A 0%, #171310 100%) !important;
+            border: 1px solid #78350F !important;
+            color: #F59E0B !important;
+            box-shadow: none !important;
+        }
+        body[data-theme="roland-amber"] .magic-wand-btn {
+            background: linear-gradient(180deg, #241E1A 0%, #171310 100%) !important;
+            border: 1px solid #3D322B !important;
+            color: #D6D3D1 !important;
+            box-shadow: none !important;
+        }
+        body[data-theme="roland-amber"] .btn-panic {
+            background: linear-gradient(180deg, #421D1D 0%, #291212 100%) !important;
+            border: 1px solid #991B1B !important;
+            color: #FECACA !important;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.6) !important;
+        }
+        body[data-theme="roland-amber"] .continuous-pad-key {
+            background: #1A1613 !important;
+            border-color: #332B25 !important;
+            color: #A8A29E !important;
+        }
+        body[data-theme="roland-amber"] .continuous-pad-key.active-pad {
+            background: #2D2318 !important;
+            border-color: #F59E0B !important;
+            color: #FBBF24 !important;
+        }
     </style>
 </head>
 <body>
@@ -2283,6 +2553,14 @@
                     </div>
                 </div>
             </div>
+            <!-- Seletor de Tema Visual de Áudio Pro -->
+            <select id="selThemeVisual" class="theme-selector-dropdown" onchange="setAppVisualTheme(this.value)" title="Escolha o estilo visual da interface">
+                <option value="default">🎨 Cores Originais</option>
+                <option value="studio-pro">🎚️ Studio Pro (Grafite)</option>
+                <option value="ableton-min">🎛️ Ableton Minimal</option>
+                <option value="roland-amber">📻 Roland Amber</option>
+            </select>
+
             <!-- Botão de Pânico MIDI Instantâneo -->
             <button class="btn-panic" onclick="triggerMidiPanic()" title="Corta todas as notas presas e reseta controles (Panic)">
                 🚨 Pânico
@@ -3258,6 +3536,22 @@
             // Ajuste automático ideal para o iPad com barra de navegação visível: 92%
             applyZoom(0.92);
         }
+
+        // ========================================================
+        // GERENCIADOR DE TEMAS VISUAIS DE ÁUDIO PRO
+        // ========================================================
+        function setAppVisualTheme(themeName) {
+            const validThemes = ["default", "studio-pro", "ableton-min", "roland-amber"];
+            const chosen = validThemes.includes(themeName) ? themeName : "default";
+            document.body.setAttribute("data-theme", chosen);
+            localStorage.setItem("jv1010_visual_theme", chosen);
+            const sel = document.getElementById("selThemeVisual");
+            if (sel && sel.value !== chosen) sel.value = chosen;
+        }
+
+        // Carrega o tema salvo do usuário (ou inicia com Studio Pro mais limpo se não houver preferência)
+        const savedTheme = localStorage.getItem("jv1010_visual_theme") || "studio-pro";
+        setAppVisualTheme(savedTheme);
 
         let ws = null;
         let currentTab = "patches";
